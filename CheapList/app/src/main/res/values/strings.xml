@@ -1,4 +1,6 @@
 <resources>
 	<string name="app_name">CheapList</string>
 	<string name="sign_out">Sign Out</string>
+	<string name="category">Category</string>
+	<string name="no_items_available">No items available</string>
 </resources>

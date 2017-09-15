@@ -1,0 +1,175 @@
+package hu.tvarga.capstone.cheaplist;
+
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+import hu.tvarga.capstone.cheaplist.dao.Merchant;
+import hu.tvarga.capstone.cheaplist.dao.MerchantCategoryListItem;
+import timber.log.Timber;
+
+public class CompareFragment extends Fragment {
+
+	public static final String ARG_CATEGORY = "ARG_CATEGORY";
+	private static final String ARG_MERCHANT_MAP = "ARG_MERCHANT_MAP";
+
+	@BindView(R.id.startEmptyText)
+	TextView startEmptyText;
+	@BindView(R.id.itemsListStart)
+	RecyclerView startItems;
+
+	@BindView(R.id.endEmptyText)
+	TextView endEmptyText;
+	@BindView(R.id.itemListEnd)
+	RecyclerView endItems;
+
+	private String category;
+	private Unbinder unbinder;
+	private HashMap<String, Merchant> merchantMap;
+	protected DatabaseReference startMerchantItemsDBRef;
+	protected DatabaseReference endMerchantItemsDBRef;
+
+	public static Fragment newInstance(String categoryName, Map<String, Merchant> merchantMap) {
+		Bundle arguments = new Bundle();
+		arguments.putString(ARG_CATEGORY, categoryName);
+		arguments.putSerializable(ARG_MERCHANT_MAP, (HashMap<String, Merchant>) merchantMap);
+		CompareFragment fragment = new CompareFragment();
+		fragment.setArguments(arguments);
+		return fragment;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (getArguments().containsKey(ARG_CATEGORY)) {
+			category = getArguments().getString(ARG_CATEGORY);
+		}
+		if (getArguments().containsKey(ARG_MERCHANT_MAP)) {
+			merchantMap = (HashMap<String, Merchant>) getArguments().getSerializable(
+					ARG_MERCHANT_MAP);
+		}
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+
+		attachRecyclerViewAdapter();
+	}
+
+	private DatabaseReference getDBRefForMerchantCategoryList(Map.Entry<String, Merchant> entry) {
+		String key = entry.getKey() + category;
+		return FirebaseDatabase.getInstance().getReference().child("publicReadable").child(
+				"merchantCategoryListItems").child(key);
+	}
+
+	private void attachRecyclerViewAdapter() {
+		Timber.d("attachRecyclerViewAdapter");
+		FirebaseRecyclerAdapter<MerchantCategoryListItem, MerchantCategoryListItemHolder>
+				startAdapter = getStartAdapter();
+		FirebaseRecyclerAdapter<MerchantCategoryListItem, MerchantCategoryListItemHolder>
+				endAdapter = getEndAdapter();
+
+		startItems.setAdapter(startAdapter);
+		endItems.setAdapter(endAdapter);
+	}
+
+	protected FirebaseRecyclerAdapter<MerchantCategoryListItem, MerchantCategoryListItemHolder> getStartAdapter() {
+		Query lastFifty = startMerchantItemsDBRef.limitToLast(50);
+		return new FirebaseRecyclerAdapter<MerchantCategoryListItem, MerchantCategoryListItemHolder>(
+				MerchantCategoryListItem.class, R.layout.merchant_category_list_item_start,
+				MerchantCategoryListItemHolder.class, lastFifty, this) {
+			@Override
+			public void populateViewHolder(MerchantCategoryListItemHolder holder,
+					MerchantCategoryListItem chat, int position) {
+				holder.bind(chat);
+			}
+
+			@Override
+			public void onDataChanged() {
+				// If there are no chat messages, show a view that invites the user to add a message.
+				startEmptyText.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
+			}
+		};
+	}
+
+	protected FirebaseRecyclerAdapter<MerchantCategoryListItem, MerchantCategoryListItemHolder> getEndAdapter() {
+		Query lastFifty = endMerchantItemsDBRef.limitToLast(50);
+		return new FirebaseRecyclerAdapter<MerchantCategoryListItem, MerchantCategoryListItemHolder>(
+				MerchantCategoryListItem.class, R.layout.merchant_category_list_item_end,
+				MerchantCategoryListItemHolder.class, lastFifty, this) {
+			@Override
+			public void populateViewHolder(MerchantCategoryListItemHolder holder,
+					MerchantCategoryListItem chat, int position) {
+				holder.bind(chat);
+			}
+
+			@Override
+			public void onDataChanged() {
+				// If there are no chat messages, show a view that invites the user to add a message.
+				endEmptyText.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
+			}
+		};
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View rootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
+		unbinder = ButterKnife.bind(this, rootView);
+
+		return rootView;
+	}
+
+	@Override
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+
+		if (merchantMap != null && !merchantMap.isEmpty() && category != null &&
+				!category.isEmpty()) {
+			boolean startSet = false;
+			for (Map.Entry<String, Merchant> entry : merchantMap.entrySet()) {
+				if (!startSet) {
+					startMerchantItemsDBRef = getDBRefForMerchantCategoryList(entry);
+					startSet = true;
+				}
+				else {
+					endMerchantItemsDBRef = getDBRefForMerchantCategoryList(entry);
+				}
+			}
+
+			LinearLayoutManager startLayoutManager = new LinearLayoutManager(getActivity());
+			startLayoutManager.setReverseLayout(false);
+			LinearLayoutManager endLayoutManager = new LinearLayoutManager(getActivity());
+			endLayoutManager.setReverseLayout(false);
+
+			startItems.setLayoutManager(startLayoutManager);
+			endItems.setLayoutManager(endLayoutManager);
+		}
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		unbinder.unbind();
+	}
+
+}

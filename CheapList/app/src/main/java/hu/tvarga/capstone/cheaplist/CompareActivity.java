@@ -3,6 +3,11 @@ package hu.tvarga.capstone.cheaplist;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,39 +17,63 @@ import android.widget.Toast;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import hu.tvarga.capstone.cheaplist.dao.Merchant;
+import timber.log.Timber;
 
 public class CompareActivity extends AppCompatActivity {
 
 	public static final String ANONYMOUS = "anonymous";
 	public static final int RC_SIGN_IN = 1;
+	public static final String PAGE_ITEM = "pageItem";
 
-	private FirebaseDatabase firebaseDatabase;
+	@BindView(R.id.pager)
+	ViewPager pager;
+
+	@BindView(R.id.tabs)
+	TabLayout tabLayout;
+
 	private FirebaseAuth firebaseAuth;
-	private FirebaseRemoteConfig firebaseRemoteConfig;
 	private FirebaseAuth.AuthStateListener authStateListener;
 	private String userName;
-	private ChildEventListener childEventListener;
-	private DatabaseReference databaseReference;
+	private DatabaseReference databaseReferencePublic;
+	private CategoryPagerAdapter pagerAdapter;
+	private int currentPage;
+
+	private List<String> categories = new ArrayList<>();
+	private HashMap<String, Merchant> merchantMap;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_compare);
+		ButterKnife.bind(this);
 
-		firebaseDatabase = FirebaseDatabase.getInstance();
+		if (savedInstanceState != null) {
+			currentPage = savedInstanceState.getInt(PAGE_ITEM, 0);
+		}
+
+		FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 		firebaseAuth = FirebaseAuth.getInstance();
-		firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+		FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
 
-		databaseReference = firebaseDatabase.getReference().child("publicReadable");
+		databaseReferencePublic = firebaseDatabase.getReference().child("publicReadable");
 
 		userName = ANONYMOUS;
 
@@ -71,13 +100,82 @@ public class CompareActivity extends AppCompatActivity {
 				}
 			}
 		};
+
+		pagerAdapter = new CategoryPagerAdapter(getSupportFragmentManager());
+		pager.setAdapter(pagerAdapter);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		firebaseAuth.addAuthStateListener(authStateListener);
+		getCategories();
+		getMerchants();
 	}
+
+	private void getMerchants() {
+		databaseReferencePublic.child("merchants").addListenerForSingleValueEvent(
+				new ValueEventListener() {
+					@Override
+					public void onDataChange(DataSnapshot dataSnapshot) {
+						GenericTypeIndicator<HashMap<String, Merchant>> genericTypeIndicator =
+								new GenericTypeIndicator<HashMap<String, Merchant>>() {};
+						merchantMap = dataSnapshot.getValue(genericTypeIndicator);
+						gotMerchants();
+					}
+
+					@Override
+					public void onCancelled(DatabaseError databaseError) {
+						Timber.d("getMerchants#onCancelled", databaseError);
+					}
+				});
+	}
+
+	private void gotMerchants() {
+		Timber.d("gotMerchants");
+		getMerchantCategoryData();
+	}
+
+	private void gotCategories() {
+		Timber.d("gotCategories");
+		getMerchantCategoryData();
+	}
+
+	private void getMerchantCategoryData() {
+		if (isMerchantAndCategoryAvailable()) {
+			pagerAdapter.notifyDataSetChanged();
+			pager.setCurrentItem(currentPage);
+		}
+	}
+
+	private boolean isMerchantAndCategoryAvailable() {
+		return merchantMap != null && !merchantMap.isEmpty() && !categories.isEmpty();
+	}
+
+	private void getCategories() {
+		databaseReferencePublic.child("itemCategories").addListenerForSingleValueEvent(
+				new ValueEventListener() {
+					@Override
+					public void onDataChange(DataSnapshot dataSnapshot) {
+						GenericTypeIndicator<Map<String, String>> genericTypeIndicator =
+								new GenericTypeIndicator<Map<String, String>>() {};
+						Map<String, String> categoriesFromDB = dataSnapshot.getValue(
+								genericTypeIndicator);
+						if (categoriesFromDB != null) {
+							for (Map.Entry<String, String> pair : categoriesFromDB.entrySet()) {
+								categories.add(pair.getValue());
+							}
+							gotCategories();
+						}
+					}
+
+					@Override
+					public void onCancelled(DatabaseError databaseError) {
+						Timber.d("addAuthStateListener#onCancelled", databaseError);
+					}
+				});
+	}
+
 
 	@Override
 	protected void onPause() {
@@ -85,8 +183,6 @@ public class CompareActivity extends AppCompatActivity {
 		if (authStateListener != null) {
 			firebaseAuth.removeAuthStateListener(authStateListener);
 		}
-		detachDatabaseReadListener();
-		//		mMessageAdapter.clear();
 	}
 
 	@Override
@@ -107,6 +203,12 @@ public class CompareActivity extends AppCompatActivity {
 	}
 
 	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt(PAGE_ITEM, pager.getCurrentItem());
+	}
+
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (RC_SIGN_IN == requestCode) {
@@ -122,52 +224,39 @@ public class CompareActivity extends AppCompatActivity {
 
 	private void onSignedInInitialize(String displayName) {
 		userName = displayName;
-		attachDatabaseReadListener();
 	}
 
 	private void onSignedOutCleanUp() {
 		userName = ANONYMOUS;
-		//		mMessageAdapter.clear();
-		detachDatabaseReadListener();
 	}
 
-	private void attachDatabaseReadListener() {
-		if (childEventListener == null) {
-			childEventListener = new ChildEventListener() {
-				@Override
-				public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-					//					FriendlyMessage friendlyMessage = dataSnapshot.getValue(FriendlyMessage.class);
-					//					mMessageAdapter.add(friendlyMessage);
-				}
+	private class CategoryPagerAdapter extends FragmentStatePagerAdapter {
 
-				@Override
-				public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-				}
-
-				@Override
-				public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-				}
-
-				@Override
-				public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-				}
-
-				@Override
-				public void onCancelled(DatabaseError databaseError) {
-
-				}
-			};
+		CategoryPagerAdapter(FragmentManager fragmentManager) {
+			super(fragmentManager);
 		}
-		databaseReference.addChildEventListener(childEventListener);
-	}
 
-	private void detachDatabaseReadListener() {
-		if (childEventListener != null) {
-			databaseReference.removeEventListener(childEventListener);
-			childEventListener = null;
+		@Override
+		public Fragment getItem(int position) {
+			return CompareFragment.newInstance(getCategoryName(position), merchantMap);
+		}
+
+		@Override
+		public CharSequence getPageTitle(int position) {
+			return getCategoryName(position);
+		}
+
+		private String getCategoryName(int position) {
+			String title = getString(R.string.category);
+			if (position < categories.size()) {
+				title = categories.get(position);
+			}
+			return title;
+		}
+
+		@Override
+		public int getCount() {
+			return categories.size();
 		}
 	}
 }
