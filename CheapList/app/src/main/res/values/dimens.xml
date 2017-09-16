@@ -9,4 +9,5 @@
 	<dimen name="compare_list_text_top_padding">2dp</dimen>
 	<dimen name="compare_list_item_price_per_unit_text_size">10sp</dimen>
 	<dimen name="compare_list_item_margin">1dp</dimen>
+	<dimen name="detail_image_max_width">150dp</dimen>
 </resources>

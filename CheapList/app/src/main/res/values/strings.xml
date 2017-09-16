@@ -2,8 +2,10 @@
 	<string name="app_name">CheapList</string>
 	<string name="sign_out">Sign Out</string>
 	<string name="category">Category</string>
-	<string name="no_items_available">No items available</string>
+	<string name="no_data_available">No data available</string>
 	<string name="undo">Undo</string>
 	<string name="added_to_shopping_list">Added to shopping list</string>
 	<string name="widget_nothing_to_show">Nothing to show</string>
+	<string name="nutrition_information">Nutrition information</string>
+	<string name="manufacturer_information">Manufacturer information</string>
 </resources>

@@ -10,7 +10,7 @@ import android.net.Uri;
 import android.widget.RemoteViews;
 
 import hu.tvarga.capstone.cheaplist.R;
-import hu.tvarga.capstone.cheaplist.ui.CompareActivity;
+import hu.tvarga.capstone.cheaplist.ui.compare.CompareActivity;
 
 public class WidgetProvider extends AppWidgetProvider {
 

@@ -1,5 +1,6 @@
-package hu.tvarga.capstone.cheaplist.ui;
+package hu.tvarga.capstone.cheaplist.ui.compare;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -29,7 +30,12 @@ import hu.tvarga.capstone.cheaplist.R;
 import hu.tvarga.capstone.cheaplist.business.ShoppingListManager;
 import hu.tvarga.capstone.cheaplist.dao.Merchant;
 import hu.tvarga.capstone.cheaplist.dao.MerchantCategoryListItem;
+import hu.tvarga.capstone.cheaplist.ui.detail.DetailActivity;
+import hu.tvarga.capstone.cheaplist.ui.shoppinglist.ShoppingListActivity;
 import timber.log.Timber;
+
+import static hu.tvarga.capstone.cheaplist.R.bool.multipane;
+import static hu.tvarga.capstone.cheaplist.ui.detail.DetailActivity.DETAIL_ITEM;
 
 public class CompareFragment extends DaggerFragment {
 
@@ -54,6 +60,8 @@ public class CompareFragment extends DaggerFragment {
 	private HashMap<String, Merchant> merchantMap;
 	protected DatabaseReference startMerchantItemsDBRef;
 	protected DatabaseReference endMerchantItemsDBRef;
+	private Merchant startMerchant;
+	private Merchant endMerchant;
 
 	public static Fragment newInstance(String categoryName, Map<String, Merchant> merchantMap) {
 		Bundle arguments = new Bundle();
@@ -102,14 +110,15 @@ public class CompareFragment extends DaggerFragment {
 	}
 
 	protected FirebaseRecyclerAdapter<MerchantCategoryListItem, MerchantCategoryListItemHolder> getStartAdapter() {
-		Query lastFifty = startMerchantItemsDBRef.limitToLast(50);
+		Query lastFifty = startMerchantItemsDBRef.orderByChild("name");
 		return new FirebaseRecyclerAdapter<MerchantCategoryListItem, MerchantCategoryListItemHolder>(
 				MerchantCategoryListItem.class, R.layout.merchant_category_list_item_start,
 				MerchantCategoryListItemHolder.class, lastFifty, this) {
 			@Override
 			public void populateViewHolder(MerchantCategoryListItemHolder holder,
-					MerchantCategoryListItem chat, int position) {
-				holder.bind(chat, getActivityCoordinatorLayout(), shoppingListManager);
+					MerchantCategoryListItem item, int position) {
+				holder.bind(item, getActivityCoordinatorLayout(), shoppingListManager,
+						startMerchant, getOnListItemOnClickListener(item));
 			}
 
 			@Override
@@ -121,20 +130,36 @@ public class CompareFragment extends DaggerFragment {
 	}
 
 	protected FirebaseRecyclerAdapter<MerchantCategoryListItem, MerchantCategoryListItemHolder> getEndAdapter() {
-		Query lastFifty = endMerchantItemsDBRef.limitToLast(50);
+		Query lastFifty = endMerchantItemsDBRef.orderByChild("name");
 		return new FirebaseRecyclerAdapter<MerchantCategoryListItem, MerchantCategoryListItemHolder>(
 				MerchantCategoryListItem.class, R.layout.merchant_category_list_item_end,
 				MerchantCategoryListItemHolder.class, lastFifty, this) {
 			@Override
 			public void populateViewHolder(MerchantCategoryListItemHolder holder,
-					MerchantCategoryListItem chat, int position) {
-				holder.bind(chat, getActivityCoordinatorLayout(), shoppingListManager);
+					MerchantCategoryListItem item, int position) {
+				holder.bind(item, getActivityCoordinatorLayout(), shoppingListManager, endMerchant,
+						getOnListItemOnClickListener(item));
 			}
 
 			@Override
 			public void onDataChanged() {
 				// If there are no chat messages, show a view that invites the user to add a message.
 				endEmptyText.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
+			}
+		};
+	}
+
+	private View.OnClickListener getOnListItemOnClickListener(final MerchantCategoryListItem item) {
+		return new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Class<?> targetActivity = DetailActivity.class;
+				if (getResources().getBoolean(multipane)) {
+					targetActivity = ShoppingListActivity.class;
+				}
+				Intent intent = new Intent(getContext(), targetActivity);
+				intent.putExtra(DETAIL_ITEM, item.id);
+				startActivity(intent);
 			}
 		};
 	}
@@ -151,7 +176,7 @@ public class CompareFragment extends DaggerFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
+		View rootView = inflater.inflate(R.layout.fragment_compare, container, false);
 		unbinder = ButterKnife.bind(this, rootView);
 
 		return rootView;
@@ -167,10 +192,12 @@ public class CompareFragment extends DaggerFragment {
 			for (Map.Entry<String, Merchant> entry : merchantMap.entrySet()) {
 				if (!startSet) {
 					startMerchantItemsDBRef = getDBRefForMerchantCategoryList(entry);
+					startMerchant = entry.getValue();
 					startSet = true;
 				}
 				else {
 					endMerchantItemsDBRef = getDBRefForMerchantCategoryList(entry);
+					endMerchant = entry.getValue();
 				}
 			}
 

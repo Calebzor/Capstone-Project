@@ -2,7 +2,7 @@ package hu.tvarga.capstone.cheaplist.dao;
 
 public class MerchantCategoryListItem extends Item {
 
-	private MerchantCategoryListItem() {
+	protected MerchantCategoryListItem() {
 	}
 
 	public MerchantCategoryListItem(String id, String name, Double price, Double pricePerUnit,

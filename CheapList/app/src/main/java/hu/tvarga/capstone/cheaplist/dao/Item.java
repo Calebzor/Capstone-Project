@@ -1,6 +1,5 @@
 package hu.tvarga.capstone.cheaplist.dao;
 
-import com.google.firebase.database.Exclude;
 import com.google.firebase.database.ServerValue;
 
 public class Item extends DataObject {
@@ -20,7 +19,6 @@ public class Item extends DataObject {
 	public NutritionInformation nutritionInformation;
 
 	public String manufacturerID;
-	@Exclude
 	public ManufacturerInformation manufacturerInformation;
 
 	public Object lastModified = ServerValue.TIMESTAMP;

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout android:id="@+id/fragmentDetailContainer"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<android.support.v4.widget.NestedScrollView
+		android:id="@+id/detailScrollView"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_margin="4dp"
+		>
+
+		<android.support.v7.widget.CardView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			>
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_margin="8dp"
+				android:orientation="vertical">
+
+				<TextView
+					android:id="@+id/detailItemTitle"
+					style="@style/TextAppearance.AppCompat.Headline"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					tools:text="detailItemTitle" />
+
+				<View
+					android:layout_width="match_parent"
+					android:layout_height="2dp"
+					android:background="?selectableItemBackground"
+					android:layout_marginBottom="4dp" />
+
+				<RelativeLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginEnd="64dp"
+					android:layout_marginBottom="8dp">
+
+					<ImageView
+						android:id="@+id/detailImage"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:maxWidth="@dimen/detail_image_max_width"
+						android:adjustViewBounds="true"
+						android:scaleType="fitXY"
+						tools:layout_height="100dp"
+						tools:layout_width="100dp"
+						tools:src="@color/primaryColor"
+						/>
+
+					<TextView
+						android:id="@+id/detailPrice"
+						style="@style/TextAppearance.AppCompat.Headline"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_toEndOf="@id/detailImage"
+						android:paddingStart="4dp"
+						tools:text="detailPrice" />
+
+					<TextView
+						android:id="@+id/detailPricePerUnit"
+						style="@style/TextAppearance.AppCompat.Subhead"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_alignBottom="@id/detailImage"
+						android:layout_below="@id/detailPrice"
+						android:layout_toEndOf="@id/detailImage"
+						android:paddingStart="4dp"
+						tools:text="detailPricePerUnit" />
+				</RelativeLayout>
+
+				<TextView
+					android:id="@+id/detailNutritionTitle"
+					style="@style/TextAppearance.AppCompat.Subhead"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:text="@string/nutrition_information" />
+
+				<View
+					android:layout_width="match_parent"
+					android:layout_height="2dp"
+					android:background="?selectableItemBackground"
+					android:layout_marginBottom="4dp" />
+
+				<android.support.v7.widget.RecyclerView
+					android:id="@+id/detailNutritionInformation"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginBottom="8dp" />
+
+				<TextView
+					android:id="@+id/detailManufacturerTitle"
+					style="@style/TextAppearance.AppCompat.Subhead"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:text="@string/manufacturer_information" />
+
+				<View
+					android:layout_width="match_parent"
+					android:layout_height="2dp"
+					android:background="?selectableItemBackground"
+					android:layout_marginBottom="4dp" />
+
+				<TextView
+					android:id="@+id/detailManufacturerInformation"
+					style="@style/TextAppearance.AppCompat.Body1"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:text="@string/no_data_available" />
+			</LinearLayout>
+
+		</android.support.v7.widget.CardView>
+	</android.support.v4.widget.NestedScrollView>
+
+	<android.support.design.widget.FloatingActionButton
+		android:id="@+id/detailFab"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="16dp"
+		android:layout_marginTop="42dp"
+		app:layout_anchor="@id/detailScrollView"
+		app:layout_anchorGravity="top|end"
+		android:tint="@color/secondaryTextColor"
+		app:srcCompat="@drawable/zzz_playlist_minus" />
+
+</android.support.design.widget.CoordinatorLayout>

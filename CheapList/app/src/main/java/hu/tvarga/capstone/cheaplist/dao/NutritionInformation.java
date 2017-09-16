@@ -2,7 +2,7 @@ package hu.tvarga.capstone.cheaplist.dao;
 
 public class NutritionInformation extends DataObject {
 
-	public String energy;
+	public Double energy;
 	public Double fat;
 	public Double saturatedFat;
 	public Double carbs;

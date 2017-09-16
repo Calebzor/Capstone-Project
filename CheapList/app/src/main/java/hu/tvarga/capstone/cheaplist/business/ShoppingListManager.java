@@ -9,6 +9,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import javax.inject.Inject;
 
+import hu.tvarga.capstone.cheaplist.dao.Item;
+import hu.tvarga.capstone.cheaplist.dao.Merchant;
+import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.capstone.cheaplist.di.scopes.ApplicationScope;
 
 @ApplicationScope
@@ -26,25 +29,41 @@ public class ShoppingListManager implements FirebaseAuth.AuthStateListener {
 
 	@Override
 	public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-		FirebaseUser user = firebaseAuth.getCurrentUser();
-		if (user != null) {
-			databaseReferenceUser = firebaseDatabase.getReference().child("users").child(
-					user.getUid());
+		FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+		if (currentUser != null) {
+			databaseReferenceUser = firebaseDatabase.getReference().child("userData").child(
+					currentUser.getUid());
 		}
 		else {
 			databaseReferenceUser = null;
 		}
 	}
 
-	public void addToList(String itemID) {
+	public void addToList(Item item, Merchant merchant) {
 		if (databaseReferenceUser == null) {
 			return;
 		}
+		final ShoppingListItem shoppingListItem = new ShoppingListItem(item);
+		shoppingListItem.checked = true;
+		shoppingListItem.merchant = merchant;
+		databaseReferenceUser.child("shoppingList").child(item.id).setValue(shoppingListItem);
 	}
 
-	public void removeFromList(String itemID) {
+	public void unCheckItem(ShoppingListItem shoppingListItem) {
 		if (databaseReferenceUser == null) {
 			return;
 		}
+		shoppingListItem.checked = false;
+		databaseReferenceUser.child("shoppingList").child(shoppingListItem.id).setValue(
+				shoppingListItem);
+	}
+
+	public void removeFromList(Item item) {
+		if (databaseReferenceUser == null) {
+			return;
+		}
+		ShoppingListItem shoppingListItem = new ShoppingListItem(item);
+		shoppingListItem.checked = false;
+		databaseReferenceUser.child("shoppingList").child(item.id).setValue(null);
 	}
 }
