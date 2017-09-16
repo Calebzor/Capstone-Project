@@ -3,4 +3,10 @@
 <resources>
 	<dimen name="app_bar_height">256dp</dimen>
 	<dimen name="detail_inner_horizontal_margin">16dp</dimen>
+
+	<dimen name="compare_list_item_height">72dp</dimen>
+	<dimen name="compare_list_text_padding">4dp</dimen>
+	<dimen name="compare_list_text_top_padding">2dp</dimen>
+	<dimen name="compare_list_item_price_per_unit_text_size">10sp</dimen>
+	<dimen name="compare_list_item_margin">1dp</dimen>
 </resources>

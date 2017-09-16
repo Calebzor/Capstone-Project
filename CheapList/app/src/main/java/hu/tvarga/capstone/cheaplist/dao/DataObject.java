@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 
 import java.io.Serializable;
 
-import static hu.tvarga.capstone.cheaplist.dao.utility.GsonHelper.getGson;
+import static hu.tvarga.capstone.cheaplist.utility.GsonHelper.getGson;
 
 public class DataObject implements Serializable {
 

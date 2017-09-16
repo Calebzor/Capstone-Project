@@ -1,4 +1,4 @@
-package hu.tvarga.capstone.cheaplist.dao.utility;
+package hu.tvarga.capstone.cheaplist.utility;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

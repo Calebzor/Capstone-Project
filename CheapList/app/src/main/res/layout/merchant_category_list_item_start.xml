@@ -1,21 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout android:id="@+id/item_container"
+<FrameLayout
+	android:id="@+id/item_container"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:layout_marginBottom="1dp"
-	android:layout_marginEnd="1dp"
-	android:background="@android:color/white"
-	android:orientation="vertical">
+	android:layout_height="@dimen/compare_list_item_height"
+	android:layout_marginBottom="@dimen/compare_list_item_margin"
+	android:layout_marginEnd="@dimen/compare_list_item_margin"
+	android:background="@android:color/white">
 
-	<TextView
-		android:id="@+id/name"
-		style="@style/TextAppearance.AppCompat.Medium"
+	<ImageView
+		android:id="@+id/image"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:layout_gravity="start"
+		android:adjustViewBounds="true"
+		android:scaleType="fitXY"
+		tools:layout_width="@dimen/compare_list_item_height"
+		tools:src="@color/primaryColor" />
+
+	<RelativeLayout
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:gravity="end"
-		tools:text="name" />
+		android:layout_height="match_parent"
+		android:background="?android:attr/selectableItemBackground"
+		android:clickable="true"
+		android:paddingEnd="@dimen/compare_list_text_padding">
 
-</RelativeLayout>
+		<TextView
+			android:id="@+id/name"
+			style="@style/TextAppearance.AppCompat.Body1"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="@dimen/compare_list_item_height"
+			android:ellipsize="end"
+			android:gravity="end"
+			android:maxLines="2"
+			android:paddingTop="@dimen/compare_list_text_top_padding"
+			tools:text="name" />
+
+		<TextView
+			android:id="@+id/price"
+			style="@style/TextAppearance.AppCompat.Caption"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/name"
+			android:layout_marginStart="@dimen/compare_list_item_height"
+			android:gravity="end"
+			tools:text="name" />
+
+		<TextView
+			android:id="@+id/pricePerUnit"
+			style="@style/TextAppearance.AppCompat.Caption"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/price"
+			android:layout_marginStart="@dimen/compare_list_item_height"
+			android:gravity="end"
+			android:textSize="@dimen/compare_list_item_price_per_unit_text_size"
+			tools:text="name" />
+
+	</RelativeLayout>
+</FrameLayout>

@@ -1,4 +1,4 @@
-package hu.tvarga.capstone.cheaplist;
+package hu.tvarga.capstone.cheaplist.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,12 +28,15 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import hu.tvarga.capstone.cheaplist.BuildConfig;
+import hu.tvarga.capstone.cheaplist.R;
 import hu.tvarga.capstone.cheaplist.dao.Merchant;
 import timber.log.Timber;
 
@@ -162,9 +165,11 @@ public class CompareActivity extends AppCompatActivity {
 						Map<String, String> categoriesFromDB = dataSnapshot.getValue(
 								genericTypeIndicator);
 						if (categoriesFromDB != null) {
+							categories.clear();
 							for (Map.Entry<String, String> pair : categoriesFromDB.entrySet()) {
 								categories.add(pair.getValue());
 							}
+							Collections.sort(categories);
 							gotCategories();
 						}
 					}
