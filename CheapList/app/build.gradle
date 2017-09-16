@@ -34,10 +34,15 @@ dependencies {
 	compile "com.google.firebase:firebase-config:$firebaseVersion"
 	compile "com.firebaseui:firebase-ui-auth:$firebaseUIVersion"
 	compile "com.firebaseui:firebase-ui-database:$firebaseUIVersion"
+	compile 'com.google.dagger:dagger:2.11'
+	compile 'com.google.dagger:dagger-android:2.11'
+	compile 'com.google.dagger:dagger-android-support:2.11'
 	compile "com.jakewharton.timber:timber:4.5.1"
 	compile "com.jakewharton:butterknife:8.8.1"
 	compile "com.squareup.picasso:picasso:2.5.2"
 	annotationProcessor "com.jakewharton:butterknife-compiler:8.8.1"
+	annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
+	annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
 	testCompile "junit:junit:4.12"
 	compile "com.google.code.gson:gson:2.8.1"
 }

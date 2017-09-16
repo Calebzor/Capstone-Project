@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -35,12 +34,13 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dagger.android.support.DaggerAppCompatActivity;
 import hu.tvarga.capstone.cheaplist.BuildConfig;
 import hu.tvarga.capstone.cheaplist.R;
 import hu.tvarga.capstone.cheaplist.dao.Merchant;
 import timber.log.Timber;
 
-public class CompareActivity extends AppCompatActivity {
+public class CompareActivity extends DaggerAppCompatActivity {
 
 	public static final String ANONYMOUS = "anonymous";
 	public static final int RC_SIGN_IN = 1;

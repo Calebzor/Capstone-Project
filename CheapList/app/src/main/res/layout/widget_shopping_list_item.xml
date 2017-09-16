@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/widgetListItem"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<LinearLayout
+		android:id="@+id/widgetListItemContainer"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_marginBottom="2dp"
+		android:orientation="vertical"
+		android:paddingBottom="4dp"
+		android:paddingEnd="4dp"
+		android:paddingStart="4dp"
+		android:paddingTop="4dp">
+
+		<TextView
+			android:id="@+id/widgetItemName"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:textSize="18sp"
+			android:textStyle="bold"
+			tools:text="text" />
+
+		<TextView
+			android:id="@+id/widgetItemPrice"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			tools:text="ingredients" />
+	</LinearLayout>
+
+	<TextView
+		android:id="@+id/widgetDefaultMessage"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:layout_gravity="center"
+		android:text="@string/widget_nothing_to_show"
+		android:visibility="gone"
+		tools:text="Nothing to show"
+		tools:visibility="visible" />
+</FrameLayout>

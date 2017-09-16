@@ -10,4 +10,11 @@
 
 	</style>
 
+	<style name="CheapListAppWidget">
+		<item name="android:background">@color/primaryColor</item>
+		<item name="android:textSize">18sp</item>
+		<item name="android:textColor">@android:color/white</item>
+		<item name="android:padding">4dp</item>
+	</style>
+
 </resources>

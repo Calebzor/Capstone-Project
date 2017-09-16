@@ -3,6 +3,7 @@ package hu.tvarga.capstone.cheaplist.ui;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,15 +19,19 @@ import com.google.firebase.database.Query;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import dagger.android.support.DaggerFragment;
 import hu.tvarga.capstone.cheaplist.R;
+import hu.tvarga.capstone.cheaplist.business.ShoppingListManager;
 import hu.tvarga.capstone.cheaplist.dao.Merchant;
 import hu.tvarga.capstone.cheaplist.dao.MerchantCategoryListItem;
 import timber.log.Timber;
 
-public class CompareFragment extends Fragment {
+public class CompareFragment extends DaggerFragment {
 
 	public static final String ARG_CATEGORY = "ARG_CATEGORY";
 	private static final String ARG_MERCHANT_MAP = "ARG_MERCHANT_MAP";
@@ -40,6 +45,9 @@ public class CompareFragment extends Fragment {
 	TextView endEmptyText;
 	@BindView(R.id.itemListEnd)
 	RecyclerView endItems;
+
+	@Inject
+	ShoppingListManager shoppingListManager;
 
 	private String category;
 	private Unbinder unbinder;
@@ -101,7 +109,7 @@ public class CompareFragment extends Fragment {
 			@Override
 			public void populateViewHolder(MerchantCategoryListItemHolder holder,
 					MerchantCategoryListItem chat, int position) {
-				holder.bind(chat);
+				holder.bind(chat, getActivityCoordinatorLayout(), shoppingListManager);
 			}
 
 			@Override
@@ -120,7 +128,7 @@ public class CompareFragment extends Fragment {
 			@Override
 			public void populateViewHolder(MerchantCategoryListItemHolder holder,
 					MerchantCategoryListItem chat, int position) {
-				holder.bind(chat);
+				holder.bind(chat, getActivityCoordinatorLayout(), shoppingListManager);
 			}
 
 			@Override
@@ -129,6 +137,15 @@ public class CompareFragment extends Fragment {
 				endEmptyText.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
 			}
 		};
+	}
+
+	private View getActivityCoordinatorLayout() {
+		View view = null;
+		FragmentActivity activity = getActivity();
+		if (activity != null) {
+			view = activity.findViewById(R.id.coordinator);
+		}
+		return view;
 	}
 
 	@Override
