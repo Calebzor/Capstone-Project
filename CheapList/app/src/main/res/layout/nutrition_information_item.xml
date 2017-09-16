@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:layout_marginBottom="2dp">
+
+	<TextView
+		android:id="@+id/nutritionValue"
+		style="@style/Base.TextAppearance.AppCompat.Body2"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentEnd="true"
+		tools:text="100 g" />
+
+	<TextView
+		android:id="@+id/nutritionName"
+		style="@style/Base.TextAppearance.AppCompat.Body2"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentStart="true"
+		android:layout_toStartOf="@id/nutritionValue"
+		tools:text="Protein" />
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="2dp"
+		android:layout_below="@id/nutritionValue"
+		android:background="@color/cardview_dark_background"
+		/>
+
+</RelativeLayout>

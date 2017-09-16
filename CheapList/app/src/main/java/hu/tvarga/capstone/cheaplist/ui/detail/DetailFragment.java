@@ -3,11 +3,11 @@ package hu.tvarga.capstone.cheaplist.ui.detail;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,6 +19,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.lang.reflect.Field;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -26,9 +28,11 @@ import dagger.android.support.DaggerFragment;
 import hu.tvarga.capstone.cheaplist.R;
 import hu.tvarga.capstone.cheaplist.dao.Item;
 import hu.tvarga.capstone.cheaplist.dao.ManufacturerInformation;
+import hu.tvarga.capstone.cheaplist.dao.NutritionInformation;
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
 import timber.log.Timber;
 
+import static hu.tvarga.capstone.cheaplist.NutritionNameHelper.getNutritionLocalizedName;
 import static hu.tvarga.capstone.cheaplist.ui.detail.DetailActivity.DETAIL_ITEM;
 
 public class DetailFragment extends DaggerFragment {
@@ -46,7 +50,7 @@ public class DetailFragment extends DaggerFragment {
 	TextView detailPricePerUnit;
 
 	@BindView(R.id.detailNutritionInformation)
-	RecyclerView detailNutritionInformation;
+	LinearLayout detailNutritionInformation;
 
 	@BindView(R.id.detailManufacturerInformation)
 	TextView detailManufacturerInformation;
@@ -169,11 +173,56 @@ public class DetailFragment extends DaggerFragment {
 					getManufacturerInformation(item.manufacturerInformation));
 		}
 		if (item.nutritionInformation != null) {
-			setUpNutritionInformation(item);
+			showNutritionInformation(item.nutritionInformation);
 		}
 	}
 
-	private void setUpNutritionInformation(Item item) {
+	private void showNutritionInformation(NutritionInformation nutritionInformation) {
+		addEnergyAtTop(nutritionInformation.energy);
+
+		Field[] fields = NutritionInformation.class.getDeclaredFields();
+		for (Field field : fields) {
+			Class<?> type = field.getType();
+			String fieldName = field.getName();
+			if (type == Double.class && !"energy".equals(fieldName)) {
+				Double nutritionValue = null;
+				try {
+					nutritionValue = (Double) field.get(nutritionInformation);
+				}
+				catch (IllegalAccessException e) {
+					Timber.d(e);
+				}
+				if (nutritionValue != null) {
+					View view = LayoutInflater.from(getContext()).inflate(
+							R.layout.nutrition_information_item, null);
+					TextView name = view.findViewById(R.id.nutritionName);
+					int nutritionLocalizedName = getNutritionLocalizedName(fieldName);
+					if (nutritionLocalizedName == 0) {
+						name.setText(fieldName);
+					}
+					else {
+						name.setText(nutritionLocalizedName);
+					}
+					TextView value = view.findViewById(R.id.nutritionValue);
+					String unit = " g";
+					value.setText(nutritionValue + unit);
+					detailNutritionInformation.addView(view);
+				}
+			}
+		}
+	}
+
+	private void addEnergyAtTop(Double energy) {
+		if (energy != null) {
+			View view = LayoutInflater.from(getContext()).inflate(
+					R.layout.nutrition_information_item, null);
+			TextView name = view.findViewById(R.id.nutritionName);
+			name.setText(R.string.energy);
+			TextView value = view.findViewById(R.id.nutritionValue);
+			String unit = " kcal";
+			value.setText(energy + unit);
+			detailNutritionInformation.addView(view);
+		}
 	}
 
 	@Override

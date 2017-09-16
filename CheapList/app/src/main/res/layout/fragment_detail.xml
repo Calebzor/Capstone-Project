@@ -90,10 +90,11 @@
 					android:background="?selectableItemBackground"
 					android:layout_marginBottom="4dp" />
 
-				<android.support.v7.widget.RecyclerView
+				<LinearLayout
 					android:id="@+id/detailNutritionInformation"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
+					android:orientation="vertical"
 					android:layout_marginBottom="8dp" />
 
 				<TextView
