@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentManager;
 import butterknife.ButterKnife;
 import hu.tvarga.capstone.cheaplist.R;
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
-import hu.tvarga.capstone.cheaplist.ui.AuthBaseActivity;
+import hu.tvarga.capstone.cheaplist.ui.AdShowingActivity;
 import hu.tvarga.capstone.cheaplist.ui.detail.DetailActivity;
 import hu.tvarga.capstone.cheaplist.ui.detail.DetailFragment;
 
@@ -15,7 +15,7 @@ import static hu.tvarga.capstone.cheaplist.R.bool.multipane;
 import static hu.tvarga.capstone.cheaplist.ui.detail.DetailActivity.DETAIL_FRAGMENT_INSTANCE_KEY;
 import static hu.tvarga.capstone.cheaplist.ui.detail.DetailActivity.DETAIL_ITEM;
 
-public class ShoppingListActivity extends AuthBaseActivity
+public class ShoppingListActivity extends AdShowingActivity
 		implements ShoppingListFragment.ShoppingListItemClickAction {
 
 	public static final String SHOPPING_LIST_FRAGMENT_INSTANCE_KEY =

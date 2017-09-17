@@ -6,9 +6,9 @@ import android.support.v4.app.FragmentManager;
 import butterknife.ButterKnife;
 import hu.tvarga.capstone.cheaplist.R;
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
-import hu.tvarga.capstone.cheaplist.ui.AuthBaseActivity;
+import hu.tvarga.capstone.cheaplist.ui.AdShowingActivity;
 
-public class DetailActivity extends AuthBaseActivity {
+public class DetailActivity extends AdShowingActivity {
 
 	public static final String DETAIL_ITEM = "DETAIL_ITEM";
 	public static final String DETAIL_FRAGMENT_INSTANCE_KEY = "DETAIL_FRAGMENT_INSTANCE_KEY";

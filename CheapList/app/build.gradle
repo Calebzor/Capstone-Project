@@ -31,6 +31,7 @@ dependencies {
 	compile "com.google.firebase:firebase-database:$firebaseVersion"
 	compile "com.google.firebase:firebase-auth:$firebaseVersion"
 	compile "com.google.firebase:firebase-config:$firebaseVersion"
+	compile "com.google.firebase:firebase-ads:$firebaseVersion"
 	compile "com.firebaseui:firebase-ui-auth:$firebaseUIVersion"
 	compile "com.firebaseui:firebase-ui-database:$firebaseUIVersion"
 	compile 'com.firebase:firebase-jobdispatcher:0.8.1'
