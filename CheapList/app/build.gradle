@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+	signingConfigs {
+		defaultConfig {
+			keyAlias 'CheapListKey'
+			keyPassword 'cheaplistkeypassword'
+			storeFile file('..//keystore/android.jks')
+			storePassword 'cheaplistkeystorepassword'
+		}
+	}
 	compileSdkVersion compileSdk
 	buildToolsVersion buildTools
 	defaultConfig {
@@ -17,6 +25,7 @@ android {
 			minifyEnabled true
 			shrinkResources true
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+			signingConfig signingConfigs.defaultConfig
 		}
 	}
 }
