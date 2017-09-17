@@ -1,53 +1,114 @@
 package hu.tvarga.capstone.cheaplist.widget;
 
-import android.content.Context;
+import android.appwidget.AppWidgetManager;
 import android.content.Intent;
+import android.os.Bundle;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-import javax.inject.Inject;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 
 import hu.tvarga.capstone.cheaplist.R;
-import hu.tvarga.capstone.cheaplist.business.ShoppingListManager;
-import hu.tvarga.capstone.cheaplist.di.DaggerWidgetServiceComponent;
-import hu.tvarga.capstone.cheaplist.di.androidinjectors.ServiceModule;
+import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
+import hu.tvarga.capstone.cheaplist.ui.shoppinglist.ShoppingListActivity;
 import timber.log.Timber;
+
+import static hu.tvarga.capstone.cheaplist.ui.detail.DetailActivity.DETAIL_ITEM;
 
 public class WidgetService extends RemoteViewsService {
 
-	@Inject
-	ShoppingListManager shoppingListManager;
-
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		DaggerWidgetServiceComponent.builder().serviceModule(new ServiceModule(this)).build()
-				.inject(this);
-	}
-
 	@Override
 	public RemoteViewsService.RemoteViewsFactory onGetViewFactory(Intent intent) {
-		return new CheapListAppWidgetViewsFactory(getApplicationContext());
+		return new CheapListAppWidgetViewsFactory();
 	}
 
 	public class CheapListAppWidgetViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
-		private Context context;
+		private List<ShoppingListItem> items = new ArrayList<>();
 
-		public CheapListAppWidgetViewsFactory(Context applicationContext) {
-			context = applicationContext;
+		public CheapListAppWidgetViewsFactory() {
+			setUpFirebase();
+		}
+
+		private void setUpFirebase() {
+			DatabaseReference dbRefForShoppingList = getDBRefForShoppingList();
+			if (dbRefForShoppingList != null) {
+				dbRefForShoppingList.addValueEventListener(new ValueEventListener() {
+					@Override
+					public void onDataChange(DataSnapshot dataSnapshot) {
+						GenericTypeIndicator<Map<String, ShoppingListItem>> genericTypeIndicator =
+								new GenericTypeIndicator<Map<String, ShoppingListItem>>() {};
+						Map<String, ShoppingListItem> itemsMap = dataSnapshot.getValue(
+								genericTypeIndicator);
+						items.clear();
+						if (itemsMap != null) {
+							items.addAll(itemsMap.values());
+							sortByCheckedState();
+							updateWidget();
+						}
+					}
+
+					@Override
+					public void onCancelled(DatabaseError databaseError) {
+						Timber.d("Widget firebase cancel for shopping list %s", databaseError);
+					}
+				});
+			}
+		}
+
+		private void sortByCheckedState() {
+			Collections.sort(items, new Comparator<ShoppingListItem>() {
+				@Override
+				public int compare(ShoppingListItem i1, ShoppingListItem i2) {
+					if (i1.checked && !i2.checked) {
+						return 1;
+					}
+					else {
+						return -1;
+					}
+				}
+			});
+		}
+
+		private DatabaseReference getDBRefForShoppingList() {
+			FirebaseAuth auth = FirebaseAuth.getInstance();
+			FirebaseUser currentUser = auth.getCurrentUser();
+			if (currentUser != null) {
+				return FirebaseDatabase.getInstance().getReference().child("userData").child(
+						currentUser.getUid()).child("shoppingList");
+			}
+			return null;
+		}
+
+		public void updateWidget() {
+			Intent intent = new Intent(getApplicationContext(), WidgetProvider.class);
+			intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+			int[] ids = {R.xml.widget_provider};
+			intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+			getApplicationContext().sendBroadcast(intent);
 		}
 
 		@Override
 		public void onCreate() {
 			Timber.d("CheapListAppWidgetViewsFactory#onCreate");
-			//			loadData(true);
 		}
 
 		@Override
 		public void onDataSetChanged() {
 			Timber.d("CheapListAppWidgetViewsFactory#onDataSetChanged");
-			//			loadData(false);
 		}
 
 		@Override
@@ -57,33 +118,25 @@ public class WidgetService extends RemoteViewsService {
 
 		@Override
 		public int getCount() {
-			return 1;
+			return items == null ? 0 : items.size();
 		}
 
 		@Override
 		public RemoteViews getViewAt(int position) {
-			RemoteViews row = new RemoteViews(context.getPackageName(),
-					R.layout.widget_shopping_list_item);
-			//			if (favoritesIndex == -1 || recepyWithIngredientAndSteps == null) {
-			//				row.setViewVisibility(R.id.listItemContainer, GONE);
-			//				row.setViewVisibility(R.id.defaultMessage, VISIBLE);
-			//				return row;
-			//			}
-			//			row.setViewVisibility(R.id.listItemContainer, VISIBLE);
-			//			row.setViewVisibility(R.id.defaultMessage, GONE);
-			//			row.setTextViewText(R.id.text, recepyWithIngredientAndSteps.name);
-			//			StringBuilder sb = new StringBuilder("");
-			//			for (Ingredient ingredient : recepyWithIngredientAndSteps.ingredients) {
-			//				if (ingredient.ingredient != null) {
-			//					sb.append(ingredient.ingredient).append("\n");
-			//				}
-			//				if (ingredient.quantity != null && ingredient.measure != null) {
-			//					sb.append(ingredient.quantity).append(" ").append(ingredient.measure);
-			//				}
-			//			}
-			//			String ingredient = sb.toString();
-			//			row.setTextViewText(R.id.ingredients, ingredient);
+			RemoteViews row = new RemoteViews(getPackageName(), R.layout.widget_shopping_list_item);
+			if (items != null) {
+				row.setTextViewText(R.id.widgetItemName, items.get(position).name);
+				row.setTextViewText(R.id.widgetItemPrice,
+						String.format("%s %s", items.get(position).price,
+								items.get(position).currency));
 
+				Intent intent = new Intent(getApplicationContext(), ShoppingListActivity.class);
+				Bundle extras = new Bundle();
+				extras.putSerializable(DETAIL_ITEM, items.get(position));
+				intent.putExtras(extras);
+
+				row.setOnClickFillInIntent(R.id.widgetListItem, intent);
+			}
 			return row;
 		}
 
@@ -107,22 +160,5 @@ public class WidgetService extends RemoteViewsService {
 			return true;
 		}
 
-		//		public void loadData(final boolean shouldBroadcastUpdate) {
-		//			SharedPreferences sharedPreferences = Preferences.getSharedPreferences(context);
-		//			favoritesIndex = sharedPreferences.getInt(FAVORITE_RECEPY_INDEX, -1);
-		//			runInBackgroundThread(new Runnable() {
-		//				@Override
-		//				public void run() {
-		//					recepyWithIngredientAndSteps =
-		//							dbFactory.getDb().recepyWithIngredientsAndStepsDao()
-		//									.loadRecepyWithIngredientsAndSteps(favoritesIndex);
-		//					if (shouldBroadcastUpdate) {
-		//						Intent dataUpdatedIntent = new Intent(ACTION_UPDATE);
-		//						context.sendBroadcast(dataUpdatedIntent);
-		//					}
-		//				}
-		//			});
-		//
-		//		}
 	}
 }

@@ -10,7 +10,7 @@ import android.net.Uri;
 import android.widget.RemoteViews;
 
 import hu.tvarga.capstone.cheaplist.R;
-import hu.tvarga.capstone.cheaplist.ui.compare.CompareActivity;
+import hu.tvarga.capstone.cheaplist.ui.shoppinglist.ShoppingListActivity;
 
 public class WidgetProvider extends AppWidgetProvider {
 
@@ -36,12 +36,14 @@ public class WidgetProvider extends AppWidgetProvider {
 		rv.setRemoteAdapter(R.id.widgetShoppingList, intent);
 		rv.setEmptyView(R.id.widgetShoppingList, R.id.widgetDefaultMessage);
 
-		Intent openAppIntent = new Intent(context, CompareActivity.class);
-		PendingIntent openAppPendingIntent = PendingIntent.getActivity(context, 0, openAppIntent,
-				PendingIntent.FLAG_UPDATE_CURRENT);
-		rv.setOnClickPendingIntent(R.id.widgetTitle, openAppPendingIntent);
-		rv.setOnClickPendingIntent(R.id.widgetDefaultMessage, openAppPendingIntent);
-		rv.setOnClickPendingIntent(R.id.widgetLayoutParent, openAppPendingIntent);
+		Intent shoppingListIntent = new Intent(context, ShoppingListActivity.class);
+		PendingIntent shoppingListPendingIntent = PendingIntent.getActivity(context, 0,
+				shoppingListIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+		rv.setPendingIntentTemplate(R.id.widgetShoppingList, shoppingListPendingIntent);
+
+		rv.setOnClickPendingIntent(R.id.widgetTitle, shoppingListPendingIntent);
+		rv.setOnClickPendingIntent(R.id.widgetDefaultMessage, shoppingListPendingIntent);
+		rv.setOnClickPendingIntent(R.id.widgetLayoutParent, shoppingListPendingIntent);
 
 		appWidgetManager.updateAppWidget(appWidgetIds, rv);
 
