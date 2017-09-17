@@ -19,4 +19,5 @@
 	<string name="salt">Salt</string>
 	<string name="shopping_list_menu_item">Shopping list</string>
 	<string name="compare_menu_item">Compare</string>
+	<string name="product_image">Product image</string>
 </resources>

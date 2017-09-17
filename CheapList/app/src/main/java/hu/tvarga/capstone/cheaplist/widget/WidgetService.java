@@ -135,7 +135,7 @@ public class WidgetService extends RemoteViewsService {
 				extras.putSerializable(DETAIL_ITEM, items.get(position));
 				intent.putExtras(extras);
 
-				row.setOnClickFillInIntent(R.id.widgetListItem, intent);
+				row.setOnClickFillInIntent(R.id.widgetListItemContainer, intent);
 			}
 			return row;
 		}

@@ -54,7 +54,7 @@
 						tools:layout_height="100dp"
 						tools:layout_width="100dp"
 						tools:src="@color/primaryColor"
-						/>
+						android:contentDescription="@string/product_image" />
 
 					<TextView
 						android:id="@+id/detailPrice"
