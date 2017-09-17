@@ -31,10 +31,8 @@ import hu.tvarga.capstone.cheaplist.business.ShoppingListManager;
 import hu.tvarga.capstone.cheaplist.dao.Merchant;
 import hu.tvarga.capstone.cheaplist.dao.MerchantCategoryListItem;
 import hu.tvarga.capstone.cheaplist.ui.detail.DetailActivity;
-import hu.tvarga.capstone.cheaplist.ui.shoppinglist.ShoppingListActivity;
 import timber.log.Timber;
 
-import static hu.tvarga.capstone.cheaplist.R.bool.multipane;
 import static hu.tvarga.capstone.cheaplist.ui.detail.DetailActivity.DETAIL_ITEM;
 
 public class CompareFragment extends DaggerFragment {
@@ -154,9 +152,9 @@ public class CompareFragment extends DaggerFragment {
 			@Override
 			public void onClick(View view) {
 				Class<?> targetActivity = DetailActivity.class;
-				if (getResources().getBoolean(multipane)) {
-					targetActivity = ShoppingListActivity.class;
-				}
+				//				if (getResources().getBoolean(multipane)) {
+				//					targetActivity = ShoppingListActivity.class;
+				//				}
 				Intent intent = new Intent(getContext(), targetActivity);
 				intent.putExtra(DETAIL_ITEM, item.id);
 				startActivity(intent);

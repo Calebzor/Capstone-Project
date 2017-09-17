@@ -53,10 +53,6 @@ public class CompareActivity extends AuthBaseActivity {
 		setContentView(R.layout.activity_compare);
 		ButterKnife.bind(this);
 
-		if (savedInstanceState != null) {
-			currentPage = savedInstanceState.getInt(PAGE_ITEM, 0);
-		}
-
 		FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 		FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
 
@@ -69,11 +65,10 @@ public class CompareActivity extends AuthBaseActivity {
 
 		pagerAdapter = new CategoryPagerAdapter(getSupportFragmentManager());
 		pager.setAdapter(pagerAdapter);
-	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
+		if (savedInstanceState != null) {
+			currentPage = savedInstanceState.getInt(PAGE_ITEM, 0);
+		}
 		getCategories();
 		getMerchants();
 	}
