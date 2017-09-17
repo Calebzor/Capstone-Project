@@ -5,6 +5,7 @@ import dagger.android.ContributesAndroidInjector;
 import hu.tvarga.capstone.cheaplist.di.scopes.FragmentScope;
 import hu.tvarga.capstone.cheaplist.ui.compare.CompareFragment;
 import hu.tvarga.capstone.cheaplist.ui.detail.DetailFragment;
+import hu.tvarga.capstone.cheaplist.ui.shoppinglist.ShoppingListFragment;
 
 @Module
 public interface FragmentInjectorModule {
@@ -16,4 +17,8 @@ public interface FragmentInjectorModule {
 	@FragmentScope
 	@ContributesAndroidInjector
 	DetailFragment contributesDetailFragmentInjector();
+
+	@FragmentScope
+	@ContributesAndroidInjector
+	ShoppingListFragment contributesShoppingListFragmentInjector();
 }

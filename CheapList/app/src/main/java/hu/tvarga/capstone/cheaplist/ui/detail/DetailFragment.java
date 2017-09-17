@@ -89,6 +89,9 @@ public class DetailFragment extends DaggerFragment {
 	private Unbinder unbinder;
 
 	public static DetailFragment newInstance(ShoppingListItem item) {
+		if (item == null) {
+			return null;
+		}
 		Bundle arguments = new Bundle();
 		arguments.putSerializable(DETAIL_ITEM, item);
 		DetailFragment fragment = new DetailFragment();
@@ -103,6 +106,10 @@ public class DetailFragment extends DaggerFragment {
 		if (getArguments().containsKey(DETAIL_ITEM)) {
 			itemFromArgument = (ShoppingListItem) getArguments().getSerializable(DETAIL_ITEM);
 		}
+	}
+
+	public void setItemFromArgument(ShoppingListItem itemFromArgument) {
+		this.itemFromArgument = itemFromArgument;
 	}
 
 	@Override
@@ -121,7 +128,7 @@ public class DetailFragment extends DaggerFragment {
 		return rootView;
 	}
 
-	private void loadData() {
+	public void loadData() {
 		FirebaseAuth auth = FirebaseAuth.getInstance();
 		FirebaseUser currentUser = auth.getCurrentUser();
 		if (currentUser != null) {
@@ -131,18 +138,20 @@ public class DetailFragment extends DaggerFragment {
 					final ShoppingListItem shoppingListItem = dataSnapshot.getValue(
 							ShoppingListItem.class);
 					Timber.d("listItemChange %s", shoppingListItem);
-					if (shoppingListItem != null) {
-						fab.setImageResource(R.drawable.zzz_playlist_minus);
-						fab.setOnClickListener(new View.OnClickListener() {
-							@Override
-							public void onClick(View view) {
-								shoppingListManager.removeFromList(shoppingListItem);
-							}
-						});
-					}
-					else {
-						fab.setImageResource(R.drawable.zzz_playlist_plus);
-						fab.setOnClickListener(getAddToListOnClickListener());
+					if (fab != null) {
+						if (shoppingListItem != null) {
+							fab.setImageResource(R.drawable.zzz_playlist_minus);
+							fab.setOnClickListener(new View.OnClickListener() {
+								@Override
+								public void onClick(View view) {
+									shoppingListManager.removeFromList(shoppingListItem);
+								}
+							});
+						}
+						else {
+							fab.setImageResource(R.drawable.zzz_playlist_plus);
+							fab.setOnClickListener(getAddToListOnClickListener());
+						}
 					}
 				}
 
@@ -202,6 +211,8 @@ public class DetailFragment extends DaggerFragment {
 	}
 
 	private void showNutritionInformation(NutritionInformation nutritionInformation) {
+		detailNutritionInformation.removeAllViews();
+
 		addEnergyAtTop(nutritionInformation.energy);
 
 		Field[] fields = NutritionInformation.class.getDeclaredFields();

@@ -32,8 +32,10 @@ import hu.tvarga.capstone.cheaplist.dao.Merchant;
 import hu.tvarga.capstone.cheaplist.dao.MerchantCategoryListItem;
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.capstone.cheaplist.ui.detail.DetailActivity;
+import hu.tvarga.capstone.cheaplist.ui.shoppinglist.ShoppingListActivity;
 import timber.log.Timber;
 
+import static hu.tvarga.capstone.cheaplist.R.bool.multipane;
 import static hu.tvarga.capstone.cheaplist.ui.detail.DetailActivity.DETAIL_ITEM;
 
 public class CompareFragment extends DaggerFragment {
@@ -109,10 +111,10 @@ public class CompareFragment extends DaggerFragment {
 	}
 
 	protected FirebaseRecyclerAdapter<MerchantCategoryListItem, MerchantCategoryListItemHolder> getStartAdapter() {
-		Query lastFifty = startMerchantItemsDBRef.orderByChild("name");
+		Query query = startMerchantItemsDBRef.orderByChild("name");
 		return new FirebaseRecyclerAdapter<MerchantCategoryListItem, MerchantCategoryListItemHolder>(
 				MerchantCategoryListItem.class, R.layout.merchant_category_list_item_start,
-				MerchantCategoryListItemHolder.class, lastFifty, this) {
+				MerchantCategoryListItemHolder.class, query, this) {
 			@Override
 			public void populateViewHolder(MerchantCategoryListItemHolder holder,
 					MerchantCategoryListItem item, int position) {
@@ -123,17 +125,16 @@ public class CompareFragment extends DaggerFragment {
 
 			@Override
 			public void onDataChanged() {
-				// If there are no chat messages, show a view that invites the user to add a message.
 				startEmptyText.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
 			}
 		};
 	}
 
 	protected FirebaseRecyclerAdapter<MerchantCategoryListItem, MerchantCategoryListItemHolder> getEndAdapter() {
-		Query lastFifty = endMerchantItemsDBRef.orderByChild("name");
+		Query query = endMerchantItemsDBRef.orderByChild("name");
 		return new FirebaseRecyclerAdapter<MerchantCategoryListItem, MerchantCategoryListItemHolder>(
 				MerchantCategoryListItem.class, R.layout.merchant_category_list_item_end,
-				MerchantCategoryListItemHolder.class, lastFifty, this) {
+				MerchantCategoryListItemHolder.class, query, this) {
 			@Override
 			public void populateViewHolder(MerchantCategoryListItemHolder holder,
 					MerchantCategoryListItem item, int position) {
@@ -143,7 +144,6 @@ public class CompareFragment extends DaggerFragment {
 
 			@Override
 			public void onDataChanged() {
-				// If there are no chat messages, show a view that invites the user to add a message.
 				endEmptyText.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
 			}
 		};
@@ -154,9 +154,9 @@ public class CompareFragment extends DaggerFragment {
 			@Override
 			public void onClick(View view) {
 				Class<?> targetActivity = DetailActivity.class;
-				//				if (getResources().getBoolean(multipane)) {
-				//					targetActivity = ShoppingListActivity.class;
-				//				}
+				if (getResources().getBoolean(multipane)) {
+					targetActivity = ShoppingListActivity.class;
+				}
 				Intent intent = new Intent(getContext(), targetActivity);
 				intent.putExtra(DETAIL_ITEM, item);
 				startActivity(intent);

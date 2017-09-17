@@ -5,6 +5,7 @@ import dagger.android.ContributesAndroidInjector;
 import hu.tvarga.capstone.cheaplist.di.scopes.ActivityScope;
 import hu.tvarga.capstone.cheaplist.ui.compare.CompareActivity;
 import hu.tvarga.capstone.cheaplist.ui.detail.DetailActivity;
+import hu.tvarga.capstone.cheaplist.ui.shoppinglist.ShoppingListActivity;
 
 @Module
 public interface ActivityInjectorModule {
@@ -17,4 +18,7 @@ public interface ActivityInjectorModule {
 	@ContributesAndroidInjector
 	DetailActivity contributesDetailActivityInjector();
 
+	@ActivityScope
+	@ContributesAndroidInjector
+	ShoppingListActivity contributesShoppingListActivityInjector();
 }

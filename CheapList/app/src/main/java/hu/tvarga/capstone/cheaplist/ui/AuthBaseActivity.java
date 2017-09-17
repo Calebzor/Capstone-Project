@@ -16,6 +16,8 @@ import java.util.Arrays;
 
 import dagger.android.support.DaggerAppCompatActivity;
 import hu.tvarga.capstone.cheaplist.R;
+import hu.tvarga.capstone.cheaplist.ui.compare.CompareActivity;
+import hu.tvarga.capstone.cheaplist.ui.shoppinglist.ShoppingListActivity;
 
 public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 
@@ -57,6 +59,12 @@ public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main_menu, menu);
+		if (this instanceof ShoppingListActivity) {
+			menu.findItem(R.id.shoppingListMenuItem).setVisible(false);
+		}
+		else if (this instanceof CompareActivity) {
+			menu.findItem(R.id.compareMenuItem).setVisible(false);
+		}
 		return true;
 	}
 
@@ -65,6 +73,12 @@ public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 		switch (item.getItemId()) {
 			case R.id.sign_out_menu:
 				AuthUI.getInstance().signOut(this);
+				return true;
+			case R.id.shoppingListMenuItem:
+				startActivity(new Intent(this, ShoppingListActivity.class));
+				return true;
+			case R.id.compareMenuItem:
+				startActivity(new Intent(this, CompareActivity.class));
 				return true;
 		}
 		return super.onOptionsItemSelected(item);

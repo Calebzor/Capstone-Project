@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="@dimen/shopping_list_item_height"
+	android:layout_marginBottom="@dimen/shopping_list_item_margin"
+	android:layout_marginStart="@dimen/shopping_list_item_margin"
+	android:background="@android:color/white">
+
+	<ImageView
+		android:id="@+id/image"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:layout_gravity="end"
+		android:adjustViewBounds="true"
+		android:scaleType="fitXY"
+		tools:layout_width="@dimen/shopping_list_item_height"
+		tools:src="@color/primaryColor" />
+
+	<RelativeLayout
+		android:id="@+id/itemContainer"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="?android:attr/selectableItemBackground"
+		android:clickable="true"
+		android:paddingStart="@dimen/shopping_list_text_padding">
+
+		<android.support.v7.widget.AppCompatCheckBox
+			android:id="@+id/shoppingListItemCheckBox"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentStart="true"
+			android:layout_centerInParent="true"
+			/>
+
+		<TextView
+			android:id="@+id/name"
+			style="@style/TextAppearance.AppCompat.Body1"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="@dimen/shopping_list_item_height"
+			android:layout_toEndOf="@id/shoppingListItemCheckBox"
+			android:ellipsize="end"
+			android:maxLines="2"
+			android:paddingTop="@dimen/shopping_list_text_top_padding"
+			tools:text="name" />
+
+		<TextView
+			android:id="@+id/price"
+			style="@style/TextAppearance.AppCompat.Caption"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/name"
+			android:layout_marginEnd="@dimen/shopping_list_item_height"
+			android:layout_toEndOf="@id/shoppingListItemCheckBox"
+			tools:text="name" />
+
+		<TextView
+			android:id="@+id/pricePerUnit"
+			style="@style/TextAppearance.AppCompat.Caption"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/price"
+			android:layout_marginEnd="@dimen/shopping_list_item_height"
+			android:layout_toEndOf="@id/shoppingListItemCheckBox"
+			android:textSize="@dimen/shopping_list_item_price_per_unit_text_size"
+			tools:text="name" />
+
+	</RelativeLayout>
+</FrameLayout>

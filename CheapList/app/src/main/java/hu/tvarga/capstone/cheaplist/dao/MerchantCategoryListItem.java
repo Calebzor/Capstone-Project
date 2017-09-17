@@ -6,7 +6,7 @@ public class MerchantCategoryListItem extends Item {
 	}
 
 	public MerchantCategoryListItem(String id, String name, Double price, Double pricePerUnit,
-			String unit, String currency) {
+			String unit, String currency, String imageURL) {
 		this.id = id;
 
 		this.name = name;
@@ -14,6 +14,8 @@ public class MerchantCategoryListItem extends Item {
 		this.pricePerUnit = pricePerUnit;
 		this.unit = unit;
 		this.currency = currency;
+
+		this.imageURL = imageURL;
 	}
 
 	public MerchantCategoryListItem(Item item) {
@@ -24,5 +26,7 @@ public class MerchantCategoryListItem extends Item {
 		pricePerUnit = item.pricePerUnit;
 		unit = item.unit;
 		currency = item.currency;
+
+		imageURL = item.imageURL;
 	}
 }

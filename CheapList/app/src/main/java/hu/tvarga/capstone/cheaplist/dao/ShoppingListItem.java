@@ -9,8 +9,8 @@ public class ShoppingListItem extends MerchantCategoryListItem {
 	}
 
 	public ShoppingListItem(String id, String name, Double price, Double pricePerUnit, String unit,
-			String currency, boolean checked, Merchant merchant) {
-		super(id, name, price, pricePerUnit, unit, currency);
+			String currency, String imageURL, boolean checked, Merchant merchant) {
+		super(id, name, price, pricePerUnit, unit, currency, imageURL);
 		this.checked = checked;
 		this.merchant = merchant;
 	}

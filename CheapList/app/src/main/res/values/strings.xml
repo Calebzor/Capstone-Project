@@ -15,4 +15,6 @@
 	<string name="sugar">Sugar</string>
 	<string name="protein">Protein</string>
 	<string name="salt">Salt</string>
+	<string name="shopping_list_menu_item">Shopping list</string>
+	<string name="compare_menu_item">Compare</string>
 </resources>
