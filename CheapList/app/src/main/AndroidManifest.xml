@@ -48,6 +48,14 @@
 			android:name=".widget.WidgetService"
 			android:enabled="true"
 			android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+		<service
+			android:exported="false"
+			android:name=".jobservices.CategoriesJobService">
+			<intent-filter>
+				<action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
+			</intent-filter>
+		</service>
 	</application>
 
 </manifest>

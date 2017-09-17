@@ -4,6 +4,12 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
+import com.firebase.jobdispatcher.Constraint;
+import com.firebase.jobdispatcher.FirebaseJobDispatcher;
+import com.firebase.jobdispatcher.GooglePlayDriver;
+import com.firebase.jobdispatcher.Job;
+import com.firebase.jobdispatcher.Lifetime;
+import com.firebase.jobdispatcher.Trigger;
 import com.google.firebase.database.FirebaseDatabase;
 
 import javax.inject.Inject;
@@ -12,6 +18,7 @@ import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
 import hu.tvarga.capstone.cheaplist.di.AppModule;
 import hu.tvarga.capstone.cheaplist.di.DaggerAppComponent;
+import hu.tvarga.capstone.cheaplist.jobservices.CategoriesJobService;
 import timber.log.Timber;
 
 public class CheapListApp extends Application implements HasActivityInjector {
@@ -32,6 +39,18 @@ public class CheapListApp extends Application implements HasActivityInjector {
 		FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 		firebaseDatabase.setPersistenceEnabled(true);
 		DaggerAppComponent.builder().appModule(new AppModule(this)).build().inject(this);
+		setUpCategoriesJob();
+	}
+
+	private void setUpCategoriesJob() {
+		FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
+		Job categoriesJob = dispatcher.newJobBuilder().setService(CategoriesJobService.class)
+				.setTag(CategoriesJobService.class.getName()).setRecurring(true).setTrigger(
+						Trigger.executionWindow(12 * 60 * 60, 24 * 60 * 60)).setReplaceCurrent(
+						false).setConstraints(Constraint.ON_UNMETERED_NETWORK,
+						Constraint.DEVICE_CHARGING).setLifetime(Lifetime.UNTIL_NEXT_BOOT).build();
+
+		dispatcher.mustSchedule(categoriesJob);
 	}
 
 	public static CheapListApp get(Context context) {
