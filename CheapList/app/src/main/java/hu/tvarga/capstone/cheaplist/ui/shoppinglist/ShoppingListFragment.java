@@ -2,8 +2,11 @@ package hu.tvarga.capstone.cheaplist.ui.shoppinglist;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,7 +82,58 @@ public class ShoppingListFragment extends DaggerFragment {
 
 		shoppingList.setAdapter(shoppingListAdapter);
 		shoppingList.setHasFixedSize(true);
+		setUpSwipeAction();
 	}
+
+	//region Swipe action
+	private void setUpSwipeAction() {
+		ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(
+				0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+			@Override
+			public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+					RecyclerView.ViewHolder target) {
+				return false;
+			}
+
+			@Override
+			public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+				if (viewHolder instanceof ShoppingListItemHolder) {
+					ShoppingListItemHolder shoppingListItemHolder =
+							(ShoppingListItemHolder) viewHolder;
+					if (shoppingListItemHolder.item != null) {
+						shoppingListManager.removeFromList(shoppingListItemHolder.item);
+						View coordinatorLayout = getActivity().findViewById(R.id.coordinator);
+						if (coordinatorLayout != null) {
+							showSnackBar(coordinatorLayout, shoppingListItemHolder.item,
+									shoppingListManager);
+						}
+					}
+				}
+			}
+		};
+
+		ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+		itemTouchHelper.attachToRecyclerView(shoppingList);
+	}
+
+	private void showSnackBar(View coordinatorLayout, final ShoppingListItem item,
+			final ShoppingListManager shoppingListManager) {
+		Snackbar.make(coordinatorLayout, R.string.removed_from_shopping_list, Snackbar.LENGTH_LONG)
+				.setAction(R.string.undo, new View.OnClickListener() {
+					@Override
+					public void onClick(View undoView) {
+						snackUndoAction(item, shoppingListManager);
+					}
+				}).setActionTextColor(
+				ContextCompat.getColor(coordinatorLayout.getContext(), R.color.secondaryTextColor))
+				.show();
+	}
+
+	private void snackUndoAction(ShoppingListItem item, ShoppingListManager shoppingListManager) {
+		shoppingListManager.addToList(item);
+	}
+	//endregion
 
 	protected FirebaseRecyclerAdapter<ShoppingListItem, ShoppingListItemHolder> getShoppingListAdapter() {
 		if (dbRefForShoppingList == null) {

@@ -40,11 +40,15 @@ public class ShoppingListManager implements FirebaseAuth.AuthStateListener {
 	}
 
 	public void addToList(Item item, Merchant merchant) {
+		ShoppingListItem shoppingListItem = new ShoppingListItem(item, merchant);
+		addToList(shoppingListItem);
+	}
+
+	public void addToList(ShoppingListItem shoppingListItem) {
 		if (databaseReferenceUser == null) {
 			return;
 		}
-		ShoppingListItem shoppingListItem = new ShoppingListItem(item, merchant);
-		databaseReferenceUser.child(item.id).setValue(shoppingListItem);
+		databaseReferenceUser.child(shoppingListItem.id).setValue(shoppingListItem);
 	}
 
 	public void checkItem(ShoppingListItem shoppingListItem) {
