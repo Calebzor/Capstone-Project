@@ -30,6 +30,7 @@ import hu.tvarga.capstone.cheaplist.R;
 import hu.tvarga.capstone.cheaplist.business.ShoppingListManager;
 import hu.tvarga.capstone.cheaplist.dao.Merchant;
 import hu.tvarga.capstone.cheaplist.dao.MerchantCategoryListItem;
+import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.capstone.cheaplist.ui.detail.DetailActivity;
 import timber.log.Timber;
 
@@ -116,7 +117,8 @@ public class CompareFragment extends DaggerFragment {
 			public void populateViewHolder(MerchantCategoryListItemHolder holder,
 					MerchantCategoryListItem item, int position) {
 				holder.bind(item, getActivityCoordinatorLayout(), shoppingListManager,
-						startMerchant, getOnListItemOnClickListener(item));
+						startMerchant,
+						getOnListItemOnClickListener(new ShoppingListItem(item, startMerchant)));
 			}
 
 			@Override
@@ -136,7 +138,7 @@ public class CompareFragment extends DaggerFragment {
 			public void populateViewHolder(MerchantCategoryListItemHolder holder,
 					MerchantCategoryListItem item, int position) {
 				holder.bind(item, getActivityCoordinatorLayout(), shoppingListManager, endMerchant,
-						getOnListItemOnClickListener(item));
+						getOnListItemOnClickListener(new ShoppingListItem(item, endMerchant)));
 			}
 
 			@Override
@@ -147,7 +149,7 @@ public class CompareFragment extends DaggerFragment {
 		};
 	}
 
-	private View.OnClickListener getOnListItemOnClickListener(final MerchantCategoryListItem item) {
+	private View.OnClickListener getOnListItemOnClickListener(final ShoppingListItem item) {
 		return new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -156,7 +158,7 @@ public class CompareFragment extends DaggerFragment {
 				//					targetActivity = ShoppingListActivity.class;
 				//				}
 				Intent intent = new Intent(getContext(), targetActivity);
-				intent.putExtra(DETAIL_ITEM, item.id);
+				intent.putExtra(DETAIL_ITEM, item);
 				startActivity(intent);
 			}
 		};

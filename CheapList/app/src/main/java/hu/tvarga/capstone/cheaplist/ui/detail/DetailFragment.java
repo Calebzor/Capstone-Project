@@ -1,6 +1,7 @@
 package hu.tvarga.capstone.cheaplist.ui.detail;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
@@ -21,11 +22,14 @@ import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Field;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 import hu.tvarga.capstone.cheaplist.R;
+import hu.tvarga.capstone.cheaplist.business.ShoppingListManager;
 import hu.tvarga.capstone.cheaplist.dao.Item;
 import hu.tvarga.capstone.cheaplist.dao.ManufacturerInformation;
 import hu.tvarga.capstone.cheaplist.dao.NutritionInformation;
@@ -58,6 +62,9 @@ public class DetailFragment extends DaggerFragment {
 	@BindView(R.id.detailFab)
 	FloatingActionButton fab;
 
+	@Inject
+	ShoppingListManager shoppingListManager;
+
 	private DatabaseReference itemRef;
 	private ValueEventListener itemEventListener;
 	private DatabaseReference shoppingListItemRef;
@@ -78,12 +85,12 @@ public class DetailFragment extends DaggerFragment {
 		return string.length() == 0 ? getString(R.string.no_data_available) : string;
 	}
 
-	private String itemID;
+	private ShoppingListItem itemFromArgument;
 	private Unbinder unbinder;
 
-	public static DetailFragment newInstance(String itemID) {
+	public static DetailFragment newInstance(ShoppingListItem item) {
 		Bundle arguments = new Bundle();
-		arguments.putString(DETAIL_ITEM, itemID);
+		arguments.putSerializable(DETAIL_ITEM, item);
 		DetailFragment fragment = new DetailFragment();
 		fragment.setArguments(arguments);
 		return fragment;
@@ -94,7 +101,7 @@ public class DetailFragment extends DaggerFragment {
 		super.onCreate(savedInstanceState);
 		setRetainInstance(true);
 		if (getArguments().containsKey(DETAIL_ITEM)) {
-			itemID = getArguments().getString(DETAIL_ITEM);
+			itemFromArgument = (ShoppingListItem) getArguments().getSerializable(DETAIL_ITEM);
 		}
 	}
 
@@ -121,27 +128,34 @@ public class DetailFragment extends DaggerFragment {
 			shoppingListItemEventListener = new ValueEventListener() {
 				@Override
 				public void onDataChange(DataSnapshot dataSnapshot) {
-					ShoppingListItem shoppingListItem = dataSnapshot.getValue(
+					final ShoppingListItem shoppingListItem = dataSnapshot.getValue(
 							ShoppingListItem.class);
 					Timber.d("listItemChange %s", shoppingListItem);
 					if (shoppingListItem != null) {
 						fab.setImageResource(R.drawable.zzz_playlist_minus);
+						fab.setOnClickListener(new View.OnClickListener() {
+							@Override
+							public void onClick(View view) {
+								shoppingListManager.removeFromList(shoppingListItem);
+							}
+						});
 					}
 					else {
 						fab.setImageResource(R.drawable.zzz_playlist_plus);
+						fab.setOnClickListener(getAddToListOnClickListener());
 					}
 				}
 
 				@Override
 				public void onCancelled(DatabaseError databaseError) {
-
+					Timber.d("shoppingListItemEventListener#onCancelled %s", databaseError);
 				}
 			};
 			shoppingListItemRef = FirebaseDatabase.getInstance().getReference().child("userData")
-					.child(currentUser.getUid()).child("shoppingList").child(itemID);
+					.child(currentUser.getUid()).child("shoppingList").child(itemFromArgument.id);
 			shoppingListItemRef.addValueEventListener(shoppingListItemEventListener);
 			itemRef = FirebaseDatabase.getInstance().getReference().child("publicReadable").child(
-					"items").child(itemID);
+					"items").child(itemFromArgument.id);
 			itemEventListener = new ValueEventListener() {
 				@Override
 				public void onDataChange(DataSnapshot dataSnapshot) {
@@ -154,11 +168,21 @@ public class DetailFragment extends DaggerFragment {
 
 				@Override
 				public void onCancelled(DatabaseError databaseError) {
-
+					Timber.d("itemEventListener#onCancelled %s", databaseError);
 				}
 			};
 			itemRef.addValueEventListener(itemEventListener);
 		}
+	}
+
+	@NonNull
+	private View.OnClickListener getAddToListOnClickListener() {
+		return new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				shoppingListManager.addToList(itemFromArgument, itemFromArgument.merchant);
+			}
+		};
 	}
 
 	private void updateUI(Item item) {

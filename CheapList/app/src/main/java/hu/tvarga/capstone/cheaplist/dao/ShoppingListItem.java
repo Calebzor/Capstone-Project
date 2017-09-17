@@ -15,8 +15,8 @@ public class ShoppingListItem extends MerchantCategoryListItem {
 		this.merchant = merchant;
 	}
 
-	public ShoppingListItem(Item item) {
+	public ShoppingListItem(Item item, Merchant merchant) {
 		super(item);
+		this.merchant = merchant;
 	}
-
 }

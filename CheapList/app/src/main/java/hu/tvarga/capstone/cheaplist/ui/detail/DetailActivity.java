@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 
 import butterknife.ButterKnife;
 import hu.tvarga.capstone.cheaplist.R;
+import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.capstone.cheaplist.ui.AuthBaseActivity;
 
 public class DetailActivity extends AuthBaseActivity {
@@ -12,7 +13,7 @@ public class DetailActivity extends AuthBaseActivity {
 	public static final String DETAIL_ITEM = "DETAIL_ITEM";
 	public static final String DETAIL_FRAGMENT_INSTANCE_KEY = "DETAIL_FRAGMENT_INSTANCE_KEY";
 
-	private String currentShoppingListDetailItem;
+	private ShoppingListItem currentShoppingListDetailItem;
 
 	private DetailFragment detailFragment;
 
@@ -24,11 +25,12 @@ public class DetailActivity extends AuthBaseActivity {
 
 		Bundle extras = getIntent().getExtras();
 		if (extras.containsKey(DETAIL_ITEM)) {
-			currentShoppingListDetailItem = extras.getString(DETAIL_ITEM);
+			currentShoppingListDetailItem = (ShoppingListItem) extras.getSerializable(DETAIL_ITEM);
 		}
 
 		if (savedInstanceState != null) {
-			currentShoppingListDetailItem = savedInstanceState.getString(DETAIL_ITEM);
+			currentShoppingListDetailItem = (ShoppingListItem) savedInstanceState.getSerializable(
+					DETAIL_ITEM);
 			detailFragment = (DetailFragment) getSupportFragmentManager().getFragment(
 					savedInstanceState, DETAIL_FRAGMENT_INSTANCE_KEY);
 		}
@@ -44,7 +46,7 @@ public class DetailActivity extends AuthBaseActivity {
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.getString(DETAIL_ITEM, currentShoppingListDetailItem);
+		outState.putSerializable(DETAIL_ITEM, currentShoppingListDetailItem);
 		getSupportFragmentManager().putFragment(outState, DETAIL_FRAGMENT_INSTANCE_KEY,
 				detailFragment);
 	}

@@ -32,7 +32,7 @@ public class ShoppingListManager implements FirebaseAuth.AuthStateListener {
 		FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 		if (currentUser != null) {
 			databaseReferenceUser = firebaseDatabase.getReference().child("userData").child(
-					currentUser.getUid());
+					currentUser.getUid()).child("shoppingList");
 		}
 		else {
 			databaseReferenceUser = null;
@@ -43,10 +43,16 @@ public class ShoppingListManager implements FirebaseAuth.AuthStateListener {
 		if (databaseReferenceUser == null) {
 			return;
 		}
-		final ShoppingListItem shoppingListItem = new ShoppingListItem(item);
+		ShoppingListItem shoppingListItem = new ShoppingListItem(item, merchant);
+		databaseReferenceUser.child(item.id).setValue(shoppingListItem);
+	}
+
+	public void checkItem(ShoppingListItem shoppingListItem) {
+		if (databaseReferenceUser == null) {
+			return;
+		}
 		shoppingListItem.checked = true;
-		shoppingListItem.merchant = merchant;
-		databaseReferenceUser.child("shoppingList").child(item.id).setValue(shoppingListItem);
+		databaseReferenceUser.child(shoppingListItem.id).setValue(shoppingListItem);
 	}
 
 	public void unCheckItem(ShoppingListItem shoppingListItem) {
@@ -54,16 +60,13 @@ public class ShoppingListManager implements FirebaseAuth.AuthStateListener {
 			return;
 		}
 		shoppingListItem.checked = false;
-		databaseReferenceUser.child("shoppingList").child(shoppingListItem.id).setValue(
-				shoppingListItem);
+		databaseReferenceUser.child(shoppingListItem.id).setValue(shoppingListItem);
 	}
 
 	public void removeFromList(Item item) {
 		if (databaseReferenceUser == null) {
 			return;
 		}
-		ShoppingListItem shoppingListItem = new ShoppingListItem(item);
-		shoppingListItem.checked = false;
-		databaseReferenceUser.child("shoppingList").child(item.id).setValue(null);
+		databaseReferenceUser.child(item.id).setValue(null);
 	}
 }
