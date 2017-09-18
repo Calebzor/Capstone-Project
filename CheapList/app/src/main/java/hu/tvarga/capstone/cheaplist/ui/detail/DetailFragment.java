@@ -239,7 +239,7 @@ public class DetailFragment extends DaggerFragment {
 						name.setText(nutritionLocalizedName);
 					}
 					TextView value = view.findViewById(R.id.nutritionValue);
-					String unit = " g";
+					String unit = getString(R.string.gram);
 					value.setText(nutritionValue + unit);
 					detailNutritionInformation.addView(view);
 				}
@@ -254,7 +254,7 @@ public class DetailFragment extends DaggerFragment {
 			TextView name = view.findViewById(R.id.nutritionName);
 			name.setText(R.string.energy);
 			TextView value = view.findViewById(R.id.nutritionValue);
-			String unit = " kcal";
+			String unit = getString(R.string.kcal);
 			value.setText(energy + unit);
 			detailNutritionInformation.addView(view);
 		}

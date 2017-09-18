@@ -20,4 +20,9 @@
 	<string name="shopping_list_menu_item">Shopping list</string>
 	<string name="compare_menu_item">Compare</string>
 	<string name="product_image">Product image</string>
+	<string name="signed_in">Signed in!</string>
+	<string name="sign_in_canceled">Sign in canceled</string>
+	<string name="add_remove_from_list_action">Add or remove from shopping list action</string>
+	<string name="kcal"> kcal</string>
+	<string name="gram"> g</string>
 </resources>

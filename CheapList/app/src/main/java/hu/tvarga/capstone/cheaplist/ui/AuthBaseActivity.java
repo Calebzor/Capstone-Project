@@ -103,10 +103,11 @@ public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (RC_SIGN_IN == requestCode) {
 			if (RESULT_OK == resultCode) {
-				Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, getString(R.string.signed_in), Toast.LENGTH_SHORT).show();
 			}
 			else if (RESULT_CANCELED == resultCode) {
-				Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, getString(R.string.sign_in_canceled), Toast.LENGTH_SHORT)
+						.show();
 				finish();
 			}
 		}
