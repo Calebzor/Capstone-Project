@@ -44,6 +44,10 @@ public class CompareFragment extends DaggerFragment {
 
 	public static final String ARG_CATEGORY = "ARG_CATEGORY";
 	private static final String ARG_MERCHANT_MAP = "ARG_MERCHANT_MAP";
+	public static final String START_POS_INDEX = "START_POS_INDEX";
+	public static final String START_TOP_VIEW = "START_TOP_VIEW";
+	public static final String END_POS_INDEX = "END_POS_INDEX";
+	public static final String END_TOP_VIEW = "END_TOP_VIEW";
 
 	@BindView(R.id.startEmptyText)
 	TextView startEmptyText;
@@ -65,6 +69,12 @@ public class CompareFragment extends DaggerFragment {
 	protected DatabaseReference endMerchantItemsDBRef;
 	private Merchant startMerchant;
 	private Merchant endMerchant;
+	private LinearLayoutManager startLayoutManager;
+	private LinearLayoutManager endLayoutManager;
+	private int startPositionIndex;
+	private int endPositionIndex;
+	private int startTopView;
+	private int endTopView;
 
 	public static Fragment newInstance(String categoryName, Map<String, Merchant> merchantMap) {
 		Bundle arguments = new Bundle();
@@ -183,11 +193,22 @@ public class CompareFragment extends DaggerFragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public void onResume() {
+		super.onResume();
+		startLayoutManager.scrollToPositionWithOffset(startPositionIndex, startTopView);
+		endLayoutManager.scrollToPositionWithOffset(endPositionIndex, endTopView);
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_compare, container, false);
 		unbinder = ButterKnife.bind(this, rootView);
-
+		if (savedInstanceState != null) {
+			startPositionIndex = savedInstanceState.getInt(START_POS_INDEX);
+			startTopView = savedInstanceState.getInt(START_TOP_VIEW);
+			endPositionIndex = savedInstanceState.getInt(END_POS_INDEX);
+			endTopView = savedInstanceState.getInt(END_TOP_VIEW);
+		}
 		return rootView;
 	}
 
@@ -210,14 +231,32 @@ public class CompareFragment extends DaggerFragment {
 				}
 			}
 
-			LinearLayoutManager startLayoutManager = new LinearLayoutManager(getActivity());
+			startLayoutManager = new LinearLayoutManager(getActivity());
 			startLayoutManager.setReverseLayout(false);
-			LinearLayoutManager endLayoutManager = new LinearLayoutManager(getActivity());
+			endLayoutManager = new LinearLayoutManager(getActivity());
 			endLayoutManager.setReverseLayout(false);
 
 			startItems.setLayoutManager(startLayoutManager);
 			endItems.setLayoutManager(endLayoutManager);
 		}
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		startPositionIndex = startLayoutManager.findFirstVisibleItemPosition();
+		endPositionIndex = endLayoutManager.findFirstVisibleItemPosition();
+		View startView = startItems.getChildAt(0);
+		View endView = endItems.getChildAt(0);
+
+		startTopView = (startView == null) ? 0 : (startView.getTop() - startItems.getPaddingTop());
+		endTopView = (endView == null) ? 0 : (endView.getTop() - endItems.getPaddingTop());
+
+		outState.putInt(START_POS_INDEX, startPositionIndex);
+		outState.putInt(START_TOP_VIEW, startTopView);
+		outState.putInt(END_POS_INDEX, endPositionIndex);
+		outState.putInt(END_TOP_VIEW, endTopView);
+		super.onSaveInstanceState(outState);
+
 	}
 
 	@Override
