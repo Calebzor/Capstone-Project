@@ -243,18 +243,21 @@ public class CompareFragment extends DaggerFragment {
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
-		startPositionIndex = startLayoutManager.findFirstVisibleItemPosition();
-		endPositionIndex = endLayoutManager.findFirstVisibleItemPosition();
-		View startView = startItems.getChildAt(0);
-		View endView = endItems.getChildAt(0);
+		if (startItems != null && endItems != null) {
+			startPositionIndex = startLayoutManager.findFirstVisibleItemPosition();
+			endPositionIndex = endLayoutManager.findFirstVisibleItemPosition();
+			View startView = startItems.getChildAt(0);
+			View endView = endItems.getChildAt(0);
 
-		startTopView = (startView == null) ? 0 : (startView.getTop() - startItems.getPaddingTop());
-		endTopView = (endView == null) ? 0 : (endView.getTop() - endItems.getPaddingTop());
+			startTopView =
+					(startView == null) ? 0 : (startView.getTop() - startItems.getPaddingTop());
+			endTopView = (endView == null) ? 0 : (endView.getTop() - endItems.getPaddingTop());
 
-		outState.putInt(START_POS_INDEX, startPositionIndex);
-		outState.putInt(START_TOP_VIEW, startTopView);
-		outState.putInt(END_POS_INDEX, endPositionIndex);
-		outState.putInt(END_TOP_VIEW, endTopView);
+			outState.putInt(START_POS_INDEX, startPositionIndex);
+			outState.putInt(START_TOP_VIEW, startTopView);
+			outState.putInt(END_POS_INDEX, endPositionIndex);
+			outState.putInt(END_TOP_VIEW, endTopView);
+		}
 		super.onSaveInstanceState(outState);
 
 	}
