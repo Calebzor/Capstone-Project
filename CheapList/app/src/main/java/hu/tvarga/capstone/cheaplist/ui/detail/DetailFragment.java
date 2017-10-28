@@ -38,6 +38,7 @@ import timber.log.Timber;
 
 import static hu.tvarga.capstone.cheaplist.NutritionNameHelper.getNutritionLocalizedName;
 import static hu.tvarga.capstone.cheaplist.ui.detail.DetailActivity.DETAIL_ITEM;
+import static hu.tvarga.capstone.cheaplist.ui.detail.DetailActivity.IMAGE_TRANSITION_NAME;
 
 public class DetailFragment extends DaggerFragment {
 
@@ -106,6 +107,9 @@ public class DetailFragment extends DaggerFragment {
 		setRetainInstance(true);
 		if (getArguments().containsKey(DETAIL_ITEM)) {
 			itemFromArgument = (ShoppingListItem) getArguments().getSerializable(DETAIL_ITEM);
+		}
+		if (getArguments().containsKey(IMAGE_TRANSITION_NAME)) {
+			imageTransitionName = getArguments().getString(IMAGE_TRANSITION_NAME);
 		}
 	}
 
@@ -273,5 +277,6 @@ public class DetailFragment extends DaggerFragment {
 
 	public void setImageTransitionName(String imageTransitionName) {
 		this.imageTransitionName = imageTransitionName;
+		getArguments().putString(IMAGE_TRANSITION_NAME, imageTransitionName);
 	}
 }
