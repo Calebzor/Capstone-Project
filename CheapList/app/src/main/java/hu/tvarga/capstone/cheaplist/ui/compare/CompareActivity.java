@@ -145,8 +145,9 @@ public class CompareActivity extends AuthBaseActivity {
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
+		currentPage = pager.getCurrentItem();
+		outState.putInt(PAGE_ITEM, currentPage);
 		super.onSaveInstanceState(outState);
-		outState.putInt(PAGE_ITEM, pager.getCurrentItem());
 	}
 
 	private class CategoryPagerAdapter extends FragmentStatePagerAdapter {
