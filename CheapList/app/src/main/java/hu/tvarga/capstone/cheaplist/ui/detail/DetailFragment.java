@@ -69,6 +69,7 @@ public class DetailFragment extends DaggerFragment {
 	private ValueEventListener itemEventListener;
 	private DatabaseReference shoppingListItemRef;
 	private ValueEventListener shoppingListItemEventListener;
+	private String imageTransitionName;
 
 	private String getManufacturerInformation(ManufacturerInformation manufacturerInformation) {
 		StringBuilder sb = new StringBuilder();
@@ -124,6 +125,8 @@ public class DetailFragment extends DaggerFragment {
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 		unbinder = ButterKnife.bind(this, rootView);
+		detailImage = rootView.findViewById(R.id.detailImage);
+		detailImage.setTransitionName(imageTransitionName);
 
 		return rootView;
 	}
@@ -268,4 +271,7 @@ public class DetailFragment extends DaggerFragment {
 		itemRef.removeEventListener(itemEventListener);
 	}
 
+	public void setImageTransitionName(String imageTransitionName) {
+		this.imageTransitionName = imageTransitionName;
+	}
 }

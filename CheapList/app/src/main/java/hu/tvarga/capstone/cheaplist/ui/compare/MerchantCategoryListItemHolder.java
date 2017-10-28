@@ -2,6 +2,7 @@ package hu.tvarga.capstone.cheaplist.ui.compare;
 
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -40,12 +41,14 @@ public class MerchantCategoryListItemHolder extends RecyclerView.ViewHolder {
 
 	public void bind(final MerchantCategoryListItem item, final View coordinatorLayout,
 			final ShoppingListManager shoppingListManager, final Merchant merchant,
-			View.OnClickListener onClickListener) {
+			View.OnClickListener onClickListener, int position) {
 		name.setText(item.name != null ? item.name.trim() : null);
 		price.setText(String.format("%s %s", item.price, item.currency));
 		pricePerUnit.setText(
 				String.format("%s %s %s", item.pricePerUnit, item.currency, item.unit));
 		Picasso.with(itemView.getContext()).load(item.imageURL).into(image);
+
+		ViewCompat.setTransitionName(image, String.valueOf(position) + "_itemImage");
 
 		itemContainer.setOnClickListener(onClickListener);
 

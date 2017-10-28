@@ -11,9 +11,11 @@ import hu.tvarga.capstone.cheaplist.ui.AdShowingActivity;
 public class DetailActivity extends AdShowingActivity {
 
 	public static final String DETAIL_ITEM = "DETAIL_ITEM";
+	public static final String IMAGE_TRANSITION_NAME = "IMAGE_TRANSITION_NAME";
 	public static final String DETAIL_FRAGMENT_INSTANCE_KEY = "DETAIL_FRAGMENT_INSTANCE_KEY";
 
 	private ShoppingListItem currentShoppingListDetailItem;
+	private String transitionName;
 
 	private DetailFragment detailFragment;
 
@@ -27,10 +29,14 @@ public class DetailActivity extends AdShowingActivity {
 		if (extras.containsKey(DETAIL_ITEM)) {
 			currentShoppingListDetailItem = (ShoppingListItem) extras.getSerializable(DETAIL_ITEM);
 		}
+		if (extras.containsKey(IMAGE_TRANSITION_NAME)) {
+			transitionName = extras.getString(IMAGE_TRANSITION_NAME);
+		}
 
 		if (savedInstanceState != null) {
 			currentShoppingListDetailItem = (ShoppingListItem) savedInstanceState.getSerializable(
 					DETAIL_ITEM);
+			transitionName = savedInstanceState.getString(IMAGE_TRANSITION_NAME);
 			detailFragment = (DetailFragment) getSupportFragmentManager().getFragment(
 					savedInstanceState, DETAIL_FRAGMENT_INSTANCE_KEY);
 		}
@@ -39,6 +45,7 @@ public class DetailActivity extends AdShowingActivity {
 			detailFragment = DetailFragment.newInstance(currentShoppingListDetailItem);
 		}
 
+		detailFragment.setImageTransitionName(transitionName);
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		fragmentManager.beginTransaction().replace(R.id.startPane, detailFragment).commit();
 	}
@@ -47,6 +54,7 @@ public class DetailActivity extends AdShowingActivity {
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putSerializable(DETAIL_ITEM, currentShoppingListDetailItem);
+		outState.putString(IMAGE_TRANSITION_NAME, transitionName);
 		getSupportFragmentManager().putFragment(outState, DETAIL_FRAGMENT_INSTANCE_KEY,
 				detailFragment);
 	}

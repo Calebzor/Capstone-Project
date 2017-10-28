@@ -38,6 +38,7 @@ import timber.log.Timber;
 
 import static hu.tvarga.capstone.cheaplist.R.bool.multipane;
 import static hu.tvarga.capstone.cheaplist.ui.detail.DetailActivity.DETAIL_ITEM;
+import static hu.tvarga.capstone.cheaplist.ui.detail.DetailActivity.IMAGE_TRANSITION_NAME;
 
 public class CompareFragment extends DaggerFragment {
 
@@ -122,7 +123,7 @@ public class CompareFragment extends DaggerFragment {
 				holder.bind(item, getActivityCoordinatorLayout(), shoppingListManager,
 						startMerchant,
 						getOnListItemOnClickListener(new ShoppingListItem(item, startMerchant),
-								holder));
+								holder), position);
 			}
 
 			@Override
@@ -142,7 +143,7 @@ public class CompareFragment extends DaggerFragment {
 					MerchantCategoryListItem item, int position) {
 				holder.bind(item, getActivityCoordinatorLayout(), shoppingListManager, endMerchant,
 						getOnListItemOnClickListener(new ShoppingListItem(item, endMerchant),
-								holder));
+								holder), position);
 			}
 
 			@Override
@@ -162,9 +163,11 @@ public class CompareFragment extends DaggerFragment {
 					targetActivity = ShoppingListActivity.class;
 				}
 				Intent intent = new Intent(getContext(), targetActivity);
+				String transitionName = holder.image.getTransitionName();
 				ActivityOptionsCompat options = ActivityOptionsCompat.
-						makeSceneTransitionAnimation(getActivity(), holder.image, "itemImage");
+						makeSceneTransitionAnimation(getActivity(), holder.image, transitionName);
 				intent.putExtra(DETAIL_ITEM, item);
+				intent.putExtra(IMAGE_TRANSITION_NAME, transitionName);
 				startActivity(intent, options.toBundle());
 			}
 		};
