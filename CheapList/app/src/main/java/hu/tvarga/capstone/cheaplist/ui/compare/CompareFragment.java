@@ -3,6 +3,7 @@ package hu.tvarga.capstone.cheaplist.ui.compare;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -120,7 +121,8 @@ public class CompareFragment extends DaggerFragment {
 					MerchantCategoryListItem item, int position) {
 				holder.bind(item, getActivityCoordinatorLayout(), shoppingListManager,
 						startMerchant,
-						getOnListItemOnClickListener(new ShoppingListItem(item, startMerchant)));
+						getOnListItemOnClickListener(new ShoppingListItem(item, startMerchant),
+								holder));
 			}
 
 			@Override
@@ -139,7 +141,8 @@ public class CompareFragment extends DaggerFragment {
 			public void populateViewHolder(MerchantCategoryListItemHolder holder,
 					MerchantCategoryListItem item, int position) {
 				holder.bind(item, getActivityCoordinatorLayout(), shoppingListManager, endMerchant,
-						getOnListItemOnClickListener(new ShoppingListItem(item, endMerchant)));
+						getOnListItemOnClickListener(new ShoppingListItem(item, endMerchant),
+								holder));
 			}
 
 			@Override
@@ -149,7 +152,8 @@ public class CompareFragment extends DaggerFragment {
 		};
 	}
 
-	private View.OnClickListener getOnListItemOnClickListener(final ShoppingListItem item) {
+	private View.OnClickListener getOnListItemOnClickListener(final ShoppingListItem item,
+			final MerchantCategoryListItemHolder holder) {
 		return new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -158,8 +162,10 @@ public class CompareFragment extends DaggerFragment {
 					targetActivity = ShoppingListActivity.class;
 				}
 				Intent intent = new Intent(getContext(), targetActivity);
+				ActivityOptionsCompat options = ActivityOptionsCompat.
+						makeSceneTransitionAnimation(getActivity(), holder.image, "itemImage");
 				intent.putExtra(DETAIL_ITEM, item);
-				startActivity(intent);
+				startActivity(intent, options.toBundle());
 			}
 		};
 	}
