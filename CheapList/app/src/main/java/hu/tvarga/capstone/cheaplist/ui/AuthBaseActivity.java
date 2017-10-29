@@ -75,10 +75,12 @@ public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 				AuthUI.getInstance().signOut(this);
 				return true;
 			case R.id.shoppingListMenuItem:
-				startActivity(new Intent(this, ShoppingListActivity.class));
+				// TODO 29-Oct-2017/vatam: put intent
+				startActivity(new Intent(this, MainActivity.class));
 				return true;
 			case R.id.compareMenuItem:
-				startActivity(new Intent(this, CompareActivity.class));
+				// TODO 29-Oct-2017/vatam: put intent
+				startActivity(new Intent(this, MainActivity.class));
 				return true;
 		}
 		return super.onOptionsItemSelected(item);

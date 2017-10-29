@@ -17,4 +17,5 @@
 	<dimen name="shopping_list_text_top_padding">2dp</dimen>
 	<dimen name="shopping_list_item_price_per_unit_text_size">10sp</dimen>
 	<dimen name="shopping_list_item_margin">1dp</dimen>
+	<dimen name="compareToolbarIconSize">24dp</dimen>
 </resources>

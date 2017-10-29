@@ -1,59 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout
+	android:id="@+id/mainContainer"
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
-	android:id="@+id/fragmentCompareContainer"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:orientation="horizontal"
-	android:weightSum="2"
-	android:baselineAligned="false">
+	android:focusable="true"
+	android:focusableInTouchMode="true"
+	android:orientation="vertical">
 
-	<FrameLayout
-		android:layout_width="0dp"
-		android:layout_height="match_parent"
-		android:layout_weight="1">
+	<RelativeLayout
+		android:id="@+id/compareSearchBarContainer"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@color/primaryLightColor"
+		android:paddingEnd="8dp"
+		android:paddingStart="8dp">
 
-		<TextView
-			android:id="@+id/startEmptyText"
-			style="@style/TextAppearance.AppCompat.Subhead"
-			android:layout_width="match_parent"
+		<android.support.v7.widget.AppCompatEditText
+			android:id="@+id/compareSearchInput"
+			style="@style/Base.V7.Widget.AppCompat.EditText"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_gravity="center"
-			android:layout_marginBottom="@dimen/detail_inner_horizontal_margin"
-			android:gravity="center"
-			android:text="@string/no_data_available"
+			android:layout_alignParentStart="true"
+			android:layout_toStartOf="@id/compareFilterButton"
+			android:layout_marginEnd="8dp"
+			android:hint="@string/filter"
+			android:lines="1" />
+
+		<ProgressBar
+			android:id="@+id/compareProgressBar"
+			android:layout_width="wrap_content"
+			android:layout_height="@dimen/compareToolbarIconSize"
+			android:layout_alignParentEnd="true"
+			android:layout_centerInParent="true"
+			android:indeterminate="true"
 			/>
 
-		<android.support.v7.widget.RecyclerView
-			android:id="@+id/itemsListStart"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			tools:listitem="@layout/merchant_category_list_item_start" />
-	</FrameLayout>
+		<android.support.v7.widget.AppCompatImageView
+			android:id="@+id/compareFilterButton"
+			android:layout_width="wrap_content"
+			android:layout_height="@dimen/compareToolbarIconSize"
+			android:layout_alignParentEnd="true"
+			android:layout_centerInParent="true"
+			android:contentDescription="@string/filter"
+			android:tint="@color/secondaryTextColor"
+			android:visibility="invisible"
+			app:srcCompat="@drawable/zzz_filter" />
+	</RelativeLayout>
 
-	<FrameLayout
-		android:layout_width="0dp"
+	<LinearLayout
+		android:id="@+id/fragmentCompareContainer"
+		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:layout_weight="1">
+		android:baselineAligned="false"
+		android:orientation="horizontal"
+		android:weightSum="2">
 
-		<TextView
-			android:id="@+id/endEmptyText"
-			style="@style/TextAppearance.AppCompat.Subhead"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center"
-			android:layout_marginBottom="@dimen/detail_inner_horizontal_margin"
-			android:gravity="center"
-			android:text="@string/no_data_available"
-			/>
-
-		<android.support.v7.widget.RecyclerView
-			android:id="@+id/itemListEnd"
-			android:layout_width="match_parent"
+		<FrameLayout
+			android:id="@+id/startContainer"
+			android:layout_width="0dp"
 			android:layout_height="match_parent"
-			tools:listitem="@layout/merchant_category_list_item_start" />
-	</FrameLayout>
+			android:layout_weight="1">
+
+			<TextView
+				android:id="@+id/startEmptyText"
+				style="@style/TextAppearance.AppCompat.Subhead"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:layout_marginBottom="@dimen/detail_inner_horizontal_margin"
+				android:gravity="center"
+				android:text="@string/no_data_available"
+				/>
+
+			<android.support.v7.widget.RecyclerView
+				android:id="@+id/itemsListStart"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+				tools:listitem="@layout/merchant_category_list_item_start" />
+		</FrameLayout>
+
+		<FrameLayout
+			android:id="@+id/endContainer"
+			android:layout_width="0dp"
+			android:layout_height="match_parent"
+			android:layout_weight="1">
+
+			<TextView
+				android:id="@+id/endEmptyText"
+				style="@style/TextAppearance.AppCompat.Subhead"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:layout_marginBottom="@dimen/detail_inner_horizontal_margin"
+				android:gravity="center"
+				android:text="@string/no_data_available"
+				/>
+
+			<android.support.v7.widget.RecyclerView
+				android:id="@+id/itemListEnd"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+				tools:listitem="@layout/merchant_category_list_item_end" />
+		</FrameLayout>
+	</LinearLayout>
+
 </LinearLayout>
-

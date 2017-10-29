@@ -25,4 +25,5 @@
 	<string name="add_remove_from_list_action">Add or remove from shopping list action</string>
 	<string name="kcal"> kcal</string>
 	<string name="gram"> g</string>
+	<string name="filter">Filter</string>
 </resources>
