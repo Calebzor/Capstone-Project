@@ -1,9 +1,7 @@
 package hu.tvarga.capstone.cheaplist.ui.compare;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.AppCompatImageView;
@@ -30,12 +28,9 @@ import hu.tvarga.capstone.cheaplist.business.compare.CompareContract;
 import hu.tvarga.capstone.cheaplist.business.compare.ComparePresenter;
 import hu.tvarga.capstone.cheaplist.dao.Merchant;
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
-import hu.tvarga.capstone.cheaplist.ui.detail.DetailActivity;
-import hu.tvarga.capstone.cheaplist.ui.shoppinglist.ShoppingListActivity;
+import hu.tvarga.capstone.cheaplist.ui.detail.DetailFragment;
 
-import static hu.tvarga.capstone.cheaplist.R.bool.multipane;
-import static hu.tvarga.capstone.cheaplist.ui.detail.DetailActivity.DETAIL_ITEM;
-import static hu.tvarga.capstone.cheaplist.ui.detail.DetailActivity.IMAGE_TRANSITION_NAME;
+import static hu.tvarga.capstone.cheaplist.ui.detail.DetailFragment.FRAGMENT_TAG;
 
 public class CompareFragment extends DaggerFragment implements CompareContract.View {
 
@@ -84,17 +79,11 @@ public class CompareFragment extends DaggerFragment implements CompareContract.V
 		return new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				Class<?> targetActivity = DetailActivity.class;
-				if (getResources().getBoolean(multipane)) {
-					targetActivity = ShoppingListActivity.class;
-				}
-				Intent intent = new Intent(getContext(), targetActivity);
-				String transitionName = holder.image.getTransitionName();
-				ActivityOptionsCompat options = ActivityOptionsCompat.
-						makeSceneTransitionAnimation(getActivity(), holder.image, transitionName);
-				intent.putExtra(DETAIL_ITEM, item);
-				intent.putExtra(IMAGE_TRANSITION_NAME, transitionName);
-				startActivity(intent, options.toBundle());
+				DetailFragment details = DetailFragment.newInstance(item);
+				getActivity().getSupportFragmentManager().beginTransaction().addSharedElement(
+						holder.image, getString(R.string.detailImageTransition)).replace(
+						R.id.mainActivityFragmentContainer, details).addToBackStack(FRAGMENT_TAG)
+						.commit();
 			}
 		};
 	}

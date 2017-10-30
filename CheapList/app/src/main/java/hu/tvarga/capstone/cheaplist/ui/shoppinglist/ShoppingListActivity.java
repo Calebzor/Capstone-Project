@@ -14,7 +14,6 @@ import hu.tvarga.capstone.cheaplist.ui.detail.DetailFragment;
 import static hu.tvarga.capstone.cheaplist.R.bool.multipane;
 import static hu.tvarga.capstone.cheaplist.ui.detail.DetailActivity.DETAIL_FRAGMENT_INSTANCE_KEY;
 import static hu.tvarga.capstone.cheaplist.ui.detail.DetailActivity.DETAIL_ITEM;
-import static hu.tvarga.capstone.cheaplist.ui.detail.DetailActivity.IMAGE_TRANSITION_NAME;
 
 public class ShoppingListActivity extends AdShowingActivity
 		implements ShoppingListFragment.ShoppingListItemClickAction {
@@ -25,7 +24,6 @@ public class ShoppingListActivity extends AdShowingActivity
 	private ShoppingListItem currentShoppingListDetailItem;
 	private DetailFragment detailFragment;
 	private ShoppingListFragment shoppingListFragment;
-	private String transitionName;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -37,14 +35,10 @@ public class ShoppingListActivity extends AdShowingActivity
 		if (extras != null && extras.containsKey(DETAIL_ITEM)) {
 			currentShoppingListDetailItem = (ShoppingListItem) extras.getSerializable(DETAIL_ITEM);
 		}
-		if (extras != null && extras.containsKey(IMAGE_TRANSITION_NAME)) {
-			transitionName = extras.getString(IMAGE_TRANSITION_NAME);
-		}
 
 		if (savedInstanceState != null) {
 			currentShoppingListDetailItem = (ShoppingListItem) savedInstanceState.getSerializable(
 					DETAIL_ITEM);
-			transitionName = savedInstanceState.getString(IMAGE_TRANSITION_NAME);
 			detailFragment = (DetailFragment) getSupportFragmentManager().getFragment(
 					savedInstanceState, DETAIL_FRAGMENT_INSTANCE_KEY);
 			shoppingListFragment = (ShoppingListFragment) getSupportFragmentManager().getFragment(
@@ -60,7 +54,6 @@ public class ShoppingListActivity extends AdShowingActivity
 
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		if (isMultiPane() && detailFragment != null) {
-			detailFragment.setImageTransitionName(transitionName);
 			fragmentManager.beginTransaction().replace(R.id.endPane, detailFragment).commit();
 		}
 		fragmentManager.beginTransaction().replace(R.id.startPane, shoppingListFragment).commit();
@@ -86,7 +79,6 @@ public class ShoppingListActivity extends AdShowingActivity
 		super.onSaveInstanceState(outState);
 		if (isMultiPane()) {
 			outState.putSerializable(DETAIL_ITEM, currentShoppingListDetailItem);
-			outState.putString(IMAGE_TRANSITION_NAME, transitionName);
 			if (detailFragment != null) {
 				getSupportFragmentManager().putFragment(outState, DETAIL_FRAGMENT_INSTANCE_KEY,
 						detailFragment);

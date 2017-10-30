@@ -38,49 +38,36 @@
 					android:layout_marginBottom="4dp"
 					android:background="?selectableItemBackground" />
 
-				<RelativeLayout
-					android:layout_width="match_parent"
+				<LinearLayout
+					android:id="@+id/priceContainer"
+					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:layout_marginBottom="8dp"
-					android:layout_marginEnd="64dp">
+					android:orientation="vertical">
 
-					<ImageView
-						android:id="@+id/detailImage"
+					<TextView
+						android:id="@+id/detailPrice"
+						style="@style/TextAppearance.AppCompat.Headline"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						android:layout_alignParentStart="true"
-						android:adjustViewBounds="true"
-						android:contentDescription="@string/product_image"
-						android:layout_toStartOf="@+id/priceContainer"
-						android:scaleType="fitXY"
-						tools:layout_height="100dp"
-						tools:layout_width="100dp"
-						tools:src="@color/primaryColor" />
+						tools:text="detailPrice" />
 
-					<LinearLayout
-						android:id="@+id/priceContainer"
+					<TextView
+						android:id="@+id/detailPricePerUnit"
+						style="@style/TextAppearance.AppCompat.Subhead"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						android:layout_alignParentEnd="true"
-						android:paddingStart="4dp"
-						android:orientation="vertical">
+						tools:text="detailPricePerUnit" />
 
-						<TextView
-							android:id="@+id/detailPrice"
-							style="@style/TextAppearance.AppCompat.Headline"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"
-							tools:text="detailPrice" />
+				</LinearLayout>
 
-						<TextView
-							android:id="@+id/detailPricePerUnit"
-							style="@style/TextAppearance.AppCompat.Subhead"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"
-							tools:text="detailPricePerUnit" />
-
-					</LinearLayout>
-				</RelativeLayout>
+				<ImageView
+					android:id="@+id/detailImage"
+					android:layout_width="match_parent"
+					android:layout_height="250dp"
+					android:contentDescription="@string/product_image"
+					android:scaleType="fitCenter"
+					android:transitionName="@string/detailImageTransition"
+					tools:src="@color/primaryColor" />
 
 				<TextView
 					android:id="@+id/detailNutritionTitle"

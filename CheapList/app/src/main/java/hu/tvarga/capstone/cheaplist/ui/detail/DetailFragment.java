@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,9 +39,10 @@ import timber.log.Timber;
 
 import static hu.tvarga.capstone.cheaplist.NutritionNameHelper.getNutritionLocalizedName;
 import static hu.tvarga.capstone.cheaplist.ui.detail.DetailActivity.DETAIL_ITEM;
-import static hu.tvarga.capstone.cheaplist.ui.detail.DetailActivity.IMAGE_TRANSITION_NAME;
 
 public class DetailFragment extends DaggerFragment {
+
+	public static final String FRAGMENT_TAG = DetailFragment.class.getName();
 
 	@BindView(R.id.detailItemTitle)
 	TextView detailItemTitle;
@@ -70,7 +72,6 @@ public class DetailFragment extends DaggerFragment {
 	private ValueEventListener itemEventListener;
 	private DatabaseReference shoppingListItemRef;
 	private ValueEventListener shoppingListItemEventListener;
-	private String imageTransitionName;
 
 	private String getManufacturerInformation(ManufacturerInformation manufacturerInformation) {
 		StringBuilder sb = new StringBuilder();
@@ -104,12 +105,11 @@ public class DetailFragment extends DaggerFragment {
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setSharedElementEnterTransition(
+				TransitionInflater.from(getContext()).inflateTransition(android.R.transition.move));
 		setRetainInstance(true);
 		if (getArguments().containsKey(DETAIL_ITEM)) {
 			itemFromArgument = (ShoppingListItem) getArguments().getSerializable(DETAIL_ITEM);
-		}
-		if (getArguments().containsKey(IMAGE_TRANSITION_NAME)) {
-			imageTransitionName = getArguments().getString(IMAGE_TRANSITION_NAME);
 		}
 	}
 
@@ -129,9 +129,6 @@ public class DetailFragment extends DaggerFragment {
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 		unbinder = ButterKnife.bind(this, rootView);
-		detailImage = rootView.findViewById(R.id.detailImage);
-		detailImage.setTransitionName(imageTransitionName);
-
 		return rootView;
 	}
 
@@ -275,8 +272,4 @@ public class DetailFragment extends DaggerFragment {
 		itemRef.removeEventListener(itemEventListener);
 	}
 
-	public void setImageTransitionName(String imageTransitionName) {
-		this.imageTransitionName = imageTransitionName;
-		getArguments().putString(IMAGE_TRANSITION_NAME, imageTransitionName);
-	}
 }

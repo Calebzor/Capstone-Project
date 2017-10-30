@@ -48,7 +48,8 @@ public class MerchantCategoryListItemHolder extends RecyclerView.ViewHolder {
 				String.format("%s %s %s", item.pricePerUnit, item.currency, item.unit));
 		Picasso.with(itemView.getContext()).load(item.imageURL).into(image);
 
-		ViewCompat.setTransitionName(image, String.valueOf(position) + "_itemImage");
+		ViewCompat.setTransitionName(image,
+				String.valueOf(position) + merchant.name + "_itemImage");
 
 		itemContainer.setOnClickListener(onClickListener);
 
