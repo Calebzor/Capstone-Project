@@ -28,11 +28,11 @@ import hu.tvarga.capstone.cheaplist.business.compare.CompareContract;
 import hu.tvarga.capstone.cheaplist.business.compare.ComparePresenter;
 import hu.tvarga.capstone.cheaplist.dao.Merchant;
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
-import hu.tvarga.capstone.cheaplist.ui.detail.DetailFragment;
-
-import static hu.tvarga.capstone.cheaplist.ui.detail.DetailFragment.FRAGMENT_TAG;
+import hu.tvarga.capstone.cheaplist.ui.MainActivity;
 
 public class CompareFragment extends DaggerFragment implements CompareContract.View {
+
+	public static final String FRAGMENT_TAG = CompareFragment.class.getName();
 
 	public static final String ARG_CATEGORY = "ARG_CATEGORY";
 	private static final String ARG_MERCHANT_MAP = "ARG_MERCHANT_MAP";
@@ -79,11 +79,7 @@ public class CompareFragment extends DaggerFragment implements CompareContract.V
 		return new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				DetailFragment details = DetailFragment.newInstance(item);
-				getActivity().getSupportFragmentManager().beginTransaction().addSharedElement(
-						holder.image, getString(R.string.detailImageTransition)).replace(
-						R.id.mainActivityFragmentContainer, details).addToBackStack(FRAGMENT_TAG)
-						.commit();
+				((MainActivity) getActivity()).openDetailView(item, holder);
 			}
 		};
 	}

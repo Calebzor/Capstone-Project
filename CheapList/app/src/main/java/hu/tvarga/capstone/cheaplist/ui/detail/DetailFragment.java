@@ -107,7 +107,6 @@ public class DetailFragment extends DaggerFragment {
 		super.onCreate(savedInstanceState);
 		setSharedElementEnterTransition(
 				TransitionInflater.from(getContext()).inflateTransition(android.R.transition.move));
-		setRetainInstance(true);
 		if (getArguments().containsKey(DETAIL_ITEM)) {
 			itemFromArgument = (ShoppingListItem) getArguments().getSerializable(DETAIL_ITEM);
 		}
@@ -266,10 +265,14 @@ public class DetailFragment extends DaggerFragment {
 
 	@Override
 	public void onDestroyView() {
-		super.onDestroyView();
 		unbinder.unbind();
-		shoppingListItemRef.removeEventListener(shoppingListItemEventListener);
-		itemRef.removeEventListener(itemEventListener);
+		if (shoppingListItemRef != null) {
+			shoppingListItemRef.removeEventListener(shoppingListItemEventListener);
+		}
+		if (itemRef != null) {
+			itemRef.removeEventListener(itemEventListener);
+		}
+		super.onDestroyView();
 	}
 
 }

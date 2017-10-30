@@ -6,15 +6,13 @@ import android.support.v4.app.FragmentManager;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import dagger.android.support.DaggerFragment;
 import hu.tvarga.capstone.cheaplist.R;
 import hu.tvarga.capstone.cheaplist.business.broadcast.BroadcastBuffer;
+import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.capstone.cheaplist.ui.compare.CompareFragment;
+import hu.tvarga.capstone.cheaplist.ui.detail.DetailFragment;
 
 public class MainActivity extends AuthBaseActivity {
-
-	public static final String CURRENT_FRAGMENT = "CURRENT_FRAGMENT";
-	private DaggerFragment currentFragment;
 
 	@Inject
 	BroadcastBuffer broadcastBuffer;
@@ -25,23 +23,12 @@ public class MainActivity extends AuthBaseActivity {
 		setContentView(R.layout.activity_main);
 		ButterKnife.bind(this);
 
-		if (savedInstanceState != null) {
-			currentFragment = (DaggerFragment) getSupportFragmentManager().getFragment(
-					savedInstanceState, CURRENT_FRAGMENT);
-		}
-
-		if (currentFragment == null) {
-			currentFragment = new CompareFragment();
+		if (savedInstanceState == null) {
+			CompareFragment compareFragment = new CompareFragment();
 			FragmentManager fragmentManager = getSupportFragmentManager();
 			fragmentManager.beginTransaction().replace(R.id.mainActivityFragmentContainer,
-					currentFragment).commit();
+					compareFragment, compareFragment.getClass().getName()).commit();
 		}
-	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		getSupportFragmentManager().putFragment(outState, CURRENT_FRAGMENT, currentFragment);
 	}
 
 	@Override
@@ -56,5 +43,13 @@ public class MainActivity extends AuthBaseActivity {
 		// After the activity completely finished onResume we do a replay of all the buffered
 		// intents which could not be broadcast.
 		broadcastBuffer.replayAllAndClearBuffer();
+	}
+
+	public void openDetailView(ShoppingListItem item, ImageBasedListItemHolder holder) {
+		DetailFragment details = DetailFragment.newInstance(item);
+		getSupportFragmentManager().beginTransaction().addSharedElement(holder.image,
+				getString(R.string.detailImageTransition)).replace(
+				R.id.mainActivityFragmentContainer, details).addToBackStack(
+				DetailFragment.FRAGMENT_TAG).commit();
 	}
 }

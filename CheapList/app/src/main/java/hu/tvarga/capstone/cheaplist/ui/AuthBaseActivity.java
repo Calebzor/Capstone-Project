@@ -3,6 +3,7 @@ package hu.tvarga.capstone.cheaplist.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,9 +16,10 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.Arrays;
 
 import dagger.android.support.DaggerAppCompatActivity;
+import dagger.android.support.DaggerFragment;
 import hu.tvarga.capstone.cheaplist.R;
-import hu.tvarga.capstone.cheaplist.ui.compare.CompareActivity;
-import hu.tvarga.capstone.cheaplist.ui.shoppinglist.ShoppingListActivity;
+import hu.tvarga.capstone.cheaplist.ui.compare.CompareFragment;
+import hu.tvarga.capstone.cheaplist.ui.shoppinglist.ShoppingListFragment;
 
 public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 
@@ -59,31 +61,68 @@ public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main_menu, menu);
-		if (this instanceof ShoppingListActivity) {
-			menu.findItem(R.id.shoppingListMenuItem).setVisible(false);
-		}
-		else if (this instanceof CompareActivity) {
-			menu.findItem(R.id.compareMenuItem).setVisible(false);
-		}
 		return true;
+	}
+
+	private DaggerFragment getFragmentByTag(String fragmentTag) {
+		return (DaggerFragment) getSupportFragmentManager().findFragmentByTag(fragmentTag);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		DaggerFragment fragmentByTag;
+		String fragmentTag;
 		switch (item.getItemId()) {
 			case R.id.sign_out_menu:
 				AuthUI.getInstance().signOut(this);
 				return true;
 			case R.id.shoppingListMenuItem:
-				// TODO 29-Oct-2017/vatam: put intent
-				startActivity(new Intent(this, MainActivity.class));
+				fragmentTag = ShoppingListFragment.FRAGMENT_TAG;
+				fragmentByTag = getFragmentByTag(fragmentTag);
+				if (fragmentByTag == null) {
+					fragmentByTag = ShoppingListFragment.newInstance();
+				}
+				replaceFragment(fragmentByTag);
 				return true;
 			case R.id.compareMenuItem:
-				// TODO 29-Oct-2017/vatam: put intent
-				startActivity(new Intent(this, MainActivity.class));
+				fragmentTag = CompareFragment.FRAGMENT_TAG;
+				fragmentByTag = getFragmentByTag(fragmentTag);
+				if (fragmentByTag == null) {
+					fragmentByTag = new CompareFragment();
+				}
+				replaceFragment(fragmentByTag);
 				return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	protected void replaceFragment(DaggerFragment fragment) {
+		String backStateName = fragment.getClass().getName();
+
+		FragmentManager manager = getSupportFragmentManager();
+		boolean fragmentPopped;
+		// logic meant to be hear is that Compare Fragment is the very root, opening it from the
+		// menu clears the stack
+		// Opening ShoppingList from menu should clear the stack and open shopping list (while
+		// compare fragment is still there)
+		// FIXME 30-Oct-2017/vatam:
+		// not yet working but shopping list should always keep scroll position
+		if (fragment instanceof CompareFragment || fragment instanceof ShoppingListFragment) {
+			fragmentPopped = manager.popBackStackImmediate(null,
+					FragmentManager.POP_BACK_STACK_INCLUSIVE);
+			if (fragment instanceof ShoppingListFragment && fragmentPopped) {
+				manager.beginTransaction().replace(R.id.mainActivityFragmentContainer, fragment)
+						.addToBackStack(backStateName).commit();
+			}
+		}
+		else {
+			fragmentPopped = manager.popBackStackImmediate(backStateName, 0);
+		}
+
+		if (!fragmentPopped) { //fragment not in back stack, create it.
+			manager.beginTransaction().replace(R.id.mainActivityFragmentContainer, fragment)
+					.addToBackStack(backStateName).commit();
+		}
 	}
 
 	@Override

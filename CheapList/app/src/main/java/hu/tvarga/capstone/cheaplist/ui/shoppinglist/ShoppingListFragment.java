@@ -7,6 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,9 +29,16 @@ import dagger.android.support.DaggerFragment;
 import hu.tvarga.capstone.cheaplist.R;
 import hu.tvarga.capstone.cheaplist.business.ShoppingListManager;
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
+import hu.tvarga.capstone.cheaplist.ui.MainActivity;
 import timber.log.Timber;
 
 public class ShoppingListFragment extends DaggerFragment {
+
+	public static final String FRAGMENT_TAG = ShoppingListFragment.class.getName();
+
+	public static ShoppingListFragment newInstance() {
+		return new ShoppingListFragment();
+	}
 
 	public interface ShoppingListItemClickAction {
 
@@ -48,6 +56,13 @@ public class ShoppingListFragment extends DaggerFragment {
 
 	private Unbinder unbinder;
 	private DatabaseReference dbRefForShoppingList;
+
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setSharedElementEnterTransition(
+				TransitionInflater.from(getContext()).inflateTransition(android.R.transition.move));
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -146,11 +161,8 @@ public class ShoppingListFragment extends DaggerFragment {
 			@Override
 			public void populateViewHolder(ShoppingListItemHolder holder, ShoppingListItem item,
 					int position) {
-				ShoppingListActivity shoppingListActivity = (ShoppingListActivity) getActivity();
-				if (shoppingListActivity != null && !shoppingListActivity.hasDetailFragment()) {
-					shoppingListActivity.addDetailFragment(item);
-				}
-				holder.bind(item, shoppingListManager, getOnListItemOnClickListener(item));
+				holder.bind(item, shoppingListManager, getOnListItemOnClickListener(item, holder),
+						position);
 			}
 
 			@Override
@@ -161,11 +173,12 @@ public class ShoppingListFragment extends DaggerFragment {
 		};
 	}
 
-	private View.OnClickListener getOnListItemOnClickListener(final ShoppingListItem item) {
+	private View.OnClickListener getOnListItemOnClickListener(final ShoppingListItem item,
+			final ShoppingListItemHolder holder) {
 		return new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				((ShoppingListItemClickAction) getActivity()).onShoppingListItemClick(item);
+				((MainActivity) getActivity()).openDetailView(item, holder);
 			}
 		};
 	}

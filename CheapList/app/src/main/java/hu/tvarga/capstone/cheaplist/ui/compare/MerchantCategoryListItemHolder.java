@@ -2,10 +2,7 @@ package hu.tvarga.capstone.cheaplist.ui.compare;
 
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -16,8 +13,9 @@ import hu.tvarga.capstone.cheaplist.R;
 import hu.tvarga.capstone.cheaplist.business.ShoppingListManager;
 import hu.tvarga.capstone.cheaplist.dao.Merchant;
 import hu.tvarga.capstone.cheaplist.dao.MerchantCategoryListItem;
+import hu.tvarga.capstone.cheaplist.ui.ImageBasedListItemHolder;
 
-public class MerchantCategoryListItemHolder extends RecyclerView.ViewHolder {
+public class MerchantCategoryListItemHolder extends ImageBasedListItemHolder {
 
 	@BindView(R.id.itemContainer)
 	View itemContainer;
@@ -30,9 +28,6 @@ public class MerchantCategoryListItemHolder extends RecyclerView.ViewHolder {
 
 	@BindView(R.id.pricePerUnit)
 	TextView pricePerUnit;
-
-	@BindView(R.id.image)
-	ImageView image;
 
 	public MerchantCategoryListItemHolder(View itemView) {
 		super(itemView);
@@ -48,8 +43,7 @@ public class MerchantCategoryListItemHolder extends RecyclerView.ViewHolder {
 				String.format("%s %s %s", item.pricePerUnit, item.currency, item.unit));
 		Picasso.with(itemView.getContext()).load(item.imageURL).into(image);
 
-		ViewCompat.setTransitionName(image,
-				String.valueOf(position) + merchant.name + "_itemImage");
+		setTransitionName(merchant, position);
 
 		itemContainer.setOnClickListener(onClickListener);
 
