@@ -38,27 +38,19 @@
 					android:layout_marginBottom="4dp"
 					android:background="?selectableItemBackground" />
 
-				<LinearLayout
-					android:id="@+id/priceContainer"
+				<TextView
+					android:id="@+id/detailPrice"
+					style="@style/TextAppearance.AppCompat.Headline"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:orientation="vertical">
+					tools:text="detailPrice" />
 
-					<TextView
-						android:id="@+id/detailPrice"
-						style="@style/TextAppearance.AppCompat.Headline"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						tools:text="detailPrice" />
-
-					<TextView
-						android:id="@+id/detailPricePerUnit"
-						style="@style/TextAppearance.AppCompat.Subhead"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						tools:text="detailPricePerUnit" />
-
-				</LinearLayout>
+				<TextView
+					android:id="@+id/detailPricePerUnit"
+					style="@style/TextAppearance.AppCompat.Subhead"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					tools:text="detailPricePerUnit" />
 
 				<ImageView
 					android:id="@+id/detailImage"
