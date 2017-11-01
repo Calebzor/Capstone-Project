@@ -29,7 +29,7 @@ public class DetailPresenter implements DetailContract.Presenter {
 	private ValueEventListener shoppingListItemEventListener;
 
 	@Inject
-	public DetailPresenter(ShoppingListManager shoppingListManager) {
+	DetailPresenter(ShoppingListManager shoppingListManager) {
 		view = new DetailViewStub();
 		this.shoppingListManager = shoppingListManager;
 	}
@@ -46,8 +46,7 @@ public class DetailPresenter implements DetailContract.Presenter {
 		if (manufacturerInformation.supplier != null) {
 			sb.append(manufacturerInformation.supplier).append("\n");
 		}
-		String string = sb.toString();
-		return string;
+		return sb.toString();
 	}
 
 	@Override
@@ -69,7 +68,7 @@ public class DetailPresenter implements DetailContract.Presenter {
 		shoppingListManager.removeFromList(item);
 	}
 
-	public void loadData() {
+	private void loadData() {
 		FirebaseAuth auth = FirebaseAuth.getInstance();
 		FirebaseUser currentUser = auth.getCurrentUser();
 		if (currentUser != null) {

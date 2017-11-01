@@ -2,7 +2,6 @@ package hu.tvarga.capstone.cheaplist.ui.compare;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
@@ -13,9 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -25,7 +22,6 @@ import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 import hu.tvarga.capstone.cheaplist.R;
 import hu.tvarga.capstone.cheaplist.business.compare.CompareContract;
-import hu.tvarga.capstone.cheaplist.dao.Merchant;
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.capstone.cheaplist.ui.MainActivity;
 
@@ -56,15 +52,6 @@ public class CompareFragment extends DaggerFragment implements CompareContract.V
 	CompareContract.Presenter presenter;
 
 	private Unbinder unbinder;
-
-	public static Fragment newInstance(String categoryName, Map<String, Merchant> merchantMap) {
-		Bundle arguments = new Bundle();
-		arguments.putString(ARG_CATEGORY, categoryName);
-		arguments.putSerializable(ARG_MERCHANT_MAP, (HashMap<String, Merchant>) merchantMap);
-		CompareFragment fragment = new CompareFragment();
-		fragment.setArguments(arguments);
-		return fragment;
-	}
 
 	@Override
 	public void onPause() {
@@ -142,7 +129,9 @@ public class CompareFragment extends DaggerFragment implements CompareContract.V
 		compareFilterButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-
+				CompareSettingsDialog compareSettingsDialog = new CompareSettingsDialog();
+				compareSettingsDialog.show(getActivity().getFragmentManager(),
+						CompareSettingsDialog.FRAGMENT_TAG);
 				StringBuilder sb = new StringBuilder();
 				for (String category : categories) {
 					sb.append(category).append("\n");

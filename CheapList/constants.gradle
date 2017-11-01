@@ -8,4 +8,5 @@ project.ext {
 	firebaseVersion = '11.0.4'
 	firebaseUIVersion = '2.3.0'
 	supportLibraryVersion = '26.1.0'
+	daggerVersion = '2.12'
 }
