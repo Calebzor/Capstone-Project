@@ -12,13 +12,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Field;
@@ -30,9 +23,8 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 import hu.tvarga.capstone.cheaplist.R;
-import hu.tvarga.capstone.cheaplist.business.ShoppingListManager;
+import hu.tvarga.capstone.cheaplist.business.itemdetail.DetailContract;
 import hu.tvarga.capstone.cheaplist.dao.Item;
-import hu.tvarga.capstone.cheaplist.dao.ManufacturerInformation;
 import hu.tvarga.capstone.cheaplist.dao.NutritionInformation;
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
 import timber.log.Timber;
@@ -40,7 +32,7 @@ import timber.log.Timber;
 import static hu.tvarga.capstone.cheaplist.NutritionNameHelper.getNutritionLocalizedName;
 import static hu.tvarga.capstone.cheaplist.ui.detail.DetailActivity.DETAIL_ITEM;
 
-public class DetailFragment extends DaggerFragment {
+public class DetailFragment extends DaggerFragment implements DetailContract.View {
 
 	public static final String FRAGMENT_TAG = DetailFragment.class.getName();
 
@@ -66,27 +58,7 @@ public class DetailFragment extends DaggerFragment {
 	FloatingActionButton fab;
 
 	@Inject
-	ShoppingListManager shoppingListManager;
-
-	private DatabaseReference itemRef;
-	private ValueEventListener itemEventListener;
-	private DatabaseReference shoppingListItemRef;
-	private ValueEventListener shoppingListItemEventListener;
-
-	private String getManufacturerInformation(ManufacturerInformation manufacturerInformation) {
-		StringBuilder sb = new StringBuilder();
-		if (manufacturerInformation.address != null) {
-			sb.append(manufacturerInformation.address).append("\n");
-		}
-		if (manufacturerInformation.contact != null) {
-			sb.append(manufacturerInformation.contact).append("\n");
-		}
-		if (manufacturerInformation.supplier != null) {
-			sb.append(manufacturerInformation.supplier).append("\n");
-		}
-		String string = sb.toString();
-		return string.length() == 0 ? getString(R.string.no_data_available) : string;
-	}
+	DetailContract.Presenter presenter;
 
 	private ShoppingListItem itemFromArgument;
 	private Unbinder unbinder;
@@ -117,10 +89,15 @@ public class DetailFragment extends DaggerFragment {
 	}
 
 	@Override
-	public void onStart() {
-		super.onStart();
+	public void onResume() {
+		super.onResume();
+		presenter.onResume(this, itemFromArgument);
+	}
 
-		loadData();
+	@Override
+	public void onPause() {
+		super.onPause();
+		presenter.onPause();
 	}
 
 	@Override
@@ -131,73 +108,18 @@ public class DetailFragment extends DaggerFragment {
 		return rootView;
 	}
 
-	public void loadData() {
-		FirebaseAuth auth = FirebaseAuth.getInstance();
-		FirebaseUser currentUser = auth.getCurrentUser();
-		if (currentUser != null) {
-			shoppingListItemEventListener = new ValueEventListener() {
-				@Override
-				public void onDataChange(DataSnapshot dataSnapshot) {
-					final ShoppingListItem shoppingListItem = dataSnapshot.getValue(
-							ShoppingListItem.class);
-					Timber.d("listItemChange %s", shoppingListItem);
-					if (fab != null) {
-						if (shoppingListItem != null) {
-							fab.setImageResource(R.drawable.zzz_playlist_minus);
-							fab.setOnClickListener(new View.OnClickListener() {
-								@Override
-								public void onClick(View view) {
-									shoppingListManager.removeFromList(shoppingListItem);
-								}
-							});
-						}
-						else {
-							fab.setImageResource(R.drawable.zzz_playlist_plus);
-							fab.setOnClickListener(getAddToListOnClickListener());
-						}
-					}
-				}
-
-				@Override
-				public void onCancelled(DatabaseError databaseError) {
-					Timber.d("shoppingListItemEventListener#onCancelled %s", databaseError);
-				}
-			};
-			shoppingListItemRef = FirebaseDatabase.getInstance().getReference().child("userData")
-					.child(currentUser.getUid()).child("shoppingList").child(itemFromArgument.id);
-			shoppingListItemRef.addValueEventListener(shoppingListItemEventListener);
-			itemRef = FirebaseDatabase.getInstance().getReference().child("publicReadable").child(
-					"items").child(itemFromArgument.id);
-			itemEventListener = new ValueEventListener() {
-				@Override
-				public void onDataChange(DataSnapshot dataSnapshot) {
-					Item item = dataSnapshot.getValue(Item.class);
-					Timber.d("items %s", item);
-					if (item != null) {
-						updateUI(item);
-					}
-				}
-
-				@Override
-				public void onCancelled(DatabaseError databaseError) {
-					Timber.d("itemEventListener#onCancelled %s", databaseError);
-				}
-			};
-			itemRef.addValueEventListener(itemEventListener);
-		}
-	}
-
 	@NonNull
 	private View.OnClickListener getAddToListOnClickListener() {
 		return new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				shoppingListManager.addToList(itemFromArgument, itemFromArgument.merchant);
+				presenter.addToShoppingList(itemFromArgument, itemFromArgument.merchant);
 			}
 		};
 	}
 
-	private void updateUI(Item item) {
+	@Override
+	public void updateUI(Item item) {
 		detailItemTitle.setText(item.name);
 		Picasso.with(getContext()).load(item.imageURL).placeholder(R.drawable.zzz_image).into(
 				detailImage);
@@ -205,12 +127,32 @@ public class DetailFragment extends DaggerFragment {
 		detailPricePerUnit.setText(
 				String.format("%s %s %s", item.pricePerUnit, item.currency, item.unit));
 		if (item.manufacturerInformation != null) {
-			detailManufacturerInformation.setText(
-					getManufacturerInformation(item.manufacturerInformation));
+			String manufacturerInformation = presenter.getManufacturerInformation(
+					item.manufacturerInformation);
+			String stringToShow = manufacturerInformation.length() == 0 ? getString(
+					R.string.no_data_available) : manufacturerInformation;
+			detailManufacturerInformation.setText(stringToShow);
 		}
 		if (item.nutritionInformation != null) {
 			showNutritionInformation(item.nutritionInformation);
 		}
+	}
+
+	@Override
+	public void showFabAsRemove() {
+		fab.setImageResource(R.drawable.zzz_playlist_minus);
+		fab.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				presenter.removeItemFromShoppingList();
+			}
+		});
+	}
+
+	@Override
+	public void showFabAsAdd() {
+		fab.setImageResource(R.drawable.zzz_playlist_plus);
+		fab.setOnClickListener(getAddToListOnClickListener());
 	}
 
 	private void showNutritionInformation(NutritionInformation nutritionInformation) {
@@ -266,12 +208,6 @@ public class DetailFragment extends DaggerFragment {
 	@Override
 	public void onDestroyView() {
 		unbinder.unbind();
-		if (shoppingListItemRef != null) {
-			shoppingListItemRef.removeEventListener(shoppingListItemEventListener);
-		}
-		if (itemRef != null) {
-			itemRef.removeEventListener(itemEventListener);
-		}
 		super.onDestroyView();
 	}
 

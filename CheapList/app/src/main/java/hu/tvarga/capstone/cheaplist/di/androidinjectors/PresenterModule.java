@@ -4,6 +4,8 @@ import dagger.Binds;
 import dagger.Module;
 import hu.tvarga.capstone.cheaplist.business.compare.CompareContract;
 import hu.tvarga.capstone.cheaplist.business.compare.ComparePresenter;
+import hu.tvarga.capstone.cheaplist.business.itemdetail.DetailContract;
+import hu.tvarga.capstone.cheaplist.business.itemdetail.DetailPresenter;
 
 @Module
 public abstract class PresenterModule {
@@ -11,4 +13,7 @@ public abstract class PresenterModule {
 	@Binds
 	public abstract CompareContract.Presenter bindComparePresenter(
 			ComparePresenter comparePresenter);
+
+	@Binds
+	public abstract DetailContract.Presenter bindDetailPresenter(DetailPresenter detailPresenter);
 }

@@ -92,7 +92,7 @@ public class ShoppingListActivity extends AdShowingActivity
 	public void onShoppingListItemClick(ShoppingListItem item) {
 		if (getResources().getBoolean(multipane)) {
 			detailFragment.setItemFromArgument(item);
-			detailFragment.loadData();
+			//			detailFragment.loadData();
 		}
 		else {
 			Class<?> targetActivity = DetailActivity.class;
