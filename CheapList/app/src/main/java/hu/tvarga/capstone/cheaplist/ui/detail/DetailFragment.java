@@ -30,11 +30,11 @@ import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
 import timber.log.Timber;
 
 import static hu.tvarga.capstone.cheaplist.NutritionNameHelper.getNutritionLocalizedName;
-import static hu.tvarga.capstone.cheaplist.ui.detail.DetailActivity.DETAIL_ITEM;
 
 public class DetailFragment extends DaggerFragment implements DetailContract.View {
 
 	public static final String FRAGMENT_TAG = DetailFragment.class.getName();
+	public static final String DETAIL_ITEM = "DETAIL_ITEM";
 
 	@BindView(R.id.detailItemTitle)
 	TextView detailItemTitle;
@@ -82,10 +82,6 @@ public class DetailFragment extends DaggerFragment implements DetailContract.Vie
 		if (getArguments().containsKey(DETAIL_ITEM)) {
 			itemFromArgument = (ShoppingListItem) getArguments().getSerializable(DETAIL_ITEM);
 		}
-	}
-
-	public void setItemFromArgument(ShoppingListItem itemFromArgument) {
-		this.itemFromArgument = itemFromArgument;
 	}
 
 	@Override

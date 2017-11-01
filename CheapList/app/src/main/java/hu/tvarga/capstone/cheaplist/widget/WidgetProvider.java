@@ -10,7 +10,7 @@ import android.net.Uri;
 import android.widget.RemoteViews;
 
 import hu.tvarga.capstone.cheaplist.R;
-import hu.tvarga.capstone.cheaplist.ui.shoppinglist.ShoppingListActivity;
+import hu.tvarga.capstone.cheaplist.ui.MainActivity;
 
 public class WidgetProvider extends AppWidgetProvider {
 
@@ -36,7 +36,7 @@ public class WidgetProvider extends AppWidgetProvider {
 		rv.setRemoteAdapter(R.id.widgetShoppingList, intent);
 		rv.setEmptyView(R.id.widgetShoppingList, R.id.widgetDefaultMessage);
 
-		Intent shoppingListIntent = new Intent(context, ShoppingListActivity.class);
+		Intent shoppingListIntent = new Intent(context, MainActivity.class);
 		PendingIntent shoppingListPendingIntent = PendingIntent.getActivity(context, 0,
 				shoppingListIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		rv.setPendingIntentTemplate(R.id.widgetShoppingList, shoppingListPendingIntent);

@@ -23,10 +23,10 @@ import java.util.Map;
 
 import hu.tvarga.capstone.cheaplist.R;
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
-import hu.tvarga.capstone.cheaplist.ui.shoppinglist.ShoppingListActivity;
+import hu.tvarga.capstone.cheaplist.ui.MainActivity;
 import timber.log.Timber;
 
-import static hu.tvarga.capstone.cheaplist.ui.detail.DetailActivity.DETAIL_ITEM;
+import static hu.tvarga.capstone.cheaplist.ui.detail.DetailFragment.DETAIL_ITEM;
 
 public class WidgetService extends RemoteViewsService {
 
@@ -130,7 +130,7 @@ public class WidgetService extends RemoteViewsService {
 						String.format("%s %s", items.get(position).price,
 								items.get(position).currency));
 
-				Intent intent = new Intent(getApplicationContext(), ShoppingListActivity.class);
+				Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 				Bundle extras = new Bundle();
 				extras.putSerializable(DETAIL_ITEM, items.get(position));
 				intent.putExtras(extras);
