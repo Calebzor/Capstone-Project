@@ -1,4 +1,4 @@
-package hu.tvarga.capstone.cheaplist.business.broadcast;
+package hu.tvarga.capstone.cheaplist.utility.broadcast;
 
 public interface ObjectListener<T> {
 

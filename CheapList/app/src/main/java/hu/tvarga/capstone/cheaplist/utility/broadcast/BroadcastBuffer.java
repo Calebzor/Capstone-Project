@@ -1,4 +1,4 @@
-package hu.tvarga.capstone.cheaplist.business.broadcast;
+package hu.tvarga.capstone.cheaplist.utility.broadcast;
 
 import android.content.Intent;
 

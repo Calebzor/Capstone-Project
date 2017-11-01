@@ -11,14 +11,14 @@ import javax.inject.Inject;
 
 import hu.tvarga.capstone.cheaplist.R;
 import hu.tvarga.capstone.cheaplist.business.ShoppingListManager;
-import hu.tvarga.capstone.cheaplist.business.broadcast.ObjectListener;
-import hu.tvarga.capstone.cheaplist.business.broadcast.ObjectReceiver;
-import hu.tvarga.capstone.cheaplist.business.broadcast.ObjectReceiverFactory;
 import hu.tvarga.capstone.cheaplist.business.compare.dto.CategoriesBroadcastObject;
 import hu.tvarga.capstone.cheaplist.dao.MerchantCategoryListItem;
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.capstone.cheaplist.di.scopes.ApplicationScope;
 import hu.tvarga.capstone.cheaplist.ui.compare.MerchantCategoryListItemHolder;
+import hu.tvarga.capstone.cheaplist.utility.broadcast.ObjectListener;
+import hu.tvarga.capstone.cheaplist.utility.broadcast.ObjectReceiver;
+import hu.tvarga.capstone.cheaplist.utility.broadcast.ObjectReceiverFactory;
 import timber.log.Timber;
 
 @ApplicationScope

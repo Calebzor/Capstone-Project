@@ -22,12 +22,12 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import hu.tvarga.capstone.cheaplist.BuildConfig;
-import hu.tvarga.capstone.cheaplist.business.broadcast.Broadcast;
 import hu.tvarga.capstone.cheaplist.business.compare.dto.CategoriesBroadcastObject;
 import hu.tvarga.capstone.cheaplist.dao.Merchant;
 import hu.tvarga.capstone.cheaplist.dao.MerchantCategoryListItem;
 import hu.tvarga.capstone.cheaplist.di.scopes.ApplicationScope;
 import hu.tvarga.capstone.cheaplist.ui.compare.MerchantCategoryListItemHolder;
+import hu.tvarga.capstone.cheaplist.utility.broadcast.Broadcast;
 import timber.log.Timber;
 
 @ApplicationScope

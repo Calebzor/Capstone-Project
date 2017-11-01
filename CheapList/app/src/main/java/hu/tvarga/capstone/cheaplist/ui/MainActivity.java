@@ -7,10 +7,10 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import hu.tvarga.capstone.cheaplist.R;
-import hu.tvarga.capstone.cheaplist.business.broadcast.BroadcastBuffer;
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.capstone.cheaplist.ui.compare.CompareFragment;
 import hu.tvarga.capstone.cheaplist.ui.detail.DetailFragment;
+import hu.tvarga.capstone.cheaplist.utility.broadcast.BroadcastBuffer;
 
 public class MainActivity extends AuthBaseActivity {
 
