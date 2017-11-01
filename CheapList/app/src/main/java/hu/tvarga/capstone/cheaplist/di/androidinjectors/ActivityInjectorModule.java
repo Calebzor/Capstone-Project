@@ -8,7 +8,7 @@ import hu.tvarga.capstone.cheaplist.ui.compare.CompareActivity;
 import hu.tvarga.capstone.cheaplist.ui.detail.DetailActivity;
 import hu.tvarga.capstone.cheaplist.ui.shoppinglist.ShoppingListActivity;
 
-@Module
+@Module(includes = {PresenterModule.class})
 public interface ActivityInjectorModule {
 
 	@ActivityScope

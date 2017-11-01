@@ -25,7 +25,6 @@ import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 import hu.tvarga.capstone.cheaplist.R;
 import hu.tvarga.capstone.cheaplist.business.compare.CompareContract;
-import hu.tvarga.capstone.cheaplist.business.compare.ComparePresenter;
 import hu.tvarga.capstone.cheaplist.dao.Merchant;
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.capstone.cheaplist.ui.MainActivity;
@@ -54,7 +53,7 @@ public class CompareFragment extends DaggerFragment implements CompareContract.V
 	ProgressBar progressBar;
 
 	@Inject
-	ComparePresenter presenter;
+	CompareContract.Presenter presenter;
 
 	private Unbinder unbinder;
 

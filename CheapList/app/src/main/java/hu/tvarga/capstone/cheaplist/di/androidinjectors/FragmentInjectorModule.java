@@ -7,7 +7,7 @@ import hu.tvarga.capstone.cheaplist.ui.compare.CompareFragment;
 import hu.tvarga.capstone.cheaplist.ui.detail.DetailFragment;
 import hu.tvarga.capstone.cheaplist.ui.shoppinglist.ShoppingListFragment;
 
-@Module
+@Module(includes = {PresenterModule.class})
 public interface FragmentInjectorModule {
 
 	@FragmentScope
