@@ -4,11 +4,11 @@ import com.google.gson.Gson;
 
 import java.io.Serializable;
 
-import static hu.tvarga.capstone.cheaplist.utility.GsonHelper.getGson;
+import hu.tvarga.capstone.cheaplist.utility.GsonHelper;
 
 public class DataObject implements Serializable {
 
-	private static final Gson GSON = getGson();
+	private static final Gson GSON = GsonHelper.getGson();
 
 	public String id;
 
