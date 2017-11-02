@@ -21,3 +21,5 @@ dependencies {
 	compile 'log4j:log4j:1.2.17'
 	compile 'commons-logging:commons-logging:1.2'
 }
+targetCompatibility = 1.8
+sourceCompatibility = 1.8
