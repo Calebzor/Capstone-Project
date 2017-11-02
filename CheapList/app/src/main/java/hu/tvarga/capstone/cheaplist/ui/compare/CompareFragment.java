@@ -24,6 +24,7 @@ import hu.tvarga.capstone.cheaplist.R;
 import hu.tvarga.capstone.cheaplist.business.compare.CompareContract;
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.capstone.cheaplist.ui.MainActivity;
+import hu.tvarga.capstone.cheaplist.ui.compare.settings.CompareSettingsDialog;
 
 public class CompareFragment extends DaggerFragment implements CompareContract.View {
 

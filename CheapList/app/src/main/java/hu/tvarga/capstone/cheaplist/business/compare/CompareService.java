@@ -33,7 +33,6 @@ import timber.log.Timber;
 @ApplicationScope
 public class CompareService {
 
-	public static final String CATEGORIES_BROADCAST = "CATEGORIES_BROADCAST";
 	private final Broadcast broadcast;
 	private DatabaseReference databaseReferencePublic;
 	private List<MerchantCategoryListItem> startItems = new LinkedList<>();
@@ -133,7 +132,7 @@ public class CompareService {
 		}
 	}
 
-	private void getData() {
+	public void getData() {
 		parseMerchantsAndSetCategoryDBRef();
 		getStartItemsFromDB();
 		getEndItemsFromDB();

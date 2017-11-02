@@ -11,12 +11,14 @@
 		style="@style/TextAppearance.AppCompat.Widget.PopupMenu.Header"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:layout_margin="8dp"
 		android:text="@string/filter" />
 
 	<android.support.v7.widget.RecyclerView
 		android:id="@+id/categoriesFilterList"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:layout_margin="8dp"
 		app:layoutManager="android.support.v7.widget.LinearLayoutManager"
 		tools:listitem="@layout/category_filter_list_item" />
 

@@ -4,7 +4,7 @@ import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 import hu.tvarga.capstone.cheaplist.di.scopes.FragmentScope;
 import hu.tvarga.capstone.cheaplist.ui.compare.CompareFragment;
-import hu.tvarga.capstone.cheaplist.ui.compare.CompareSettingsDialog;
+import hu.tvarga.capstone.cheaplist.ui.compare.settings.CompareSettingsDialog;
 import hu.tvarga.capstone.cheaplist.ui.detail.DetailFragment;
 import hu.tvarga.capstone.cheaplist.ui.shoppinglist.ShoppingListFragment;
 
