@@ -117,7 +117,7 @@ public class FirebaseHelperTest {
 
 			}
 		});
-		await().atMost(Duration.TWO_MINUTES).until(() -> items.size() == 2);
+		await().atMost(Duration.TWO_MINUTES).until(() -> items.size() != 0);
 	}
 
 	private static void assertTaskSuccess(Task<?> hello) {
