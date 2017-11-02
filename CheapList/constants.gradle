@@ -9,4 +9,5 @@ project.ext {
 	firebaseUIVersion = '2.3.0'
 	supportLibraryVersion = '26.1.0'
 	daggerVersion = '2.12'
+	mockitoVersion = '2.11.0'
 }

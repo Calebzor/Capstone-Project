@@ -27,9 +27,9 @@ public class ComparePresenter implements CompareContract.Presenter {
 	private final ShoppingListManager shoppingListManager;
 	private final CompareService compareService;
 	private final ObjectReceiver<CategoriesBroadcastObject> categoriesBroadcastObjectObjectReceiver;
-	private CompareContract.View view;
+	CompareContract.View view;
 
-	private List<String> categories;
+	List<String> categories;
 	@SuppressWarnings("FieldCanBeLocal")
 	private ObjectListener<CategoriesBroadcastObject> categoriesBroadcastObjectObjectListener =
 			new ObjectListener<CategoriesBroadcastObject>() {
