@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -133,12 +132,6 @@ public class CompareFragment extends DaggerFragment implements CompareContract.V
 				CompareSettingsDialog compareSettingsDialog = new CompareSettingsDialog();
 				compareSettingsDialog.show(getActivity().getFragmentManager(),
 						CompareSettingsDialog.FRAGMENT_TAG);
-				StringBuilder sb = new StringBuilder();
-				for (String category : categories) {
-					sb.append(category).append("\n");
-				}
-				String text = sb.toString();
-				Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
 			}
 		});
 	}
