@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import hu.tvarga.capstone.cheaplist.R;
 import hu.tvarga.capstone.cheaplist.business.UserService;
 import hu.tvarga.capstone.cheaplist.business.compare.CompareService;
+import hu.tvarga.capstone.cheaplist.business.compare.settings.dto.CompareSettingsFilterChangedBroadcastObject;
 import hu.tvarga.capstone.cheaplist.ui.compare.settings.CompareSettingsCategoryHolder;
 import hu.tvarga.capstone.cheaplist.utility.broadcast.ObjectListener;
 import hu.tvarga.capstone.cheaplist.utility.broadcast.ObjectReceiver;

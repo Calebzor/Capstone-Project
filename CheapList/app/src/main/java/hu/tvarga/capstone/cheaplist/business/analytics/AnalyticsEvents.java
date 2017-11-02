@@ -1,4 +1,4 @@
-package hu.tvarga.capstone.cheaplist.business;
+package hu.tvarga.capstone.cheaplist.business.analytics;
 
 public final class AnalyticsEvents {
 

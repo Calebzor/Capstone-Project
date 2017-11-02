@@ -17,8 +17,8 @@ import hu.tvarga.capstone.cheaplist.dao.Merchant;
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.capstone.cheaplist.di.scopes.ApplicationScope;
 
-import static hu.tvarga.capstone.cheaplist.business.AnalyticsEvents.ITEM_ADD_TO_SHOPPING_LIST;
-import static hu.tvarga.capstone.cheaplist.business.AnalyticsEvents.ITEM_REMOVE_FROM_SHOPPING_LIST;
+import static hu.tvarga.capstone.cheaplist.business.analytics.AnalyticsEvents.ITEM_ADD_TO_SHOPPING_LIST;
+import static hu.tvarga.capstone.cheaplist.business.analytics.AnalyticsEvents.ITEM_REMOVE_FROM_SHOPPING_LIST;
 
 @ApplicationScope
 public class ShoppingListManager implements FirebaseAuth.AuthStateListener {
