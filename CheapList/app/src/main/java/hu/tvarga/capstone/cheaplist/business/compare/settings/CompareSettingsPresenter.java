@@ -1,4 +1,4 @@
-package hu.tvarga.capstone.cheaplist.business.compare.comparesettings;
+package hu.tvarga.capstone.cheaplist.business.compare.settings;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

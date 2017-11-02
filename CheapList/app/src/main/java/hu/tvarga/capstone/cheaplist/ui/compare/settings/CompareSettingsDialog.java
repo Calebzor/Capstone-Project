@@ -14,7 +14,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import dagger.android.DaggerDialogFragment;
 import hu.tvarga.capstone.cheaplist.R;
-import hu.tvarga.capstone.cheaplist.business.compare.comparesettings.CompareSettingsContract;
+import hu.tvarga.capstone.cheaplist.business.compare.settings.CompareSettingsContract;
 
 public class CompareSettingsDialog extends DaggerDialogFragment
 		implements CompareSettingsContract.View {
