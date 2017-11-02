@@ -15,7 +15,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import hu.tvarga.capstone.cheaplist.business.compare.settings.CompareSettingsFilterChangedBroadcastObject;
+import hu.tvarga.capstone.cheaplist.business.compare.comparesettings.CompareSettingsFilterChangedBroadcastObject;
 import hu.tvarga.capstone.cheaplist.di.scopes.ApplicationScope;
 import hu.tvarga.capstone.cheaplist.utility.broadcast.Broadcast;
 import timber.log.Timber;

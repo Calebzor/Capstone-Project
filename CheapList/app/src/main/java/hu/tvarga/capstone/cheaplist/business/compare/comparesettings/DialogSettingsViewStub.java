@@ -1,3 +1,3 @@
-package hu.tvarga.capstone.cheaplist.business.compare.settings;
+package hu.tvarga.capstone.cheaplist.business.compare.comparesettings;
 
 class DialogSettingsViewStub implements CompareSettingsContract.View {}

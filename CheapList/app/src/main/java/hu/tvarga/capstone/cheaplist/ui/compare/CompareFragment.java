@@ -29,9 +29,6 @@ public class CompareFragment extends DaggerFragment implements CompareContract.V
 
 	public static final String FRAGMENT_TAG = CompareFragment.class.getName();
 
-	public static final String ARG_CATEGORY = "ARG_CATEGORY";
-	private static final String ARG_MERCHANT_MAP = "ARG_MERCHANT_MAP";
-
 	@BindView(R.id.startEmptyText)
 	TextView startEmptyText;
 	@BindView(R.id.itemsListStart)

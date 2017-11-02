@@ -1,4 +1,4 @@
-package hu.tvarga.capstone.cheaplist.business.compare.settings;
+package hu.tvarga.capstone.cheaplist.business.compare.comparesettings;
 
 import java.io.Serializable;
 
