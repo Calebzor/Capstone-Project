@@ -100,6 +100,7 @@ public class FirebaseHelperTest {
 		return merchant;
 	}
 
+	@Ignore
 	@Test
 	public void getMerchantsAlcohols() {
 		final List<MerchantCategoryListItem> items = new ArrayList<>();
