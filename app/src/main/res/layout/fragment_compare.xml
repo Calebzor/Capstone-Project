@@ -40,6 +40,7 @@
 			/>
 
 		// TODO 01-Nov-2017/vatam: use text "Filter"
+
 		<android.support.v7.widget.AppCompatImageView
 			android:id="@+id/compareFilterButton"
 			android:layout_width="wrap_content"
