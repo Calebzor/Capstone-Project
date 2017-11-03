@@ -3,7 +3,7 @@ project.ext {
 	targetSdk = 26
 	minSdk = 21
 
-	buildTools = '26.0.1'
+	buildTools = '26.0.2'
 
 	firebaseVersion = '11.0.4'
 	firebaseUIVersion = '2.3.0'
