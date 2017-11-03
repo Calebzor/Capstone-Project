@@ -1,7 +1,9 @@
-package hu.tvarga.capstone.cheaplist;
+package hu.tvarga.capstone.cheaplist.business;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import hu.tvarga.capstone.cheaplist.R;
 
 public class NutritionNameHelper {
 

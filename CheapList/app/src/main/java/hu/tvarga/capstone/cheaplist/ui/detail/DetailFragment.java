@@ -29,7 +29,7 @@ import hu.tvarga.capstone.cheaplist.dao.NutritionInformation;
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
 import timber.log.Timber;
 
-import static hu.tvarga.capstone.cheaplist.NutritionNameHelper.getNutritionLocalizedName;
+import static hu.tvarga.capstone.cheaplist.business.NutritionNameHelper.getNutritionLocalizedName;
 
 public class DetailFragment extends DaggerFragment implements DetailContract.View {
 
