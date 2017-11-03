@@ -8,6 +8,7 @@ import hu.tvarga.capstone.cheaplist.R;
 public class NutritionNameHelper {
 
 	private NutritionNameHelper() {
+		// hiding constructor
 	}
 
 	private static final Map<String, Integer> nutritionNameMap = new HashMap<>();
