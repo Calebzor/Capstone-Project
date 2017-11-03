@@ -14,6 +14,7 @@ public class NutritionNameHelper {
 	private static final Map<String, Integer> nutritionNameMap = new HashMap<>();
 
 	static {
+
 		nutritionNameMap.put("fat", R.string.fat);
 		nutritionNameMap.put("saturatedFat", R.string.saturatedFat);
 		nutritionNameMap.put("carbs", R.string.carbs);
