@@ -69,4 +69,45 @@ dependencies {
 	androidTestCompile 'com.azimolabs.conditionwatcher:conditionwatcher:0.2'
 }
 
+
+task jacocoMergedTestReport(type: JacocoReport) {
+
+	setSourceDirectories(files(["$buildDir/../src/main/java/hu"]))
+	setClassDirectories(fileTree(
+			dir: "$buildDir/intermediates/classes/debug/hu",
+			excludes: getCoverageExcludes()))
+
+	def jacocoTestFiles = ["$buildDir/jacoco/testDebugUnitTest.exec"]
+
+	String androidTestCoverageFilePath = "$buildDir/outputs/code-coverage/connected/coverage.ec"
+	File androidTestCoverage = new File(androidTestCoverageFilePath)
+	if (androidTestCoverage != null && androidTestCoverage.exists()) {
+		jacocoTestFiles.add(androidTestCoverageFilePath)
+	}
+
+	setExecutionData(files(jacocoTestFiles))
+
+	reports {
+		xml.enabled false
+		csv.enabled false
+		html.enabled true
+	}
+}
+
+def getCoverageExcludes(String format) {
+	def excludes = ['**/Manifest*.*',
+					'**/BuildConfig.*',
+					'**/R.class',
+					'**/R$*.class',
+					'**/a/d/e/f.class'
+	];
+	if ("TeamCity".equals(format)) {
+		return String.join(" ", excludes)
+	} else if ("Sonar".equals(format)) {
+		return String.join(",", excludes)
+	} else {
+		return excludes
+	}
+}
+
 apply plugin: 'com.google.gms.google-services'
