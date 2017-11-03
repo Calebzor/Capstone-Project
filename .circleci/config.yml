@@ -11,7 +11,7 @@ jobs:
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
-          command: ~/$CIRCLE_PROJECT_REPONAME/circleci-google-services-json-copy.sh
+          command: echo $GOOGLE_SERVICES | base64 --decode > ~/$CIRCLE_PROJECT_REPONAME/app/google-services.json
       - run:
           name: Download Dependencies
           command: ./gradlew androidDependencies
