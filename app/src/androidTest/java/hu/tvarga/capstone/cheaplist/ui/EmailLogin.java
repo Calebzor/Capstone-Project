@@ -16,6 +16,7 @@ import com.azimolabs.conditionwatcher.Instruction;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,6 +44,7 @@ public class EmailLogin {
 	public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(
 			MainActivity.class);
 
+	@Ignore
 	@Test
 	public void emailLogin() throws Exception {
 
@@ -56,17 +58,14 @@ public class EmailLogin {
 
 		ConditionWatcher.waitForCondition(waitForViewByIdCondition(R.id.email));
 
-		ViewInteraction textInputEditText = onView(allOf(withId(R.id.email),
-				childAtPosition(childAtPosition(withId(R.id.email_layout), 0), 0), isDisplayed()));
+		ViewInteraction textInputEditText = onView(allOf(withId(R.id.email), childAtPosition(childAtPosition(withId(R.id.email_layout), 0), 0), isDisplayed()));
 		textInputEditText.perform(click());
 
-		ViewInteraction textInputEditText2 = onView(allOf(withId(R.id.email),
-				childAtPosition(childAtPosition(withId(R.id.email_layout), 0), 0), isDisplayed()));
+		ViewInteraction textInputEditText2 = onView(allOf(withId(R.id.email), childAtPosition(childAtPosition(withId(R.id.email_layout), 0), 0), isDisplayed()));
 		textInputEditText2.perform(replaceText("user@example.com"), closeSoftKeyboard());
 
 		ViewInteraction textInputEditText5 = onView(
-				allOf(withId(R.id.email), withText("user@example.com"),
-						childAtPosition(childAtPosition(withId(R.id.email_layout), 0), 0),
+				allOf(withId(R.id.email), withText("user@example.com"), childAtPosition(childAtPosition(withId(R.id.email_layout), 0), 0),
 						isDisplayed()));
 		textInputEditText5.perform(closeSoftKeyboard());
 
@@ -77,14 +76,12 @@ public class EmailLogin {
 
 		ConditionWatcher.waitForCondition(waitForViewByIdCondition(R.id.password));
 
-		ViewInteraction textInputEditText6 = onView(allOf(withId(R.id.password),
-				childAtPosition(childAtPosition(withId(R.id.password_layout), 0), 0),
+		ViewInteraction textInputEditText6 = onView(allOf(withId(R.id.password), childAtPosition(childAtPosition(withId(R.id.password_layout), 0), 0),
 				isDisplayed()));
 		textInputEditText6.perform(replaceText("secretPassword"), closeSoftKeyboard());
 
 		ViewInteraction appCompatButton2 = onView(
-				allOf(withId(R.id.button_done), withText("Sign in"), childAtPosition(
-						childAtPosition(withClassName(is("android.widget.LinearLayout")), 3), 1)));
+				allOf(withId(R.id.button_done), withText("Sign in"), childAtPosition(childAtPosition(withClassName(is("android.widget.LinearLayout")), 3), 1)));
 		appCompatButton2.perform(scrollTo(), click());
 
 	}
