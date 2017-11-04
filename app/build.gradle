@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'jacoco'
+apply plugin: 'jacoco-android'
 
 android {
 	signingConfigs {
@@ -17,7 +17,7 @@ android {
 		minSdkVersion minSdk
 		targetSdkVersion targetSdk
 		versionCode 1
-		versionName "1.0"
+		versionName project.version
 
 		vectorDrawables.useSupportLibrary = true
 		testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
