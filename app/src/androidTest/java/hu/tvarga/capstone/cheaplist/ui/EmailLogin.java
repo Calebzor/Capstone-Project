@@ -46,6 +46,8 @@ public class EmailLogin {
 	@Test
 	public void emailLogin() throws Exception {
 
+		ConditionWatcher.waitForCondition(waitForViewByIdCondition(R.id.email_button));
+
 		ViewInteraction supportVectorDrawablesButton = onView(
 				allOf(withId(R.id.email_button), withText("Sign in with email"), childAtPosition(
 						allOf(withId(R.id.btn_holder), childAtPosition(withId(R.id.container), 0)),
