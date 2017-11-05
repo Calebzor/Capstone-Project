@@ -18,6 +18,9 @@ android:
   - android-26
   - extra-android-m2repository
 #  - sys-img-${ANDROID_ABI}-${ANDROID_TARGET}
+before_install:
+  - sudo apt-get install jq
+  - wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r .assets[0].browser_download_url)
 before_script:
   - echo $GOOGLE_SERVICES | base64 --decode --ignore-garbage > app/google-services.json
 script:
@@ -32,3 +35,4 @@ script:
 #  - ./gradlew lint sonarqube
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+  - java -cp ~/codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter -l Java -r ~/app/build/reports/jacoco/jacocoMergedTestReport/jacocoMergedTestReport.xml

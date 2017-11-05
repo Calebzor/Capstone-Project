@@ -95,7 +95,7 @@ task jacocoMergedTestReport(type: JacocoReport) {
 	setExecutionData(files(jacocoTestFiles))
 
 	reports {
-		xml.enabled false
+		xml.enabled true
 		csv.enabled false
 		html.enabled true
 	}
@@ -105,12 +105,9 @@ def getCoverageExcludes(String format) {
 	def excludes = ['**/Manifest*.*',
 					'**/BuildConfig.*',
 					'**/R.class',
-					'**/R$*.class',
-					'**/a/d/e/f.class'
-	];
-	if ("TeamCity".equals(format)) {
-		return String.join(" ", excludes)
-	} else if ("Sonar".equals(format)) {
+					'**/R$*.class'
+	]
+	if ("Sonar".equals(format)) {
 		return String.join(",", excludes)
 	} else {
 		return excludes
@@ -141,8 +138,8 @@ sonarqube {
 		// sonar lint plugin
 		//
 		// ATTENTION: this file must match the chosen build flavor in the
-		// Teamcity build configurations, otherwise lint issues will not be visible in the sonar
-		// report. Teamcity Build Configs:
+		// CI build configurations, otherwise lint issues will not be visible in the sonar
+		// report. CI Build Configs:
 		//  - Android CI -> Sonar preview report generation
 		//  - Android Master Sonar ->  SonarQube
 		// (both currently call 'lintEnvProdNormalBuildDebug')
