@@ -7,10 +7,6 @@ import hu.tvarga.capstone.cheaplist.R;
 
 public class NutritionNameHelper {
 
-	private NutritionNameHelper() {
-		// hiding constructor
-	}
-
 	private static final Map<String, Integer> nutritionNameMap = new HashMap<>();
 
 	static {
@@ -20,6 +16,10 @@ public class NutritionNameHelper {
 		nutritionNameMap.put("sugar", R.string.sugar);
 		nutritionNameMap.put("protein", R.string.protein);
 		nutritionNameMap.put("salt", R.string.salt);
+	}
+
+	private NutritionNameHelper() {
+		// hiding constructor
 	}
 
 	public static int getNutritionLocalizedName(String fieldName) {

@@ -27,7 +27,6 @@ public class CompareSettingsPresenter implements CompareSettingsContract.Present
 	private final UserService userService;
 	private final ObjectReceiver<CompareSettingsFilterChangedBroadcastObject>
 			compareSettingsFilterChangedBroadcastObjectObjectReceiver;
-	private CompareSettingsContract.View view;
 
 	@SuppressWarnings("FieldCanBeLocal")
 	private ObjectListener<CompareSettingsFilterChangedBroadcastObject> filterChangeBroadcast =
@@ -52,7 +51,6 @@ public class CompareSettingsPresenter implements CompareSettingsContract.Present
 	@Inject
 	public CompareSettingsPresenter(CompareService compareService, UserService userService,
 			ObjectReceiverFactory objectReceiverFactory) {
-		view = new DialogSettingsViewStub();
 		compareSettingsFilterChangedBroadcastObjectObjectReceiver = objectReceiverFactory.get(
 				filterChangeBroadcast, CompareSettingsFilterChangedBroadcastObject.class);
 		this.compareService = compareService;
@@ -61,7 +59,6 @@ public class CompareSettingsPresenter implements CompareSettingsContract.Present
 
 	@Override
 	public void onStart(CompareSettingsContract.View view) {
-		this.view = view;
 		compareSettingsFilterChangedBroadcastObjectObjectReceiver.register();
 
 	}
@@ -69,7 +66,6 @@ public class CompareSettingsPresenter implements CompareSettingsContract.Present
 	@Override
 	public void onStop() {
 		compareSettingsFilterChangedBroadcastObjectObjectReceiver.unregister();
-		view = new DialogSettingsViewStub();
 	}
 
 	@Override
