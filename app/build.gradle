@@ -118,3 +118,39 @@ def getCoverageExcludes(String format) {
 }
 
 apply plugin: 'com.google.gms.google-services'
+
+def getAndroidTestCoverageFiles() {
+	FileCollection androidTestCoverageFiles = fileTree("$buildDir/outputs/code-coverage/connected/flavors") {
+		include "**/*.ec"
+	}
+	return androidTestCoverageFiles
+}
+
+sonarqube {
+	properties {
+		property "sonar.tests", "src/test/java"
+		property "sonar.java.binaries",
+				"${buildDir}/intermediates/classes/debug"
+		property "sonar.java.test.binaries",
+				"${buildDir}/intermediates/classes/test/debug"
+		property "sonar.jacoco.reportPaths",
+				"${buildDir}/jacoco/testDebugUnitTest.exec"
+		property "sonar.jacoco.itReportPath", getAndroidTestCoverageFiles()
+		// NOTE: By default the java source set and not the android souce set is used
+		property "sonar.sources", android.sourceSets.main.java.srcDirs
+
+		property "sonar.junit.reportsPath",
+				"${buildDir}/test-results/testDebugUnitTest"
+
+		// sonar lint plugin
+		//
+		// ATTENTION: this file must match the chosen build flavor in the
+		// Teamcity build configurations, otherwise lint issues will not be visible in the sonar
+		// report. Teamcity Build Configs:
+		//  - Android CI -> Sonar preview report generation
+		//  - Android Master Sonar ->  SonarQube
+		// (both currently call 'lintEnvProdNormalBuildDebug')
+		property "sonar.android.lint.report",
+				"${buildDir}/reports/lint-results.xml"
+	}
+}
