@@ -4,12 +4,12 @@
 Android app to compare products of merchants
 
 ## CI:
-https://travis-ci.org/Calebzor/CheapList/
+Travis: [![Inline docs](https://travis-ci.org/Calebzor/CheapList.svg?branch=master)](https://travis-ci.org/Calebzor/CheapList.svg?branch=master)
+
 Might get disabled: http://cheaplistjenkinsazure.westeurope.cloudapp.azure.com/job/CheapList/
 
 ## Quality
-https://sonarcloud.io/dashboard?id=CheapList%3Aapp
-
+Sonar: [![Quality Gate](https://sonarcloud.io/api/badges/gate?key=CheapList%3Aapp)](https://sonarcloud.io/dashboard/index/CheapList%3Aapp)
 
 ## Credits
 
