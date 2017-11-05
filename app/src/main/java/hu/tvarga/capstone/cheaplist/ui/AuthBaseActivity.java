@@ -24,10 +24,8 @@ import hu.tvarga.capstone.cheaplist.ui.shoppinglist.ShoppingListFragment;
 @SuppressWarnings("squid:MaximumInheritanceDepth")
 public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 
-	public static final String ANONYMOUS = "anonymous";
 	public static final int RC_SIGN_IN = 1;
 
-	private String userName;
 	private FirebaseAuth firebaseAuth;
 	private FirebaseAuth.AuthStateListener authStateListener;
 
@@ -36,20 +34,17 @@ public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 		super.onCreate(savedInstanceState);
 		firebaseAuth = FirebaseAuth.getInstance();
 
-		userName = ANONYMOUS;
-
 		authStateListener = new FirebaseAuth.AuthStateListener() {
 			@Override
 			public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 				FirebaseUser user = firebaseAuth.getCurrentUser();
-				if (user != null) {
-					onSignedInInitialize(user.getDisplayName());
-				}
-				else {
-					onSignedOutCleanUp();
-					startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().setIsSmartLockEnabled(
-							false).setAvailableProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-							new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build())).build(), RC_SIGN_IN);
+				if (user == null) {
+					startActivityForResult(
+							AuthUI.getInstance().createSignInIntentBuilder().setIsSmartLockEnabled(
+									false).setAvailableProviders(Arrays.asList(
+									new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+									new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
+									.build(), RC_SIGN_IN);
 				}
 			}
 		};
@@ -107,9 +102,11 @@ public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 		// FIXME 30-Oct-2017/vatam:
 		// not yet working but shopping list should always keep scroll position
 		if (fragment instanceof CompareFragment || fragment instanceof ShoppingListFragment) {
-			fragmentPopped = manager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+			fragmentPopped = manager.popBackStackImmediate(null,
+					FragmentManager.POP_BACK_STACK_INCLUSIVE);
 			if (fragment instanceof ShoppingListFragment && fragmentPopped) {
-				manager.beginTransaction().replace(R.id.mainActivityFragmentContainer, fragment).addToBackStack(backStateName).commit();
+				manager.beginTransaction().replace(R.id.mainActivityFragmentContainer, fragment)
+						.addToBackStack(backStateName).commit();
 			}
 		}
 		else {
@@ -117,7 +114,8 @@ public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 		}
 
 		if (!fragmentPopped) { //fragment not in back stack, create it.
-			manager.beginTransaction().replace(R.id.mainActivityFragmentContainer, fragment).addToBackStack(backStateName).commit();
+			manager.beginTransaction().replace(R.id.mainActivityFragmentContainer, fragment)
+					.addToBackStack(backStateName).commit();
 		}
 	}
 
@@ -143,17 +141,10 @@ public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 				Toast.makeText(this, getString(R.string.signed_in), Toast.LENGTH_SHORT).show();
 			}
 			else if (RESULT_CANCELED == resultCode) {
-				Toast.makeText(this, getString(R.string.sign_in_canceled), Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, getString(R.string.sign_in_canceled), Toast.LENGTH_SHORT)
+						.show();
 				finish();
 			}
 		}
-	}
-
-	private void onSignedInInitialize(String displayName) {
-		userName = displayName;
-	}
-
-	private void onSignedOutCleanUp() {
-		userName = ANONYMOUS;
 	}
 }
