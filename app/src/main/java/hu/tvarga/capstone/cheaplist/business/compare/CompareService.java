@@ -13,7 +13,6 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -47,7 +46,7 @@ public class CompareService {
 	private DatabaseReference endMerchantItemsDBRef;
 
 	private ArrayList<String> categories = new ArrayList<>();
-	private Map<String, Merchant> merchantMap;
+	private Map<String, Merchant> merchantMap = new HashMap<>();
 	private Merchant startMerchant;
 	private Merchant endMerchant;
 	private String category = "ALCOHOL";
@@ -72,46 +71,24 @@ public class CompareService {
 
 	private void getCategoriesFromDB() {
 		databaseReferencePublic.child("itemCategories").addListenerForSingleValueEvent(
-				new ValueEventListener() {
-					@Override
-					public void onDataChange(DataSnapshot dataSnapshot) {
-						GenericTypeIndicator<Map<String, String>> genericTypeIndicator =
-								new GenericTypeIndicator<Map<String, String>>() {};
-						Map<String, String> categoriesFromDB = dataSnapshot.getValue(
-								genericTypeIndicator);
-						if (categoriesFromDB != null) {
-							categories.clear();
-							for (Map.Entry<String, String> pair : categoriesFromDB.entrySet()) {
-								categories.add(pair.getValue());
+				new CategoryValueEventListener(categories,
+						new CategoryValueEventListener.CategoriesDBCallback() {
+							@Override
+							public void success() {
+								gotCategoriesFromDB();
 							}
-							Collections.sort(categories);
-							gotCategoriesFromDB();
-						}
-					}
-
-					@Override
-					public void onCancelled(DatabaseError databaseError) {
-						Timber.d("addAuthStateListener#onCancelled %s", databaseError);
-					}
-				});
+						}));
 	}
 
 	private void getMerchantsFromDB() {
 		databaseReferencePublic.child("merchants").addListenerForSingleValueEvent(
-				new ValueEventListener() {
-					@Override
-					public void onDataChange(DataSnapshot dataSnapshot) {
-						GenericTypeIndicator<HashMap<String, Merchant>> genericTypeIndicator =
-								new GenericTypeIndicator<HashMap<String, Merchant>>() {};
-						merchantMap = dataSnapshot.getValue(genericTypeIndicator);
-						gotMerchantsFromDB();
-					}
-
-					@Override
-					public void onCancelled(DatabaseError databaseError) {
-						Timber.d("getMerchantsFromDB#onCancelled %s", databaseError);
-					}
-				});
+				new MerchantValueEventListener(merchantMap,
+						new MerchantValueEventListener.MerchantsDBCallback() {
+							@Override
+							public void success() {
+								gotMerchantsFromDB();
+							}
+						}));
 	}
 
 	private void gotMerchantsFromDB() {
