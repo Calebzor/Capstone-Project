@@ -22,7 +22,7 @@ before_script:
   - echo $GOOGLE_SERVICES | base64 --decode --ignore-garbage > app/google-services.json
 script:
 #  - ./gradlew build jacocoMergedTestReport
-  - ./gradlew build jacocoTestReport lint sonarqube
+  - ./gradlew assembleDebug testDebugUnit lintDebug jacocoMergedTestReport sonarqube
 #  - ./gradlew build jacocoTestReport assembleAndroidTest
 #  - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
 #  - emulator -avd test -no-skin -no-audio -no-window &

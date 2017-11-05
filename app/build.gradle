@@ -129,18 +129,14 @@ def getAndroidTestCoverageFiles() {
 sonarqube {
 	properties {
 		property "sonar.tests", "src/test/java"
-		property "sonar.java.binaries",
-				"${buildDir}/intermediates/classes/debug"
-		property "sonar.java.test.binaries",
-				"${buildDir}/intermediates/classes/test/debug"
-		property "sonar.jacoco.reportPaths",
-				"${buildDir}/jacoco/testDebugUnitTest.exec"
+		property "sonar.java.binaries",	"${buildDir}/intermediates/classes/debug"
+		property "sonar.java.test.binaries", "${buildDir}/intermediates/classes/test/debug"
+		property "sonar.jacoco.reportPaths", "${buildDir}/jacoco/testDebugUnitTest.exec"
 		property "sonar.jacoco.itReportPath", getAndroidTestCoverageFiles()
-		// NOTE: By default the java source set and not the android souce set is used
+		// NOTE: By default the java source set and not the android source set is used
 		property "sonar.sources", android.sourceSets.main.java.srcDirs
 
-		property "sonar.junit.reportsPath",
-				"${buildDir}/test-results/testDebugUnitTest"
+		property "sonar.junit.reportsPath",	"${buildDir}/test-results/testDebugUnitTest"
 
 		// sonar lint plugin
 		//
@@ -150,7 +146,6 @@ sonarqube {
 		//  - Android CI -> Sonar preview report generation
 		//  - Android Master Sonar ->  SonarQube
 		// (both currently call 'lintEnvProdNormalBuildDebug')
-		property "sonar.android.lint.report",
-				"${buildDir}/reports/lint-results.xml"
+		property "sonar.android.lint.report", "${buildDir}/reports/lint-results-debug.xml"
 	}
 }
