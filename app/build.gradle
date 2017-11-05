@@ -42,6 +42,12 @@ android {
 	buildToolsVersion '26.0.2'
 }
 
+configurations { codacy }
+repositories {
+	maven { url "https://jitpack.io" }
+	maven { url "http://dl.bintray.com/typesafe/maven-releases" }
+}
+
 dependencies {
 	compile(project(path: ':lib')) {
 		exclude group: 'com.google.firebase'
@@ -65,6 +71,7 @@ dependencies {
 	compile "com.jakewharton.timber:timber:4.5.1"
 	compile "com.jakewharton:butterknife:8.8.1"
 	compile "com.squareup.picasso:picasso:2.5.2"
+	codacy 'com.github.codacy:codacy-coverage-reporter:-SNAPSHOT'
 	annotationProcessor "com.jakewharton:butterknife-compiler:8.8.1"
 	annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVersion"
 	annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
@@ -145,4 +152,21 @@ sonarqube {
 		// (both currently call 'lintEnvProdNormalBuildDebug')
 		property "sonar.android.lint.report", "${buildDir}/reports/lint-results-debug.xml"
 	}
+}
+
+// if you get: com.codacy Error: Missing option --projectToken
+// then:
+// this should be set as environment variable in the CI
+// set CODACY_PROJECT_TOKEN=Project API Token
+// token from: https://www.codacy.com/app/calebzor/CheapList/settings/integrations
+
+task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoMergedTestReport) {
+	main = "com.codacy.CodacyCoverageReporter"
+	classpath = configurations.codacy
+	args = [
+			"-l",
+			"Java",
+			"-r",
+			"${buildDir}/reports/jacoco/jacocoMergedTestReport/jacocoMergedTestReport.xml"
+	]
 }

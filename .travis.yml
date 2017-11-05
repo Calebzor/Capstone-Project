@@ -25,7 +25,7 @@ before_script:
   - echo $GOOGLE_SERVICES | base64 --decode --ignore-garbage > app/google-services.json
 script:
 #  - ./gradlew build jacocoMergedTestReport
-  - ./gradlew assembleDebug testDebugUnit lintDebug jacocoMergedTestReport sonarqube
+  - ./gradlew assembleDebug testDebugUnit lintDebug jacocoMergedTestReport sendCoverageToCodacy sonarqube
 #  - ./gradlew build jacocoTestReport assembleAndroidTest
 #  - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
 #  - emulator -avd test -no-skin -no-audio -no-window &
@@ -35,4 +35,3 @@ script:
 #  - ./gradlew lint sonarqube
 after_success:
   - bash <(curl -s https://codecov.io/bash)
-  - java -cp ~/codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter -l Java -r /home/travis/build/Calebzor/CheapList/app/build/reports/jacoco/jacocoMergedTestReport/jacocoMergedTestReport.xml
