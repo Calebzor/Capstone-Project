@@ -26,8 +26,4 @@ jobs:
           path: app/build/reports
           destination: reports
       - store_test_results:
-          path: app/build/test-results
-    test:
-      post:
-        - mkdir -p $CIRCLE_TEST_REPORTS/junit/
-        - find . -type f -regex ".*/build/test-results/testDebugUnitTest/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+          path: app/build/test-results/testDebugUnitTest
