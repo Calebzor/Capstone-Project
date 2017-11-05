@@ -21,6 +21,7 @@ import hu.tvarga.capstone.cheaplist.R;
 import hu.tvarga.capstone.cheaplist.ui.compare.CompareFragment;
 import hu.tvarga.capstone.cheaplist.ui.shoppinglist.ShoppingListFragment;
 
+@SuppressWarnings("squid:MaximumInheritanceDepth")
 public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 
 	public static final String ANONYMOUS = "anonymous";
@@ -46,12 +47,9 @@ public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 				}
 				else {
 					onSignedOutCleanUp();
-					startActivityForResult(
-							AuthUI.getInstance().createSignInIntentBuilder().setIsSmartLockEnabled(
-									false).setAvailableProviders(Arrays.asList(
-									new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-									new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
-									.build(), RC_SIGN_IN);
+					startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().setIsSmartLockEnabled(
+							false).setAvailableProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+							new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build())).build(), RC_SIGN_IN);
 				}
 			}
 		};
@@ -92,6 +90,7 @@ public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 				}
 				replaceFragment(fragmentByTag);
 				return true;
+			default:
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -108,11 +107,9 @@ public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 		// FIXME 30-Oct-2017/vatam:
 		// not yet working but shopping list should always keep scroll position
 		if (fragment instanceof CompareFragment || fragment instanceof ShoppingListFragment) {
-			fragmentPopped = manager.popBackStackImmediate(null,
-					FragmentManager.POP_BACK_STACK_INCLUSIVE);
+			fragmentPopped = manager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 			if (fragment instanceof ShoppingListFragment && fragmentPopped) {
-				manager.beginTransaction().replace(R.id.mainActivityFragmentContainer, fragment)
-						.addToBackStack(backStateName).commit();
+				manager.beginTransaction().replace(R.id.mainActivityFragmentContainer, fragment).addToBackStack(backStateName).commit();
 			}
 		}
 		else {
@@ -120,8 +117,7 @@ public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 		}
 
 		if (!fragmentPopped) { //fragment not in back stack, create it.
-			manager.beginTransaction().replace(R.id.mainActivityFragmentContainer, fragment)
-					.addToBackStack(backStateName).commit();
+			manager.beginTransaction().replace(R.id.mainActivityFragmentContainer, fragment).addToBackStack(backStateName).commit();
 		}
 	}
 
@@ -147,8 +143,7 @@ public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 				Toast.makeText(this, getString(R.string.signed_in), Toast.LENGTH_SHORT).show();
 			}
 			else if (RESULT_CANCELED == resultCode) {
-				Toast.makeText(this, getString(R.string.sign_in_canceled), Toast.LENGTH_SHORT)
-						.show();
+				Toast.makeText(this, getString(R.string.sign_in_canceled), Toast.LENGTH_SHORT).show();
 				finish();
 			}
 		}

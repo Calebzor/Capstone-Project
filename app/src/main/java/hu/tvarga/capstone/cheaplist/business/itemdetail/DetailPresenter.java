@@ -99,10 +99,10 @@ public class DetailPresenter implements DetailContract.Presenter {
 			itemEventListener = new ValueEventListener() {
 				@Override
 				public void onDataChange(DataSnapshot dataSnapshot) {
-					Item item = dataSnapshot.getValue(Item.class);
-					Timber.d("items %s", item);
-					if (item != null) {
-						view.updateUI(item);
+					Item itemFromDB = dataSnapshot.getValue(Item.class);
+					Timber.d("items %s", itemFromDB);
+					if (itemFromDB != null) {
+						view.updateUI(itemFromDB);
 					}
 				}
 

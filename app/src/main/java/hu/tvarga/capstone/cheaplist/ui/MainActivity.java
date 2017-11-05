@@ -12,6 +12,7 @@ import hu.tvarga.capstone.cheaplist.ui.compare.CompareFragment;
 import hu.tvarga.capstone.cheaplist.ui.detail.DetailFragment;
 import hu.tvarga.capstone.cheaplist.utility.broadcast.BroadcastBuffer;
 
+@SuppressWarnings("squid:MaximumInheritanceDepth")
 public class MainActivity extends AuthBaseActivity {
 
 	@Inject
@@ -47,9 +48,7 @@ public class MainActivity extends AuthBaseActivity {
 
 	public void openDetailView(ShoppingListItem item, ImageBasedListItemHolder holder) {
 		DetailFragment details = DetailFragment.newInstance(item);
-		getSupportFragmentManager().beginTransaction().addSharedElement(holder.image,
-				getString(R.string.detailImageTransition)).replace(
-				R.id.mainActivityFragmentContainer, details).addToBackStack(
-				DetailFragment.FRAGMENT_TAG).commit();
+		getSupportFragmentManager().beginTransaction().addSharedElement(holder.image, getString(R.string.detailImageTransition)).replace(
+				R.id.mainActivityFragmentContainer, details).addToBackStack(DetailFragment.FRAGMENT_TAG).commit();
 	}
 }

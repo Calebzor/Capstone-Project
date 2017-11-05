@@ -11,6 +11,7 @@ import com.google.android.gms.ads.MobileAds;
 import hu.tvarga.capstone.cheaplist.R;
 import hu.tvarga.capstone.cheaplist.utility.Preferences;
 
+@SuppressWarnings("squid:MaximumInheritanceDepth")
 public abstract class AdShowingActivity extends AuthBaseActivity {
 
 	public static final String DETAIL_OPEN_COUNT = "DETAIL_OPEN_COUNT";
@@ -50,27 +51,28 @@ public abstract class AdShowingActivity extends AuthBaseActivity {
 				showInterstitial();
 			}
 		}
+
+		private boolean shouldShowAd() {
+			if (detailOpenCount >= AD_SHOW_DETAIL_OPEN_COUNT_TRIGGER) {
+				detailOpenCount = 0;
+				sharedPreferences.edit().putInt(DETAIL_OPEN_COUNT, detailOpenCount).apply();
+				return true;
+			}
+			return false;
+		}
+
+		private void showInterstitial() {
+			if (interstitialAd != null && interstitialAd.isLoaded()) {
+				interstitialAd.show();
+			}
+		}
+
+		private void loadNextAd() {
+			if (!interstitialAd.isLoading() && !interstitialAd.isLoaded()) {
+				AdRequest adRequest = new AdRequest.Builder().build();
+				interstitialAd.loadAd(adRequest);
+			}
+		}
 	};
 
-	private boolean shouldShowAd() {
-		if (detailOpenCount >= AD_SHOW_DETAIL_OPEN_COUNT_TRIGGER) {
-			detailOpenCount = 0;
-			sharedPreferences.edit().putInt(DETAIL_OPEN_COUNT, detailOpenCount).apply();
-			return true;
-		}
-		return false;
-	}
-
-	private void showInterstitial() {
-		if (interstitialAd != null && interstitialAd.isLoaded()) {
-			interstitialAd.show();
-		}
-	}
-
-	private void loadNextAd() {
-		if (!interstitialAd.isLoading() && !interstitialAd.isLoaded()) {
-			AdRequest adRequest = new AdRequest.Builder().build();
-			interstitialAd.loadAd(adRequest);
-		}
-	}
 }

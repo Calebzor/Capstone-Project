@@ -4,6 +4,10 @@ import timber.log.Timber;
 
 public class StringUtils {
 
+	private StringUtils() {
+		// hide constructor
+	}
+
 	public static String setTextToPlaceholder(String textWithPlaceholder, Object... textToInsert) {
 		String result;
 		try {
