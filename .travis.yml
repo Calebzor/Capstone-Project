@@ -22,7 +22,8 @@ before_script:
   - echo $GOOGLE_SERVICES | base64 --decode --ignore-garbage > app/google-services.json
 script:
 #  - ./gradlew build jacocoMergedTestReport
-  - ./gradlew build jacocoTestReport assembleAndroidTest
+  - ./gradlew build jacocoTestReport
+#  - ./gradlew build jacocoTestReport assembleAndroidTest
 #  - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
 #  - emulator -avd test -no-skin -no-audio -no-window &
 #  - android-wait-for-emulator
