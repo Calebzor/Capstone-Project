@@ -181,11 +181,15 @@ public class FirebaseHelper {
 		publicReadable.addChildEventListener(childEventListener);
 	}
 
+	/**
+	 * Create a dummy user (UI test uses this user)
+	 *
+	 * @return task for result of the operation
+	 */
 	public Task<UserRecord> createUser() {
 		UserRecord.CreateRequest request = new UserRecord.CreateRequest().setEmail(
-				"user@example.com").setEmailVerified(false).setPassword("secretPassword")
-				.setPhoneNumber("+11234567890").setDisplayName("John Doe").setPhotoUrl(
-						"http://www.example.com/12345678/photo.png").setDisabled(false);
+				"user@example.com").setEmailVerified(false).setPassword("secretPassword").setPhoneNumber("+11234567890").setDisplayName("John Doe").setPhotoUrl(
+				"http://www.example.com/12345678/photo.png").setDisabled(false);
 
 		return FirebaseAuth.getInstance().createUser(request);
 	}
