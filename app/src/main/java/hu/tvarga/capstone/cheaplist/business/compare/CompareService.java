@@ -15,6 +15,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import hu.tvarga.capstone.cheaplist.dao.Merchant;
 import hu.tvarga.capstone.cheaplist.dao.MerchantCategoryListItem;
 import hu.tvarga.capstone.cheaplist.di.scopes.ApplicationScope;
 import hu.tvarga.capstone.cheaplist.ui.compare.MerchantCategoryListItemHolder;
+import hu.tvarga.capstone.cheaplist.utility.StringUtils;
 import hu.tvarga.capstone.cheaplist.utility.broadcast.Broadcast;
 import timber.log.Timber;
 
@@ -37,6 +39,8 @@ public class CompareService {
 	private DatabaseReference databaseReferencePublic;
 	private List<MerchantCategoryListItem> startItems = new LinkedList<>();
 	private List<MerchantCategoryListItem> endItems = new LinkedList<>();
+	private List<MerchantCategoryListItem> startItemsUnfiltered = new LinkedList<>();
+	private List<MerchantCategoryListItem> endItemsUnfiltered = new LinkedList<>();
 	private RecyclerView.Adapter<MerchantCategoryListItemHolder> startAdapter;
 	private RecyclerView.Adapter<MerchantCategoryListItemHolder> endAdapter;
 	private DatabaseReference startMerchantItemsDBRef;
@@ -47,9 +51,10 @@ public class CompareService {
 	private Merchant startMerchant;
 	private Merchant endMerchant;
 	private String category = "ALCOHOL";
+	private String filter;
 
 	@Inject
-	public CompareService(Broadcast broadcast) {
+	CompareService(Broadcast broadcast) {
 		this.broadcast = broadcast;
 		FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 		FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
@@ -170,10 +175,10 @@ public class CompareService {
 				HashMap<String, MerchantCategoryListItem> value = dataSnapshot.getValue(
 						genericTypeIndicator);
 				if (value != null && !value.isEmpty()) {
-					startItems.clear();
-					startItems.addAll(value.values());
+					startItemsUnfiltered.clear();
+					startItemsUnfiltered.addAll(value.values());
 					if (startAdapter != null) {
-						startAdapter.notifyDataSetChanged();
+						filterStart();
 					}
 				}
 			}
@@ -196,10 +201,10 @@ public class CompareService {
 				HashMap<String, MerchantCategoryListItem> value = dataSnapshot.getValue(
 						genericTypeIndicator);
 				if (value != null && !value.isEmpty()) {
-					endItems.clear();
-					endItems.addAll(value.values());
+					endItemsUnfiltered.clear();
+					endItemsUnfiltered.addAll(value.values());
 					if (endAdapter != null) {
-						endAdapter.notifyDataSetChanged();
+						filterEnd();
 					}
 				}
 			}
@@ -243,4 +248,42 @@ public class CompareService {
 		this.category = category;
 		getData();
 	}
+
+	private void filterStart() {
+		startItems.clear();
+		startItems.addAll(startItemsUnfiltered);
+		if (StringUtils.isEmpty(filter)) {
+			startAdapter.notifyDataSetChanged();
+			return;
+		}
+		removeItemFromStartList(startItems);
+		startAdapter.notifyDataSetChanged();
+	}
+
+	private void filterEnd() {
+		endItems.clear();
+		endItems.addAll(endItemsUnfiltered);
+		if (StringUtils.isEmpty(filter)) {
+			endAdapter.notifyDataSetChanged();
+			return;
+		}
+		removeItemFromStartList(endItems);
+		endAdapter.notifyDataSetChanged();
+	}
+
+	private void removeItemFromStartList(List<MerchantCategoryListItem> items) {
+		for (Iterator<MerchantCategoryListItem> iterator = items.iterator(); iterator.hasNext(); ) {
+			MerchantCategoryListItem item = iterator.next();
+			if (!item.name.toLowerCase().contains(filter.toLowerCase())) {
+				iterator.remove();
+			}
+		}
+	}
+
+	void setFilter(String filter) {
+		this.filter = filter;
+		filterStart();
+		filterEnd();
+	}
+
 }

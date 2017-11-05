@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,9 @@ public class CompareFragment extends DaggerFragment implements CompareContract.V
 
 	@BindView(R.id.compareFilterButton)
 	AppCompatImageView compareFilterButton;
+
+	@BindView(R.id.compareSearchInput)
+	SearchView compareSearchInput;
 
 	@BindView(R.id.compareProgressBar)
 	ProgressBar progressBar;
@@ -96,6 +100,7 @@ public class CompareFragment extends DaggerFragment implements CompareContract.V
 		RecyclerView.Adapter<MerchantCategoryListItemHolder> startAdapter =
 				presenter.getStartAdapter();
 		startItems.setAdapter(startAdapter);
+		compareSearchInput.setOnQueryTextListener(presenter.getOnQueryTextListener());
 
 		RecyclerView.Adapter<MerchantCategoryListItemHolder> endAdapter = presenter.getEndAdapter();
 		endItems.setAdapter(endAdapter);

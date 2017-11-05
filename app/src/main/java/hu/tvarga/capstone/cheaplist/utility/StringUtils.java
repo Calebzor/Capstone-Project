@@ -15,4 +15,8 @@ public class StringUtils {
 		}
 		return result;
 	}
+
+	public static boolean isEmpty(String filter) {
+		return filter == null || filter.isEmpty();
+	}
 }

@@ -19,16 +19,16 @@
 		android:paddingEnd="8dp"
 		android:paddingStart="8dp">
 
-		<android.support.v7.widget.AppCompatEditText
+		<android.support.v7.widget.SearchView
 			android:id="@+id/compareSearchInput"
-			style="@style/Base.V7.Widget.AppCompat.EditText"
+			style="@style/Base.Widget.AppCompat.SearchView.ActionBar"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_alignParentStart="true"
-			android:layout_toStartOf="@id/compareFilterButton"
 			android:layout_marginEnd="8dp"
+			android:layout_toStartOf="@id/compareFilterButton"
 			android:hint="@string/filter"
-			android:lines="1" />
+			/>
 
 		<ProgressBar
 			android:id="@+id/compareProgressBar"

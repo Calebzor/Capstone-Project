@@ -1,6 +1,7 @@
 package hu.tvarga.capstone.cheaplist.business.compare;
 
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -141,6 +142,22 @@ public class ComparePresenter implements CompareContract.Presenter {
 				};
 		compareService.setEndAdapter(adapter);
 		return adapter;
+	}
+
+	@Override
+	public SearchView.OnQueryTextListener getOnQueryTextListener() {
+		return new SearchView.OnQueryTextListener() {
+			@Override
+			public boolean onQueryTextSubmit(String query) {
+				return false;
+			}
+
+			@Override
+			public boolean onQueryTextChange(String query) {
+				compareService.setFilter(query);
+				return false;
+			}
+		};
 	}
 
 }

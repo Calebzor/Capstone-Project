@@ -1,6 +1,7 @@
 package hu.tvarga.capstone.cheaplist.business.compare;
 
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ public interface CompareContract {
 		void onPause();
 		RecyclerView.Adapter<MerchantCategoryListItemHolder> getStartAdapter();
 		RecyclerView.Adapter<MerchantCategoryListItemHolder> getEndAdapter();
+		SearchView.OnQueryTextListener getOnQueryTextListener();
 	}
 
 	interface View {
