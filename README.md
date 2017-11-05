@@ -4,7 +4,7 @@
 Android app to compare products of merchants
 
 ## CI:
-Travis: [![Inline docs](https://travis-ci.org/Calebzor/CheapList.svg?branch=master)](https://travis-ci.org/Calebzor/CheapList.svg?branch=master)
+Travis: [![Inline docs](https://travis-ci.org/Calebzor/CheapList.svg?branch=master)](https://travis-ci.org/Calebzor/CheapList)
 
 Might get disabled: http://cheaplistjenkinsazure.westeurope.cloudapp.azure.com/job/CheapList/
 
