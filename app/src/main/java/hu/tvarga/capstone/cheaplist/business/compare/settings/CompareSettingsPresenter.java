@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -16,56 +18,38 @@ import hu.tvarga.capstone.cheaplist.business.UserService;
 import hu.tvarga.capstone.cheaplist.business.compare.CompareService;
 import hu.tvarga.capstone.cheaplist.business.compare.settings.dto.CompareSettingsFilterChangedBroadcastObject;
 import hu.tvarga.capstone.cheaplist.ui.compare.settings.CompareSettingsCategoryHolder;
-import hu.tvarga.capstone.cheaplist.utility.broadcast.ObjectListener;
-import hu.tvarga.capstone.cheaplist.utility.broadcast.ObjectReceiver;
-import hu.tvarga.capstone.cheaplist.utility.broadcast.ObjectReceiverFactory;
-import timber.log.Timber;
+import hu.tvarga.capstone.cheaplist.utility.EventBusWrapper;
 
 public class CompareSettingsPresenter implements CompareSettingsContract.Presenter {
 
 	private final CompareService compareService;
 	private final UserService userService;
-	private final ObjectReceiver<CompareSettingsFilterChangedBroadcastObject>
-			compareSettingsFilterChangedBroadcastObjectObjectReceiver;
+	private final EventBusWrapper eventBusWrapper;
 
-	@SuppressWarnings("FieldCanBeLocal")
-	private ObjectListener<CompareSettingsFilterChangedBroadcastObject> filterChangeBroadcast =
-			new ObjectListener<CompareSettingsFilterChangedBroadcastObject>() {
-				@Override
-				public void onReceive(CompareSettingsFilterChangedBroadcastObject object) {
-					filterChanged();
-				}
-
-				@Override
-				public void onFailure(Throwable throwable) {
-					Timber.e("filterChangeBroadcast#onFailure", throwable);
-				}
-
-				@Override
-				public void onCancelled() {
-					Timber.d("filterChangeBroadcast#onCancelled");
-				}
-			};
 	private RecyclerView.Adapter<CompareSettingsCategoryHolder> adapter;
 
 	@Inject
 	public CompareSettingsPresenter(CompareService compareService, UserService userService,
-			ObjectReceiverFactory objectReceiverFactory) {
-		compareSettingsFilterChangedBroadcastObjectObjectReceiver = objectReceiverFactory.get(
-				filterChangeBroadcast, CompareSettingsFilterChangedBroadcastObject.class);
+			EventBusWrapper eventBusWrapper) {
 		this.compareService = compareService;
 		this.userService = userService;
+		this.eventBusWrapper = eventBusWrapper;
 	}
 
 	@Override
 	public void onStart(CompareSettingsContract.View view) {
-		compareSettingsFilterChangedBroadcastObjectObjectReceiver.register();
-
+		eventBusWrapper.getDefault().register(this);
 	}
 
 	@Override
 	public void onStop() {
-		compareSettingsFilterChangedBroadcastObjectObjectReceiver.unregister();
+		eventBusWrapper.getDefault().unregister(this);
+	}
+
+	@Subscribe
+	public void handleCompareSettingsFilterChangedBroadcastObject(
+			CompareSettingsFilterChangedBroadcastObject object) {
+		filterChanged();
 	}
 
 	@Override

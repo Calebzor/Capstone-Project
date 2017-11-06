@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -17,9 +19,7 @@ import hu.tvarga.capstone.cheaplist.dao.MerchantCategoryListItem;
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.capstone.cheaplist.di.scopes.ApplicationScope;
 import hu.tvarga.capstone.cheaplist.ui.compare.MerchantCategoryListItemHolder;
-import hu.tvarga.capstone.cheaplist.utility.broadcast.ObjectListener;
-import hu.tvarga.capstone.cheaplist.utility.broadcast.ObjectReceiver;
-import hu.tvarga.capstone.cheaplist.utility.broadcast.ObjectReceiverFactory;
+import hu.tvarga.capstone.cheaplist.utility.EventBusWrapper;
 import timber.log.Timber;
 
 @ApplicationScope
@@ -27,45 +27,24 @@ public class ComparePresenter implements CompareContract.Presenter {
 
 	private final ShoppingListManager shoppingListManager;
 	private final CompareService compareService;
-	private final ObjectReceiver<CategoriesBroadcastObject> categoriesBroadcastObjectObjectReceiver;
+	private final EventBusWrapper eventBusWrapper;
 	CompareContract.View view;
 
 	List<String> categories;
-	@SuppressWarnings("FieldCanBeLocal")
-	private ObjectListener<CategoriesBroadcastObject> categoriesBroadcastObjectObjectListener =
-			new ObjectListener<CategoriesBroadcastObject>() {
-				@Override
-				public void onReceive(CategoriesBroadcastObject object) {
-					Timber.d("CategoriesBroadcastObject#onReceive", object);
-					categories = object.getCategories();
-					view.notifyGotMerchantCategoryData(categories);
-				}
-
-				@Override
-				public void onFailure(Throwable throwable) {
-					Timber.d("CategoriesBroadcastObject#onFailure", throwable);
-				}
-
-				@Override
-				public void onCancelled() {
-					Timber.d("CategoriesBroadcastObject#onCancelled");
-				}
-			};
 
 	@Inject
 	ComparePresenter(ShoppingListManager shoppingListManager, CompareService compareService,
-			ObjectReceiverFactory objectReceiverFactory) {
-		categoriesBroadcastObjectObjectReceiver = objectReceiverFactory.get(
-				categoriesBroadcastObjectObjectListener, CategoriesBroadcastObject.class);
+			EventBusWrapper eventBusWrapper) {
 		this.compareService = compareService;
 		this.shoppingListManager = shoppingListManager;
+		this.eventBusWrapper = eventBusWrapper;
 		view = new CompareTabsViewStub();
 	}
 
 	@Override
 	public void onResume(CompareContract.View view) {
 		this.view = view;
-		categoriesBroadcastObjectObjectReceiver.register();
+		eventBusWrapper.getDefault().register(this);
 		if (categories != null) {
 			view.notifyGotMerchantCategoryData(categories);
 		}
@@ -73,8 +52,15 @@ public class ComparePresenter implements CompareContract.Presenter {
 
 	@Override
 	public void onPause() {
-		categoriesBroadcastObjectObjectReceiver.unregister();
+		eventBusWrapper.getDefault().unregister(this);
 		view = new CompareTabsViewStub();
+	}
+
+	@Subscribe
+	public void handleCategoriesBroadcastObject(CategoriesBroadcastObject object) {
+		Timber.d("CategoriesBroadcastObject#onReceive", object);
+		categories = object.getCategories();
+		view.notifyGotMerchantCategoryData(categories);
 	}
 
 	@Override

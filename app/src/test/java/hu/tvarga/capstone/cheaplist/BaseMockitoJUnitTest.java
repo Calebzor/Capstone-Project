@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.ContextWrapper;
 import android.support.annotation.CallSuper;
 
+import org.greenrobot.eventbus.EventBus;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -15,11 +16,15 @@ import org.mockito.stubbing.Answer;
 import java.util.HashMap;
 import java.util.Map;
 
+import hu.tvarga.capstone.cheaplist.utility.EventBusWrapper;
 import hu.tvarga.capstone.cheaplist.utility.StringUtils;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public abstract class BaseMockitoJUnitTest extends Assert {
@@ -29,6 +34,12 @@ public abstract class BaseMockitoJUnitTest extends Assert {
 	@Mock
 	protected ContextWrapper contextWrapper;
 
+	@Mock
+	protected EventBusWrapper eventBusWrapper;
+
+	@Mock
+	protected EventBus eventBus;
+
 	@SuppressLint("UseSparseArrays")
 	private Map<Integer, String> customStrings = new HashMap<>();
 
@@ -36,6 +47,18 @@ public abstract class BaseMockitoJUnitTest extends Assert {
 	@CallSuper
 	public void setUp() throws Exception {
 		setupContextWrapperResourceHandling();
+	}
+
+	protected void setUpEventBusMock() {
+		when(eventBusWrapper.getDefault()).thenReturn(eventBus);
+	}
+
+	protected void verifyEventBusRegister() {
+		verify(eventBus).register(any());
+	}
+
+	protected void verifyEventBusUnregister() {
+		verify(eventBus).unregister(any());
 	}
 
 	/**

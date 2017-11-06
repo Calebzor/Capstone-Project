@@ -7,23 +7,10 @@ import java.util.ArrayList;
 
 import hu.tvarga.capstone.cheaplist.BaseMockitoJUnitTest;
 import hu.tvarga.capstone.cheaplist.business.ShoppingListManager;
-import hu.tvarga.capstone.cheaplist.business.compare.dto.CategoriesBroadcastObject;
-import hu.tvarga.capstone.cheaplist.utility.broadcast.ObjectListener;
-import hu.tvarga.capstone.cheaplist.utility.broadcast.ObjectReceiver;
-import hu.tvarga.capstone.cheaplist.utility.broadcast.ObjectReceiverFactory;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class ComparePresenterTest extends BaseMockitoJUnitTest {
-
-	@Mock
-	private ObjectReceiver<CategoriesBroadcastObject> categoriesBroadcastObjectObjectReceiver;
-
-	@Mock
-	private ObjectReceiverFactory objectReceiverFactory;
 
 	@Mock
 	private ShoppingListManager shoppingListManager;
@@ -39,12 +26,9 @@ public class ComparePresenterTest extends BaseMockitoJUnitTest {
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
+		setUpEventBusMock();
 		//noinspection unchecked
-		when(objectReceiverFactory
-				.get(any(ObjectListener.class), eq(CategoriesBroadcastObject.class))).thenReturn(
-				categoriesBroadcastObjectObjectReceiver);
-		presenter = new ComparePresenter(shoppingListManager, compareService,
-				objectReceiverFactory);
+		presenter = new ComparePresenter(shoppingListManager, compareService, eventBusWrapper);
 	}
 
 	@Test
@@ -55,7 +39,7 @@ public class ComparePresenterTest extends BaseMockitoJUnitTest {
 		presenter.onResume(view);
 
 		assertEquals(presenter.view, view);
-		verify(categoriesBroadcastObjectObjectReceiver).register();
+		verifyEventBusRegister();
 		verify(view).notifyGotMerchantCategoryData(list);
 	}
 
@@ -63,6 +47,6 @@ public class ComparePresenterTest extends BaseMockitoJUnitTest {
 	public void onPause() throws Exception {
 		presenter.onPause();
 
-		verify(categoriesBroadcastObjectObjectReceiver).unregister();
+		verifyEventBusUnregister();
 	}
 }

@@ -27,14 +27,14 @@ import hu.tvarga.capstone.cheaplist.dao.Merchant;
 import hu.tvarga.capstone.cheaplist.dao.MerchantCategoryListItem;
 import hu.tvarga.capstone.cheaplist.di.scopes.ApplicationScope;
 import hu.tvarga.capstone.cheaplist.ui.compare.MerchantCategoryListItemHolder;
+import hu.tvarga.capstone.cheaplist.utility.EventBusWrapper;
 import hu.tvarga.capstone.cheaplist.utility.StringUtils;
-import hu.tvarga.capstone.cheaplist.utility.broadcast.Broadcast;
 import timber.log.Timber;
 
 @ApplicationScope
 public class CompareService {
 
-	private final Broadcast broadcast;
+	private final EventBusWrapper eventBusWrapper;
 	private DatabaseReference databaseReferencePublic;
 	private List<MerchantCategoryListItem> startItems = new LinkedList<>();
 	private List<MerchantCategoryListItem> endItems = new LinkedList<>();
@@ -53,8 +53,8 @@ public class CompareService {
 	private String filter;
 
 	@Inject
-	CompareService(Broadcast broadcast) {
-		this.broadcast = broadcast;
+	CompareService(EventBusWrapper eventBusWrapper) {
+		this.eventBusWrapper = eventBusWrapper;
 		FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 		FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
 
@@ -109,7 +109,7 @@ public class CompareService {
 		if (isMerchantAndCategoryAvailable()) {
 			CategoriesBroadcastObject categoriesBroadcastObject = new CategoriesBroadcastObject(
 					categories);
-			broadcast.sendObject(categoriesBroadcastObject);
+			eventBusWrapper.getDefault().post(categoriesBroadcastObject);
 			getData();
 		}
 	}
