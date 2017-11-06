@@ -49,6 +49,8 @@ repositories {
 }
 
 dependencies {
+	codacy 'com.github.codacy:codacy-coverage-reporter:-SNAPSHOT'
+
 	compile(project(path: ':lib')) {
 		exclude group: 'com.google.firebase'
 	}
@@ -72,12 +74,13 @@ dependencies {
 	compile "com.jakewharton:butterknife:8.8.1"
 	compile "com.squareup.picasso:picasso:2.5.2"
 	compile 'org.greenrobot:eventbus:3.1.0-RC'
-	codacy 'com.github.codacy:codacy-coverage-reporter:-SNAPSHOT'
+
+	testCompile "junit:junit:4.12"
+	testCompile "org.mockito:mockito-core:$mockitoVersion"
+
 	annotationProcessor "com.jakewharton:butterknife-compiler:8.8.1"
 	annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVersion"
 	annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
-	testCompile "junit:junit:4.12"
-	testCompile "org.mockito:mockito-core:$mockitoVersion"
 	androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2', {
 		exclude group: 'com.android.support', module: 'support-annotations'
 	}
