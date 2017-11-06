@@ -26,9 +26,7 @@ public class ComparePresenterTest extends BaseMockitoJUnitTest {
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		setUpEventBusMock();
-		//noinspection unchecked
-		presenter = new ComparePresenter(shoppingListManager, compareService, eventBusWrapper);
+		presenter = new ComparePresenter(shoppingListManager, compareService, event);
 	}
 
 	@Test
@@ -39,7 +37,7 @@ public class ComparePresenterTest extends BaseMockitoJUnitTest {
 		presenter.onResume(view);
 
 		assertEquals(presenter.view, view);
-		verifyEventBusRegister();
+		verifyEventRegister();
 		verify(view).notifyGotMerchantCategoryData(list);
 	}
 
@@ -47,6 +45,6 @@ public class ComparePresenterTest extends BaseMockitoJUnitTest {
 	public void onPause() throws Exception {
 		presenter.onPause();
 
-		verifyEventBusUnregister();
+		verifyEventUnregister();
 	}
 }

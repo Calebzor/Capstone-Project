@@ -17,22 +17,22 @@ import javax.inject.Inject;
 
 import hu.tvarga.capstone.cheaplist.business.compare.settings.dto.CompareSettingsFilterChangedBroadcastObject;
 import hu.tvarga.capstone.cheaplist.di.scopes.ApplicationScope;
-import hu.tvarga.capstone.cheaplist.utility.EventBusWrapper;
+import hu.tvarga.capstone.cheaplist.utility.eventbus.Event;
 import timber.log.Timber;
 
 @ApplicationScope
 public class UserService implements FirebaseAuth.AuthStateListener {
 
 	private final FirebaseDatabase firebaseDatabase;
-	private final EventBusWrapper eventBusWrapper;
+	private final Event event;
 	private DatabaseReference databaseReferenceUser;
 
 	private Map<String, Boolean> categoriesFilterForUser = new HashMap<>();
 	private DatabaseReference categoriesFilterForUserDB;
 
 	@Inject
-	UserService(EventBusWrapper eventBusWrapper) {
-		this.eventBusWrapper = eventBusWrapper;
+	UserService(Event event) {
+		this.event = event;
 		firebaseDatabase = FirebaseDatabase.getInstance();
 		FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 		firebaseAuth.addAuthStateListener(this);
@@ -63,8 +63,7 @@ public class UserService implements FirebaseAuth.AuthStateListener {
 				if (categoriesFilterForUserFromDB != null) {
 					categoriesFilterForUser.putAll(categoriesFilterForUserFromDB);
 				}
-				eventBusWrapper.getDefault().post(
-						new CompareSettingsFilterChangedBroadcastObject());
+				event.post(new CompareSettingsFilterChangedBroadcastObject());
 			}
 
 			@Override

@@ -3,14 +3,20 @@ package hu.tvarga.capstone.cheaplist.ui;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import hu.tvarga.capstone.cheaplist.R;
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.capstone.cheaplist.ui.compare.CompareFragment;
 import hu.tvarga.capstone.cheaplist.ui.detail.DetailFragment;
+import hu.tvarga.capstone.cheaplist.utility.eventbus.EventBusBuffer;
 
 @SuppressWarnings("squid:MaximumInheritanceDepth")
 public class MainActivity extends AuthBaseActivity {
+
+	@Inject
+	EventBusBuffer eventBusBuffer;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -24,6 +30,18 @@ public class MainActivity extends AuthBaseActivity {
 			fragmentManager.beginTransaction().replace(R.id.mainActivityFragmentContainer,
 					compareFragment, compareFragment.getClass().getName()).commit();
 		}
+	}
+
+	@Override
+	protected void onPause() {
+		eventBusBuffer.startBuffering();
+		super.onPause();
+	}
+
+	@Override
+	protected void onPostResume() {
+		super.onPostResume();
+		eventBusBuffer.replayAndClearBuffer();
 	}
 
 	public void openDetailView(ShoppingListItem item, ImageBasedListItemHolder holder) {

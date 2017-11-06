@@ -18,32 +18,32 @@ import hu.tvarga.capstone.cheaplist.business.UserService;
 import hu.tvarga.capstone.cheaplist.business.compare.CompareService;
 import hu.tvarga.capstone.cheaplist.business.compare.settings.dto.CompareSettingsFilterChangedBroadcastObject;
 import hu.tvarga.capstone.cheaplist.ui.compare.settings.CompareSettingsCategoryHolder;
-import hu.tvarga.capstone.cheaplist.utility.EventBusWrapper;
+import hu.tvarga.capstone.cheaplist.utility.eventbus.Event;
 
 public class CompareSettingsPresenter implements CompareSettingsContract.Presenter {
 
 	private final CompareService compareService;
 	private final UserService userService;
-	private final EventBusWrapper eventBusWrapper;
+	private final Event event;
 
 	private RecyclerView.Adapter<CompareSettingsCategoryHolder> adapter;
 
 	@Inject
 	public CompareSettingsPresenter(CompareService compareService, UserService userService,
-			EventBusWrapper eventBusWrapper) {
+			Event event) {
 		this.compareService = compareService;
 		this.userService = userService;
-		this.eventBusWrapper = eventBusWrapper;
+		this.event = event;
 	}
 
 	@Override
 	public void onStart(CompareSettingsContract.View view) {
-		eventBusWrapper.getDefault().register(this);
+		event.register(this);
 	}
 
 	@Override
 	public void onStop() {
-		eventBusWrapper.getDefault().unregister(this);
+		event.unregister(this);
 	}
 
 	@Subscribe

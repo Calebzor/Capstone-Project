@@ -19,7 +19,7 @@ import hu.tvarga.capstone.cheaplist.dao.MerchantCategoryListItem;
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.capstone.cheaplist.di.scopes.ApplicationScope;
 import hu.tvarga.capstone.cheaplist.ui.compare.MerchantCategoryListItemHolder;
-import hu.tvarga.capstone.cheaplist.utility.EventBusWrapper;
+import hu.tvarga.capstone.cheaplist.utility.eventbus.Event;
 import timber.log.Timber;
 
 @ApplicationScope
@@ -27,24 +27,24 @@ public class ComparePresenter implements CompareContract.Presenter {
 
 	private final ShoppingListManager shoppingListManager;
 	private final CompareService compareService;
-	private final EventBusWrapper eventBusWrapper;
+	private final Event event;
 	CompareContract.View view;
 
 	List<String> categories;
 
 	@Inject
 	ComparePresenter(ShoppingListManager shoppingListManager, CompareService compareService,
-			EventBusWrapper eventBusWrapper) {
+			Event event) {
 		this.compareService = compareService;
 		this.shoppingListManager = shoppingListManager;
-		this.eventBusWrapper = eventBusWrapper;
+		this.event = event;
 		view = new CompareTabsViewStub();
 	}
 
 	@Override
 	public void onResume(CompareContract.View view) {
 		this.view = view;
-		eventBusWrapper.getDefault().register(this);
+		event.register(this);
 		if (categories != null) {
 			view.notifyGotMerchantCategoryData(categories);
 		}
@@ -52,7 +52,7 @@ public class ComparePresenter implements CompareContract.Presenter {
 
 	@Override
 	public void onPause() {
-		eventBusWrapper.getDefault().unregister(this);
+		event.unregister(this);
 		view = new CompareTabsViewStub();
 	}
 
