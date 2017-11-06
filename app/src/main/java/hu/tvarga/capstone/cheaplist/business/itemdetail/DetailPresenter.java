@@ -10,7 +10,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import javax.inject.Inject;
 
-import hu.tvarga.capstone.cheaplist.business.ShoppingListManager;
+import hu.tvarga.capstone.cheaplist.business.compare.shoppinglist.ShoppingListManager;
 import hu.tvarga.capstone.cheaplist.dao.Item;
 import hu.tvarga.capstone.cheaplist.dao.ManufacturerInformation;
 import hu.tvarga.capstone.cheaplist.dao.Merchant;

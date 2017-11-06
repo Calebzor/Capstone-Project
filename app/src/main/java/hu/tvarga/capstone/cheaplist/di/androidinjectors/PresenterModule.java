@@ -6,6 +6,8 @@ import hu.tvarga.capstone.cheaplist.business.compare.CompareContract;
 import hu.tvarga.capstone.cheaplist.business.compare.ComparePresenter;
 import hu.tvarga.capstone.cheaplist.business.compare.settings.CompareSettingsContract;
 import hu.tvarga.capstone.cheaplist.business.compare.settings.CompareSettingsPresenter;
+import hu.tvarga.capstone.cheaplist.business.compare.shoppinglist.ShoppingListContract;
+import hu.tvarga.capstone.cheaplist.business.compare.shoppinglist.ShoppingListPresenter;
 import hu.tvarga.capstone.cheaplist.business.itemdetail.DetailContract;
 import hu.tvarga.capstone.cheaplist.business.itemdetail.DetailPresenter;
 
@@ -22,4 +24,8 @@ public abstract class PresenterModule {
 	@Binds
 	public abstract CompareSettingsContract.Presenter bindCompareSettingsPresenter(
 			CompareSettingsPresenter compareSettingsPresenter);
+
+	@Binds
+	public abstract ShoppingListContract.Presenter bindShoppingListPresenter(
+			ShoppingListPresenter shoppingListPresenter);
 }

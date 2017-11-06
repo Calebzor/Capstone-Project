@@ -4,21 +4,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 
 import javax.inject.Inject;
 
@@ -27,22 +18,16 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 import hu.tvarga.capstone.cheaplist.R;
-import hu.tvarga.capstone.cheaplist.business.ShoppingListManager;
+import hu.tvarga.capstone.cheaplist.business.compare.shoppinglist.ShoppingListContract;
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.capstone.cheaplist.ui.MainActivity;
-import timber.log.Timber;
 
-public class ShoppingListFragment extends DaggerFragment {
+public class ShoppingListFragment extends DaggerFragment implements ShoppingListContract.View {
 
 	public static final String FRAGMENT_TAG = ShoppingListFragment.class.getName();
 
 	public static ShoppingListFragment newInstance() {
 		return new ShoppingListFragment();
-	}
-
-	public interface ShoppingListItemClickAction {
-
-		void onShoppingListItemClick(ShoppingListItem item);
 	}
 
 	@BindView(R.id.emptyText)
@@ -52,16 +37,20 @@ public class ShoppingListFragment extends DaggerFragment {
 	RecyclerView shoppingList;
 
 	@Inject
-	ShoppingListManager shoppingListManager;
+	ShoppingListContract.Presenter presenter;
 
 	private Unbinder unbinder;
-	private DatabaseReference dbRefForShoppingList;
 
 	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setSharedElementEnterTransition(
-				TransitionInflater.from(getContext()).inflateTransition(android.R.transition.move));
+	public void onResume() {
+		super.onResume();
+		presenter.onResume(this);
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		presenter.onPause();
 	}
 
 	@Override
@@ -69,35 +58,7 @@ public class ShoppingListFragment extends DaggerFragment {
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.shopping_list, container, false);
 		unbinder = ButterKnife.bind(this, rootView);
-
 		return rootView;
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-
-		attachRecyclerViewAdapter();
-	}
-
-	private DatabaseReference getDBRefForShoppingList() {
-		FirebaseAuth auth = FirebaseAuth.getInstance();
-		FirebaseUser currentUser = auth.getCurrentUser();
-		if (currentUser != null) {
-			return FirebaseDatabase.getInstance().getReference().child("userData").child(
-					currentUser.getUid()).child("shoppingList");
-		}
-		return null;
-	}
-
-	private void attachRecyclerViewAdapter() {
-		Timber.d("attachRecyclerViewAdapter");
-		FirebaseRecyclerAdapter<ShoppingListItem, ShoppingListItemHolder> shoppingListAdapter =
-				getShoppingListAdapter();
-
-		shoppingList.setAdapter(shoppingListAdapter);
-		shoppingList.setHasFixedSize(true);
-		setUpSwipeAction();
 	}
 
 	//region Swipe action
@@ -117,11 +78,10 @@ public class ShoppingListFragment extends DaggerFragment {
 					ShoppingListItemHolder shoppingListItemHolder =
 							(ShoppingListItemHolder) viewHolder;
 					if (shoppingListItemHolder.item != null) {
-						shoppingListManager.removeFromList(shoppingListItemHolder.item);
+						presenter.removeFromList(shoppingListItemHolder.item);
 						View coordinatorLayout = getActivity().findViewById(R.id.coordinator);
 						if (coordinatorLayout != null) {
-							showSnackBar(coordinatorLayout, shoppingListItemHolder.item,
-									shoppingListManager);
+							showSnackBar(coordinatorLayout, shoppingListItemHolder.item);
 						}
 					}
 				}
@@ -132,48 +92,31 @@ public class ShoppingListFragment extends DaggerFragment {
 		itemTouchHelper.attachToRecyclerView(shoppingList);
 	}
 
-	private void showSnackBar(View coordinatorLayout, final ShoppingListItem item,
-			final ShoppingListManager shoppingListManager) {
+	private void showSnackBar(View coordinatorLayout, final ShoppingListItem item) {
 		Snackbar.make(coordinatorLayout, R.string.removed_from_shopping_list, Snackbar.LENGTH_LONG)
 				.setAction(R.string.undo, new View.OnClickListener() {
 					@Override
 					public void onClick(View undoView) {
-						snackUndoAction(item, shoppingListManager);
+						snackUndoAction(item);
 					}
 				}).setActionTextColor(
 				ContextCompat.getColor(coordinatorLayout.getContext(), R.color.secondaryTextColor))
 				.show();
 	}
 
-	private void snackUndoAction(ShoppingListItem item, ShoppingListManager shoppingListManager) {
-		shoppingListManager.addToList(item);
+	private void snackUndoAction(ShoppingListItem item) {
+		presenter.addToList(item);
 	}
 	//endregion
 
-	protected FirebaseRecyclerAdapter<ShoppingListItem, ShoppingListItemHolder> getShoppingListAdapter() {
-		if (dbRefForShoppingList == null) {
-			return null;
-		}
-		Query query = dbRefForShoppingList.orderByChild("checked");
-		return new FirebaseRecyclerAdapter<ShoppingListItem, ShoppingListItemHolder>(
-				ShoppingListItem.class, R.layout.shopping_list_item, ShoppingListItemHolder.class,
-				query, this) {
-			@Override
-			public void populateViewHolder(ShoppingListItemHolder holder, ShoppingListItem item,
-					int position) {
-				holder.bind(item, shoppingListManager, getOnListItemOnClickListener(item, holder),
-						position);
-			}
-
-			@Override
-			public void onDataChanged() {
-				shoppingList.setVisibility(getItemCount() != 0 ? View.VISIBLE : View.GONE);
-				emptyText.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
-			}
-		};
+	@Override
+	public void setEmptyView(int itemCount) {
+		shoppingList.setVisibility(itemCount != 0 ? View.VISIBLE : View.GONE);
+		emptyText.setVisibility(itemCount == 0 ? View.VISIBLE : View.GONE);
 	}
 
-	private View.OnClickListener getOnListItemOnClickListener(final ShoppingListItem item,
+	@Override
+	public View.OnClickListener getOnListItemOnClickListener(final ShoppingListItem item,
 			final ShoppingListItemHolder holder) {
 		return new View.OnClickListener() {
 			@Override
@@ -185,14 +128,10 @@ public class ShoppingListFragment extends DaggerFragment {
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		RecyclerView.Adapter<ShoppingListItemHolder> adapter = presenter.getAdapter();
+		shoppingList.setAdapter(adapter);
+		setUpSwipeAction();
 		super.onViewCreated(view, savedInstanceState);
-
-		dbRefForShoppingList = getDBRefForShoppingList();
-
-		LinearLayoutManager startLayoutManager = new LinearLayoutManager(getActivity());
-		startLayoutManager.setReverseLayout(false);
-
-		shoppingList.setLayoutManager(startLayoutManager);
 	}
 
 	@Override

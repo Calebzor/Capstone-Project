@@ -1,14 +1,22 @@
-package hu.tvarga.capstone.cheaplist.business;
+package hu.tvarga.capstone.cheaplist.business.compare.shoppinglist;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -16,6 +24,8 @@ import hu.tvarga.capstone.cheaplist.dao.Item;
 import hu.tvarga.capstone.cheaplist.dao.Merchant;
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.capstone.cheaplist.di.scopes.ApplicationScope;
+import hu.tvarga.capstone.cheaplist.ui.shoppinglist.ShoppingListItemHolder;
+import timber.log.Timber;
 
 import static hu.tvarga.capstone.cheaplist.business.analytics.AnalyticsEvents.ITEM_ADD_TO_SHOPPING_LIST;
 import static hu.tvarga.capstone.cheaplist.business.analytics.AnalyticsEvents.ITEM_REMOVE_FROM_SHOPPING_LIST;
@@ -24,8 +34,11 @@ import static hu.tvarga.capstone.cheaplist.business.analytics.AnalyticsEvents.IT
 public class ShoppingListManager implements FirebaseAuth.AuthStateListener {
 
 	private final FirebaseDatabase firebaseDatabase;
-	private DatabaseReference databaseReferenceUser;
+	private DatabaseReference databaseReferenceUserShoppingList;
 	private FirebaseAnalytics firebaseAnalytics;
+
+	private List<ShoppingListItem> items = new LinkedList<>();
+	private RecyclerView.Adapter<ShoppingListItemHolder> adapter;
 
 	@Inject
 	public ShoppingListManager(Context context) {
@@ -39,11 +52,12 @@ public class ShoppingListManager implements FirebaseAuth.AuthStateListener {
 	public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 		FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 		if (currentUser != null) {
-			databaseReferenceUser = firebaseDatabase.getReference().child("userData").child(
-					currentUser.getUid()).child("shoppingList");
+			databaseReferenceUserShoppingList = firebaseDatabase.getReference().child("userData")
+					.child(currentUser.getUid()).child("shoppingList");
+			getItemsFromDB();
 		}
 		else {
-			databaseReferenceUser = null;
+			databaseReferenceUserShoppingList = null;
 		}
 	}
 
@@ -52,36 +66,36 @@ public class ShoppingListManager implements FirebaseAuth.AuthStateListener {
 		addToList(shoppingListItem);
 	}
 
-	public void addToList(ShoppingListItem shoppingListItem) {
-		if (databaseReferenceUser == null) {
+	void addToList(ShoppingListItem shoppingListItem) {
+		if (databaseReferenceUserShoppingList == null) {
 			return;
 		}
 		trackShoppingListEvent(ITEM_ADD_TO_SHOPPING_LIST, shoppingListItem);
-		databaseReferenceUser.child(shoppingListItem.id).setValue(shoppingListItem);
+		databaseReferenceUserShoppingList.child(shoppingListItem.id).setValue(shoppingListItem);
 	}
 
 	public void checkItem(ShoppingListItem shoppingListItem) {
-		if (databaseReferenceUser == null) {
+		if (databaseReferenceUserShoppingList == null) {
 			return;
 		}
 		shoppingListItem.checked = true;
-		databaseReferenceUser.child(shoppingListItem.id).setValue(shoppingListItem);
+		databaseReferenceUserShoppingList.child(shoppingListItem.id).setValue(shoppingListItem);
 	}
 
 	public void unCheckItem(ShoppingListItem shoppingListItem) {
-		if (databaseReferenceUser == null) {
+		if (databaseReferenceUserShoppingList == null) {
 			return;
 		}
 		shoppingListItem.checked = false;
-		databaseReferenceUser.child(shoppingListItem.id).setValue(shoppingListItem);
+		databaseReferenceUserShoppingList.child(shoppingListItem.id).setValue(shoppingListItem);
 	}
 
 	public void removeFromList(Item item) {
-		if (databaseReferenceUser == null) {
+		if (databaseReferenceUserShoppingList == null) {
 			return;
 		}
 		trackShoppingListEvent(ITEM_REMOVE_FROM_SHOPPING_LIST, item);
-		databaseReferenceUser.child(item.id).setValue(null);
+		databaseReferenceUserShoppingList.child(item.id).setValue(null);
 	}
 
 	private void trackShoppingListEvent(String event, Item item) {
@@ -92,5 +106,37 @@ public class ShoppingListManager implements FirebaseAuth.AuthStateListener {
 		bundle.putString(FirebaseAnalytics.Param.CURRENCY, item.currency);
 		bundle.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, String.valueOf(item.category));
 		firebaseAnalytics.logEvent(event, bundle);
+	}
+
+	private void getItemsFromDB() {
+		Query query = databaseReferenceUserShoppingList.orderByChild("checked");
+		query.addValueEventListener(new ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot dataSnapshot) {
+				Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+				items.clear();
+				for (DataSnapshot child : children) {
+					ShoppingListItem item = child.getValue(ShoppingListItem.class);
+					items.add(item);
+				}
+
+				if (adapter != null) {
+					adapter.notifyDataSetChanged();
+				}
+			}
+
+			@Override
+			public void onCancelled(DatabaseError databaseError) {
+				Timber.d("getStartItemsFromDB#onCancelled %s", databaseError);
+			}
+		});
+	}
+
+	void setAdapter(RecyclerView.Adapter<ShoppingListItemHolder> adapter) {
+		this.adapter = adapter;
+	}
+
+	List<ShoppingListItem> getItems() {
+		return items;
 	}
 }

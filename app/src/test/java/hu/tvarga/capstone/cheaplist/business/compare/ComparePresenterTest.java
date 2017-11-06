@@ -6,7 +6,7 @@ import org.mockito.Mock;
 import java.util.ArrayList;
 
 import hu.tvarga.capstone.cheaplist.BaseMockitoJUnitTest;
-import hu.tvarga.capstone.cheaplist.business.ShoppingListManager;
+import hu.tvarga.capstone.cheaplist.business.compare.shoppinglist.ShoppingListManager;
 
 import static org.mockito.Mockito.verify;
 

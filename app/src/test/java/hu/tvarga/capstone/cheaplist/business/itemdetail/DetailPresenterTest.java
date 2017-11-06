@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import hu.tvarga.capstone.cheaplist.BaseMockitoJUnitTest;
-import hu.tvarga.capstone.cheaplist.business.ShoppingListManager;
+import hu.tvarga.capstone.cheaplist.business.compare.shoppinglist.ShoppingListManager;
 import hu.tvarga.capstone.cheaplist.dao.ManufacturerInformation;
 
 import static org.hamcrest.CoreMatchers.containsString;

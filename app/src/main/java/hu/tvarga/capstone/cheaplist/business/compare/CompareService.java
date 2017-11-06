@@ -6,7 +6,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
@@ -146,17 +145,15 @@ public class CompareService {
 		query.addValueEventListener(new ValueEventListener() {
 			@Override
 			public void onDataChange(DataSnapshot dataSnapshot) {
-				GenericTypeIndicator<HashMap<String, MerchantCategoryListItem>>
-						genericTypeIndicator =
-						new GenericTypeIndicator<HashMap<String, MerchantCategoryListItem>>() {};
-				HashMap<String, MerchantCategoryListItem> value = dataSnapshot.getValue(
-						genericTypeIndicator);
-				if (value != null && !value.isEmpty()) {
-					startItemsUnfiltered.clear();
-					startItemsUnfiltered.addAll(value.values());
-					if (startAdapter != null) {
-						filterStart();
-					}
+				Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+				startItemsUnfiltered.clear();
+				for (DataSnapshot child : children) {
+					MerchantCategoryListItem item = child.getValue(MerchantCategoryListItem.class);
+					startItemsUnfiltered.add(item);
+				}
+
+				if (startAdapter != null) {
+					filterStart();
 				}
 			}
 
@@ -172,17 +169,15 @@ public class CompareService {
 		query.addValueEventListener(new ValueEventListener() {
 			@Override
 			public void onDataChange(DataSnapshot dataSnapshot) {
-				GenericTypeIndicator<HashMap<String, MerchantCategoryListItem>>
-						genericTypeIndicator =
-						new GenericTypeIndicator<HashMap<String, MerchantCategoryListItem>>() {};
-				HashMap<String, MerchantCategoryListItem> value = dataSnapshot.getValue(
-						genericTypeIndicator);
-				if (value != null && !value.isEmpty()) {
-					endItemsUnfiltered.clear();
-					endItemsUnfiltered.addAll(value.values());
-					if (endAdapter != null) {
-						filterEnd();
-					}
+				Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+				endItemsUnfiltered.clear();
+				for (DataSnapshot child : children) {
+					MerchantCategoryListItem item = child.getValue(MerchantCategoryListItem.class);
+					endItemsUnfiltered.add(item);
+				}
+
+				if (endAdapter != null) {
+					filterEnd();
 				}
 			}
 

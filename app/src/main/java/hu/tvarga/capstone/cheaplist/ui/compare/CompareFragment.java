@@ -55,6 +55,12 @@ public class CompareFragment extends DaggerFragment implements CompareContract.V
 	private Unbinder unbinder;
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		presenter.onResume(this);
+	}
+
+	@Override
 	public void onPause() {
 		super.onPause();
 		presenter.onPause();
@@ -79,12 +85,6 @@ public class CompareFragment extends DaggerFragment implements CompareContract.V
 			view = activity.findViewById(R.id.coordinator);
 		}
 		return view;
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		presenter.onResume(this);
 	}
 
 	@Override

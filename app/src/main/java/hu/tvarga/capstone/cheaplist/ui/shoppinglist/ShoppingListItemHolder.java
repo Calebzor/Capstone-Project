@@ -9,7 +9,7 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import hu.tvarga.capstone.cheaplist.R;
-import hu.tvarga.capstone.cheaplist.business.ShoppingListManager;
+import hu.tvarga.capstone.cheaplist.business.compare.shoppinglist.ShoppingListManager;
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.capstone.cheaplist.ui.ImageBasedListItemHolder;
 
