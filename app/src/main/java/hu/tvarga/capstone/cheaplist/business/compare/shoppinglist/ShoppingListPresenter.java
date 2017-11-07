@@ -48,7 +48,7 @@ public class ShoppingListPresenter implements ShoppingListContract.Presenter {
 					public void onBindViewHolder(ShoppingListItemHolder holder, int position) {
 						ShoppingListItem item = shoppingListManager.getItems().get(position);
 						holder.bind(item, shoppingListManager,
-								view.getOnListItemOnClickListener(item, holder), position);
+								view.getOnListItemOnClickListener(item, holder));
 					}
 
 					@Override

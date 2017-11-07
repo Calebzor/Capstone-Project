@@ -81,7 +81,7 @@ public class ComparePresenter implements CompareContract.Presenter {
 						holder.bind(item, view.getActivityCoordinatorLayout(), shoppingListManager,
 								compareService.getStartMerchant(),
 								view.getOnListItemOnClickListener(new ShoppingListItem(item,
-										compareService.getStartMerchant()), holder), position);
+										compareService.getStartMerchant()), holder));
 					}
 
 					@Override
@@ -114,7 +114,7 @@ public class ComparePresenter implements CompareContract.Presenter {
 						holder.bind(item, view.getActivityCoordinatorLayout(), shoppingListManager,
 								compareService.getEndMerchant(), view.getOnListItemOnClickListener(
 										new ShoppingListItem(item, compareService.getEndMerchant()),
-										holder), position);
+										holder));
 					}
 
 					@Override

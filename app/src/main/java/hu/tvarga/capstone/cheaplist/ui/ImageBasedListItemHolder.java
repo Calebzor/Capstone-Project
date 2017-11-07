@@ -20,8 +20,7 @@ public abstract class ImageBasedListItemHolder extends RecyclerView.ViewHolder {
 		ButterKnife.bind(this, itemView);
 	}
 
-	protected void setTransitionName(Merchant merchant, int position) {
-		ViewCompat.setTransitionName(image,
-				String.valueOf(position) + merchant.name + "_itemImage");
+	protected void setTransitionName(Merchant merchant, String key) {
+		ViewCompat.setTransitionName(image, key + merchant.name + "_itemImage");
 	}
 }

@@ -36,14 +36,14 @@ public class MerchantCategoryListItemHolder extends ImageBasedListItemHolder {
 
 	public void bind(final MerchantCategoryListItem item, final View coordinatorLayout,
 			final ShoppingListManager shoppingListManager, final Merchant merchant,
-			View.OnClickListener onClickListener, int position) {
+			View.OnClickListener onClickListener) {
 		name.setText(item.name != null ? item.name.trim() : null);
 		price.setText(String.format("%s %s", item.price, item.currency));
 		pricePerUnit.setText(
 				String.format("%s %s %s", item.pricePerUnit, item.currency, item.unit));
 		Picasso.with(itemView.getContext()).load(item.imageURL).into(image);
 
-		setTransitionName(merchant, position);
+		setTransitionName(merchant, item.id);
 
 		itemContainer.setOnClickListener(onClickListener);
 

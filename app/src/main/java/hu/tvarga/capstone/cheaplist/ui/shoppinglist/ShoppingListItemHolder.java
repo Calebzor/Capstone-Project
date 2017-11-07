@@ -38,7 +38,7 @@ public class ShoppingListItemHolder extends ImageBasedListItemHolder {
 	}
 
 	public void bind(final ShoppingListItem item, final ShoppingListManager shoppingListManager,
-			View.OnClickListener onClickListener, int position) {
+			View.OnClickListener onClickListener) {
 		this.item = item;
 		name.setText(item.name != null ? item.name.trim() : null);
 		price.setText(String.format("%s %s", item.price, item.currency));
@@ -48,7 +48,7 @@ public class ShoppingListItemHolder extends ImageBasedListItemHolder {
 		shoppingListItemCheckBox.setChecked(item.checked);
 
 		// would probably not need merchant name for uniqueness here
-		setTransitionName(item.merchant, position);
+		setTransitionName(item.merchant, item.id);
 
 		itemContainer.setOnClickListener(onClickListener);
 
