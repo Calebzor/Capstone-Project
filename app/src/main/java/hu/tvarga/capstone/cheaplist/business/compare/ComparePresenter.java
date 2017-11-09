@@ -44,9 +44,10 @@ public class ComparePresenter implements CompareContract.Presenter {
 	public void onResume(CompareContract.View view) {
 		this.view = view;
 		event.register(this);
-		if (categories != null) {
-			view.notifyGotMerchantCategoryData(categories);
+		if (categories == null) {
+			categories = compareService.getCategories();
 		}
+		view.notifyGotMerchantCategoryData(categories);
 	}
 
 	@Override
