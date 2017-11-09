@@ -3,6 +3,8 @@ package hu.tvarga.capstone.cheaplist.ui;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 
+import com.google.firebase.crash.FirebaseCrash;
+
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
@@ -30,6 +32,7 @@ public class MainActivity extends AuthBaseActivity {
 			fragmentManager.beginTransaction().replace(R.id.mainActivityFragmentContainer,
 					compareFragment, compareFragment.getClass().getName()).commit();
 		}
+		FirebaseCrash.log("Activity created");
 	}
 
 	@Override
