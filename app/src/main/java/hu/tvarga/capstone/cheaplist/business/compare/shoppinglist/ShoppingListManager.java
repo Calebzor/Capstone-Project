@@ -3,6 +3,7 @@ package hu.tvarga.capstone.cheaplist.business.compare.shoppinglist;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -114,15 +115,40 @@ public class ShoppingListManager implements FirebaseAuth.AuthStateListener {
 			@Override
 			public void onDataChange(DataSnapshot dataSnapshot) {
 				Iterable<DataSnapshot> children = dataSnapshot.getChildren();
-				items.clear();
+				final List<ShoppingListItem> newItems = new LinkedList<>();
 				for (DataSnapshot child : children) {
 					ShoppingListItem item = child.getValue(ShoppingListItem.class);
-					items.add(item);
+					newItems.add(item);
 				}
 
 				if (adapter != null) {
-					adapter.notifyDataSetChanged();
+					DiffUtil.DiffResult result = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+						@Override
+						public int getOldListSize() {
+							return items.size();
+						}
+
+						@Override
+						public int getNewListSize() {
+							return newItems.size();
+						}
+
+						@Override
+						public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+							return items.get(oldItemPosition).id.equals(
+									newItems.get(newItemPosition).id);
+						}
+
+						@Override
+						public boolean areContentsTheSame(int oldItemPosition,
+								int newItemPosition) {
+							return items.get(oldItemPosition).toString().equals(
+									newItems.get(newItemPosition).toString());
+						}
+					});
+					result.dispatchUpdatesTo(adapter);
 				}
+				items = newItems;
 			}
 
 			@Override

@@ -57,7 +57,7 @@
 			android:layout_below="@id/name"
 			android:layout_marginEnd="@dimen/shopping_list_item_height"
 			android:layout_toEndOf="@id/shoppingListItemCheckBox"
-			tools:text="name" />
+			tools:text="price" />
 
 		<TextView
 			android:id="@+id/pricePerUnit"
@@ -68,7 +68,7 @@
 			android:layout_marginEnd="@dimen/shopping_list_item_height"
 			android:layout_toEndOf="@id/shoppingListItemCheckBox"
 			android:textSize="@dimen/shopping_list_item_price_per_unit_text_size"
-			tools:text="name" />
+			tools:text="pricePerUnit" />
 
 	</RelativeLayout>
 </FrameLayout>
