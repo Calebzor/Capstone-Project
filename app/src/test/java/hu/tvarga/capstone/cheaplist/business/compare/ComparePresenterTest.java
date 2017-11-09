@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import hu.tvarga.capstone.cheaplist.BaseMockitoJUnitTest;
 import hu.tvarga.capstone.cheaplist.business.compare.shoppinglist.ShoppingListManager;
+import hu.tvarga.capstone.cheaplist.dao.ItemCategory;
 
 import static org.mockito.Mockito.verify;
 
@@ -31,7 +32,7 @@ public class ComparePresenterTest extends BaseMockitoJUnitTest {
 
 	@Test
 	public void onResume() throws Exception {
-		ArrayList<String> list = new ArrayList<>();
+		ArrayList<ItemCategory> list = new ArrayList<>();
 		presenter.categories = list;
 
 		presenter.onResume(view);
