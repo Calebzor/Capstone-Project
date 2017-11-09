@@ -51,20 +51,20 @@ public class CompareFragment extends DaggerFragment implements CompareContract.V
 	ProgressBar progressBar;
 
 	@Inject
-	CompareContract.Presenter presenter;
+	CompareContract.Presenter comparePresenter;
 
 	private Unbinder unbinder;
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		presenter.onResume(this);
+		comparePresenter.onResume(this);
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-		presenter.onPause();
+		comparePresenter.onPause();
 	}
 
 	@Override
@@ -99,11 +99,12 @@ public class CompareFragment extends DaggerFragment implements CompareContract.V
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		RecyclerView.Adapter<MerchantCategoryListItemHolder> startAdapter =
-				presenter.getStartAdapter();
+				comparePresenter.getStartAdapter();
 		startItems.setAdapter(startAdapter);
-		compareSearchInput.setOnQueryTextListener(presenter.getOnQueryTextListener());
+		compareSearchInput.setOnQueryTextListener(comparePresenter.getOnQueryTextListener());
 
-		RecyclerView.Adapter<MerchantCategoryListItemHolder> endAdapter = presenter.getEndAdapter();
+		RecyclerView.Adapter<MerchantCategoryListItemHolder> endAdapter =
+				comparePresenter.getEndAdapter();
 		endItems.setAdapter(endAdapter);
 		super.onViewCreated(view, savedInstanceState);
 	}

@@ -33,7 +33,7 @@ public class ShoppingListFragment extends DaggerFragment implements ShoppingList
 	RecyclerView shoppingList;
 
 	@Inject
-	ShoppingListContract.Presenter presenter;
+	ShoppingListContract.Presenter shoppingListPresenter;
 
 	private Unbinder unbinder;
 
@@ -44,13 +44,13 @@ public class ShoppingListFragment extends DaggerFragment implements ShoppingList
 	@Override
 	public void onResume() {
 		super.onResume();
-		presenter.onResume(this);
+		shoppingListPresenter.onResume(this);
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-		presenter.onPause();
+		shoppingListPresenter.onPause();
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class ShoppingListFragment extends DaggerFragment implements ShoppingList
 					ShoppingListItemHolder shoppingListItemHolder =
 							(ShoppingListItemHolder) viewHolder;
 					if (shoppingListItemHolder.item != null) {
-						presenter.removeFromList(shoppingListItemHolder.item);
+						shoppingListPresenter.removeFromList(shoppingListItemHolder.item);
 						View coordinatorLayout = getActivity().findViewById(R.id.coordinator);
 						if (coordinatorLayout != null) {
 							showSnackBar(coordinatorLayout, shoppingListItemHolder.item);
@@ -105,7 +105,7 @@ public class ShoppingListFragment extends DaggerFragment implements ShoppingList
 	}
 
 	private void snackUndoAction(ShoppingListItem item) {
-		presenter.addToList(item);
+		shoppingListPresenter.addToList(item);
 	}
 	//endregion
 
@@ -128,7 +128,7 @@ public class ShoppingListFragment extends DaggerFragment implements ShoppingList
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-		RecyclerView.Adapter<ShoppingListItemHolder> adapter = presenter.getAdapter();
+		RecyclerView.Adapter<ShoppingListItemHolder> adapter = shoppingListPresenter.getAdapter();
 		shoppingList.setAdapter(adapter);
 		setUpSwipeAction();
 		super.onViewCreated(view, savedInstanceState);
