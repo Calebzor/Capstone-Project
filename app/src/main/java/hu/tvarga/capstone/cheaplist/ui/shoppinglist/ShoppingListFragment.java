@@ -26,10 +26,6 @@ public class ShoppingListFragment extends DaggerFragment implements ShoppingList
 
 	public static final String FRAGMENT_TAG = ShoppingListFragment.class.getName();
 
-	public static ShoppingListFragment newInstance() {
-		return new ShoppingListFragment();
-	}
-
 	@BindView(R.id.emptyText)
 	TextView emptyText;
 
@@ -40,6 +36,10 @@ public class ShoppingListFragment extends DaggerFragment implements ShoppingList
 	ShoppingListContract.Presenter presenter;
 
 	private Unbinder unbinder;
+
+	public static ShoppingListFragment newInstance() {
+		return new ShoppingListFragment();
+	}
 
 	@Override
 	public void onResume() {
