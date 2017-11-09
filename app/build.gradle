@@ -67,7 +67,7 @@ dependencies {
 	compile "com.google.firebase:firebase-crash:$firebaseVersion"
 	compile "com.firebaseui:firebase-ui-auth:$firebaseUIVersion"
 	compile "com.firebaseui:firebase-ui-database:$firebaseUIVersion"
-	compile 'com.firebase:firebase-jobdispatcher:0.8.1'
+	compile 'com.firebase:firebase-jobdispatcher:0.8.3'
 	compile "com.google.dagger:dagger:$daggerVersion"
 	compile "com.google.dagger:dagger-android:$daggerVersion"
 	compile "com.google.dagger:dagger-android-support:$daggerVersion"
