@@ -4,6 +4,7 @@ import android.view.View;
 
 import java.util.List;
 
+import hu.tvarga.capstone.cheaplist.dao.ItemCategory;
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.capstone.cheaplist.ui.compare.MerchantCategoryListItemHolder;
 import timber.log.Timber;
@@ -34,7 +35,7 @@ public class CompareTabsViewStub implements CompareContract.View {
 	}
 
 	@Override
-	public void notifyGotMerchantCategoryData(List<String> categories) {
+	public void notifyGotMerchantCategoryData(List<ItemCategory> categories) {
 		Timber.d("notifyGotMerchantCategoryData");
 	}
 

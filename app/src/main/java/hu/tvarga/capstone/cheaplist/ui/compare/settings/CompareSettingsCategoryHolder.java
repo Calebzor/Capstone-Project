@@ -7,6 +7,7 @@ import android.view.View;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import hu.tvarga.capstone.cheaplist.R;
+import hu.tvarga.capstone.cheaplist.dao.ItemCategory;
 
 public class CompareSettingsCategoryHolder extends RecyclerView.ViewHolder {
 
@@ -18,9 +19,9 @@ public class CompareSettingsCategoryHolder extends RecyclerView.ViewHolder {
 		ButterKnife.bind(this, itemView);
 	}
 
-	public void bind(String category, boolean filterSelected,
+	public void bind(ItemCategory category, boolean filterSelected,
 			View.OnClickListener onClickListener) {
-		categoryListItemElement.setText(category);
+		categoryListItemElement.setText(category.toString());
 		categoryListItemElement.setChecked(filterSelected);
 		categoryListItemElement.setOnClickListener(onClickListener);
 	}

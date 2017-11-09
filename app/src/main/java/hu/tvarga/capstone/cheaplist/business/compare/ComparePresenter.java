@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import hu.tvarga.capstone.cheaplist.R;
 import hu.tvarga.capstone.cheaplist.business.compare.dto.CategoriesBroadcastObject;
 import hu.tvarga.capstone.cheaplist.business.compare.shoppinglist.ShoppingListManager;
+import hu.tvarga.capstone.cheaplist.dao.ItemCategory;
 import hu.tvarga.capstone.cheaplist.dao.MerchantCategoryListItem;
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.capstone.cheaplist.ui.compare.MerchantCategoryListItemHolder;
@@ -28,7 +29,7 @@ public class ComparePresenter implements CompareContract.Presenter {
 	private final Event event;
 	CompareContract.View view;
 
-	List<String> categories;
+	List<ItemCategory> categories;
 
 	@Inject
 	ComparePresenter(ShoppingListManager shoppingListManager, CompareService compareService,

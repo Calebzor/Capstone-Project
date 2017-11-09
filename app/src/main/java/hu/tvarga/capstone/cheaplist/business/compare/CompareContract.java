@@ -5,6 +5,7 @@ import android.support.v7.widget.SearchView;
 
 import java.util.List;
 
+import hu.tvarga.capstone.cheaplist.dao.ItemCategory;
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.capstone.cheaplist.ui.compare.MerchantCategoryListItemHolder;
 
@@ -26,6 +27,6 @@ public interface CompareContract {
 		android.view.View getActivityCoordinatorLayout();
 		void setStartEmptyView(int itemCount);
 		void setEndEmptyView(int itemCount);
-		void notifyGotMerchantCategoryData(List<String> categories);
+		void notifyGotMerchantCategoryData(List<ItemCategory> categories);
 	}
 }

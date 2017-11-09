@@ -1,8 +1,31 @@
 package hu.tvarga.capstone.cheaplist.business.compare.settings.dto;
 
-import java.io.Serializable;
+import java.util.List;
 
-public class CompareSettingsFilterChangedBroadcastObject implements Serializable {
+import hu.tvarga.capstone.cheaplist.dao.UserCategoryFilterListItem;
 
-	private static final long serialVersionUID = 8779649095181769500L;
+public class CompareSettingsFilterChangedBroadcastObject {
+
+	private List<UserCategoryFilterListItem> oldFilter;
+	private List<UserCategoryFilterListItem> newFilter;
+
+	public CompareSettingsFilterChangedBroadcastObject(List<UserCategoryFilterListItem> oldFilter,
+			List<UserCategoryFilterListItem> newFilter) {
+		this.oldFilter = oldFilter;
+		this.newFilter = newFilter;
+	}
+
+	public List<UserCategoryFilterListItem> getOldFilter() {
+		return oldFilter;
+	}
+
+	public List<UserCategoryFilterListItem> getNewFilter() {
+		return newFilter;
+	}
+
+	@Override
+	public String toString() {
+		return "CompareSettingsFilterChangedBroadcastObject{" + "oldFilter=" + oldFilter +
+				", newFilter=" + newFilter + '}';
+	}
 }

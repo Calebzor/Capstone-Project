@@ -22,6 +22,7 @@ import javax.inject.Inject;
 
 import hu.tvarga.capstone.cheaplist.BuildConfig;
 import hu.tvarga.capstone.cheaplist.business.compare.dto.CategoriesBroadcastObject;
+import hu.tvarga.capstone.cheaplist.dao.ItemCategory;
 import hu.tvarga.capstone.cheaplist.dao.Merchant;
 import hu.tvarga.capstone.cheaplist.dao.MerchantCategoryListItem;
 import hu.tvarga.capstone.cheaplist.di.scopes.ApplicationScope;
@@ -44,11 +45,11 @@ public class CompareService {
 	private DatabaseReference startMerchantItemsDBRef;
 	private DatabaseReference endMerchantItemsDBRef;
 
-	private ArrayList<String> categories = new ArrayList<>();
+	private ArrayList<ItemCategory> categories = new ArrayList<>();
 	private Map<String, Merchant> merchantMap = new HashMap<>();
 	private Merchant startMerchant;
 	private Merchant endMerchant;
-	private String category = "ALCOHOL";
+	private ItemCategory category = ItemCategory.ALCOHOL;
 	private String filter;
 
 	@Inject
@@ -69,7 +70,7 @@ public class CompareService {
 	}
 
 	private void getCategoriesFromDB() {
-		databaseReferencePublic.child("itemCategories").addListenerForSingleValueEvent(
+		databaseReferencePublic.child("itemCategories").orderByKey().addListenerForSingleValueEvent(
 				new CategoryValueEventListener(categories,
 						new CategoryValueEventListener.CategoriesDBCallback() {
 							@Override
@@ -212,11 +213,11 @@ public class CompareService {
 		return endMerchant;
 	}
 
-	public List<String> getCategories() {
+	public List<ItemCategory> getCategories() {
 		return categories;
 	}
 
-	public void setCategory(String category) {
+	public void setCategory(ItemCategory category) {
 		this.category = category;
 		getData();
 	}

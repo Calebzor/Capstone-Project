@@ -1,5 +1,6 @@
 package hu.tvarga.capstone.cheaplist.business.compare.settings;
 
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,9 +8,8 @@ import android.view.ViewGroup;
 
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -17,6 +17,8 @@ import hu.tvarga.capstone.cheaplist.R;
 import hu.tvarga.capstone.cheaplist.business.UserService;
 import hu.tvarga.capstone.cheaplist.business.compare.CompareService;
 import hu.tvarga.capstone.cheaplist.business.compare.settings.dto.CompareSettingsFilterChangedBroadcastObject;
+import hu.tvarga.capstone.cheaplist.dao.ItemCategory;
+import hu.tvarga.capstone.cheaplist.dao.UserCategoryFilterListItem;
 import hu.tvarga.capstone.cheaplist.ui.compare.settings.CompareSettingsCategoryHolder;
 import hu.tvarga.capstone.cheaplist.utility.eventbus.Event;
 
@@ -49,7 +51,7 @@ public class CompareSettingsPresenter implements CompareSettingsContract.Present
 	@Subscribe
 	public void handleCompareSettingsFilterChangedBroadcastObject(
 			CompareSettingsFilterChangedBroadcastObject object) {
-		filterChanged();
+		filterChanged(object);
 	}
 
 	@Override
@@ -66,20 +68,28 @@ public class CompareSettingsPresenter implements CompareSettingsContract.Present
 
 				@Override
 				public void onBindViewHolder(CompareSettingsCategoryHolder holder, int position) {
-					Map<String, Boolean> categoriesFilterForUser =
+					List<UserCategoryFilterListItem> categoriesFilterForUser =
 							userService.getCategoriesFilterForUser();
-					final String category = compareService.getCategories().get(position);
+					final ItemCategory category = compareService.getCategories().get(position);
 					boolean filterSelected = false;
 
-					if (categoriesFilterForUser.containsKey(category)) {
-						filterSelected = categoriesFilterForUser.get(category);
+					for (UserCategoryFilterListItem filterListItem : categoriesFilterForUser) {
+						if (filterListItem.category == category && filterListItem.checked) {
+							filterSelected = true;
+							break;
+						}
 					}
+
 					holder.bind(category, filterSelected, new View.OnClickListener() {
 						@Override
 						public void onClick(View view) {
-							Map<String, Boolean> newFilter = new HashMap<>();
-							for (String categoryInList : compareService.getCategories()) {
-								newFilter.put(categoryInList, categoryInList.equals(category));
+							List<UserCategoryFilterListItem> newFilter = new ArrayList<>();
+							for (ItemCategory categoryInList : compareService.getCategories()) {
+								UserCategoryFilterListItem filterListItem =
+										new UserCategoryFilterListItem();
+								filterListItem.category = categoryInList;
+								filterListItem.checked = categoryInList.equals(category);
+								newFilter.add(filterListItem);
 							}
 							userService.setCategoriesFilterForUser(newFilter);
 						}
@@ -96,17 +106,46 @@ public class CompareSettingsPresenter implements CompareSettingsContract.Present
 	}
 
 	@SuppressWarnings("squid:S3398")
-	private void filterChanged() {
-		adapter.notifyDataSetChanged();
-		Map<String, Boolean> categoriesFilterForUser = userService.getCategoriesFilterForUser();
-		Set<Map.Entry<String, Boolean>> entries = categoriesFilterForUser.entrySet();
+	private void filterChanged(final CompareSettingsFilterChangedBroadcastObject object) {
 
-		for (Map.Entry<String, Boolean> entry : entries) {
-			if (entry.getValue()) {
-				compareService.setCategory(entry.getKey());
+		for (UserCategoryFilterListItem filterListItem : object.getNewFilter()) {
+			if (filterListItem.checked) {
+				compareService.setCategory(filterListItem.category);
 				break;
 			}
 		}
+		if (object.getOldFilter().isEmpty()) {
+			adapter.notifyDataSetChanged();
+		}
+		else {
+			DiffUtil.DiffResult result = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+				@Override
+				public int getOldListSize() {
+					return object.getOldFilter().size();
+				}
+
+				@Override
+				public int getNewListSize() {
+					return object.getNewFilter().size();
+				}
+
+				@Override
+				public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+					return object.getOldFilter().get(oldItemPosition).category ==
+							object.getNewFilter().get(newItemPosition).category;
+				}
+
+				@Override
+				public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+					UserCategoryFilterListItem oldItem = object.getOldFilter().get(oldItemPosition);
+					UserCategoryFilterListItem newItem = object.getNewFilter().get(newItemPosition);
+					return oldItem.category == newItem.category &&
+							oldItem.checked == newItem.checked;
+				}
+			});
+			result.dispatchUpdatesTo(adapter);
+		}
+
 		compareService.getData();
 	}
 }

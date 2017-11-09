@@ -22,6 +22,7 @@ import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 import hu.tvarga.capstone.cheaplist.R;
 import hu.tvarga.capstone.cheaplist.business.compare.CompareContract;
+import hu.tvarga.capstone.cheaplist.dao.ItemCategory;
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.capstone.cheaplist.ui.MainActivity;
 import hu.tvarga.capstone.cheaplist.ui.compare.settings.CompareSettingsDialog;
@@ -124,7 +125,7 @@ public class CompareFragment extends DaggerFragment implements CompareContract.V
 	}
 
 	@Override
-	public void notifyGotMerchantCategoryData(final List<String> categories) {
+	public void notifyGotMerchantCategoryData(final List<ItemCategory> categories) {
 		progressBar.setVisibility(View.INVISIBLE);
 		compareFilterButton.setVisibility(View.VISIBLE);
 

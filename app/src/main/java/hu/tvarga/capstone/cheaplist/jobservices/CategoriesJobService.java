@@ -15,12 +15,13 @@ import java.util.Map;
 
 import hu.tvarga.capstone.cheaplist.business.compare.CategoryValueEventListener;
 import hu.tvarga.capstone.cheaplist.business.compare.MerchantValueEventListener;
+import hu.tvarga.capstone.cheaplist.dao.ItemCategory;
 import hu.tvarga.capstone.cheaplist.dao.Merchant;
 import timber.log.Timber;
 
 public class CategoriesJobService extends JobService {
 
-	private List<String> categories = new ArrayList<>();
+	private List<ItemCategory> categories = new ArrayList<>();
 	private HashMap<String, Merchant> merchantMap = new HashMap<>();
 	FirebaseDatabase firebaseDatabase;
 	DatabaseReference databaseReferencePublic;
@@ -54,7 +55,7 @@ public class CategoriesJobService extends JobService {
 		if (isMerchantAndCategoryAvailable()) {
 			Timber.d("getting merchant categories");
 			for (Map.Entry<String, Merchant> merchant : merchantMap.entrySet()) {
-				for (String category : categories) {
+				for (ItemCategory category : categories) {
 					final String key = merchant.getKey() + category;
 					DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child(
 							"publicReadable").child("merchantCategoryListItems").child(key);
@@ -91,7 +92,7 @@ public class CategoriesJobService extends JobService {
 	}
 
 	private void getCategories() {
-		databaseReferencePublic.child("itemCategories").addListenerForSingleValueEvent(
+		databaseReferencePublic.child("itemCategories").orderByKey().addListenerForSingleValueEvent(
 				new CategoryValueEventListener(categories,
 						new CategoryValueEventListener.CategoriesDBCallback() {
 							@Override

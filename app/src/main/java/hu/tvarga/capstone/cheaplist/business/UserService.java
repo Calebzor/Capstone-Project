@@ -10,12 +10,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import hu.tvarga.capstone.cheaplist.business.compare.settings.dto.CompareSettingsFilterChangedBroadcastObject;
+import hu.tvarga.capstone.cheaplist.dao.UserCategoryFilterListItem;
 import hu.tvarga.capstone.cheaplist.di.scopes.ApplicationScope;
 import hu.tvarga.capstone.cheaplist.utility.eventbus.Event;
 import timber.log.Timber;
@@ -27,7 +28,7 @@ public class UserService implements FirebaseAuth.AuthStateListener {
 	private final Event event;
 	private DatabaseReference databaseReferenceUser;
 
-	private Map<String, Boolean> categoriesFilterForUser = new HashMap<>();
+	private List<UserCategoryFilterListItem> categoriesFilterForUser = new ArrayList<>();
 	private DatabaseReference categoriesFilterForUserDB;
 
 	@Inject
@@ -53,34 +54,44 @@ public class UserService implements FirebaseAuth.AuthStateListener {
 	}
 
 	private void addCategoriesFilterForUserDBListener() {
-		categoriesFilterForUserDB.addValueEventListener(new ValueEventListener() {
-			@SuppressWarnings("unchecked")
-			@Override
-			public void onDataChange(DataSnapshot dataSnapshot) {
-				Map<String, Boolean> categoriesFilterForUserFromDB =
-						(Map<String, Boolean>) dataSnapshot.getValue();
-				categoriesFilterForUser.clear();
-				if (categoriesFilterForUserFromDB != null) {
-					categoriesFilterForUser.putAll(categoriesFilterForUserFromDB);
-				}
-				event.post(new CompareSettingsFilterChangedBroadcastObject());
-			}
+		categoriesFilterForUserDB.orderByChild("category").addValueEventListener(
+				new ValueEventListener() {
+					@SuppressWarnings("unchecked")
+					@Override
+					public void onDataChange(DataSnapshot dataSnapshot) {
+						Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+						List<UserCategoryFilterListItem> categoriesFilterForUserOld =
+								new ArrayList<>();
+						categoriesFilterForUserOld.addAll(categoriesFilterForUser);
+						categoriesFilterForUser.clear();
+						for (DataSnapshot child : children) {
+							UserCategoryFilterListItem item = child.getValue(
+									UserCategoryFilterListItem.class);
+							categoriesFilterForUser.add(item);
+						}
 
-			@Override
-			public void onCancelled(DatabaseError databaseError) {
-				Timber.d("categoriesFilterForUserDB#onCancelled", databaseError);
-			}
-		});
+						CompareSettingsFilterChangedBroadcastObject broadcastObject =
+								new CompareSettingsFilterChangedBroadcastObject(
+										categoriesFilterForUserOld, categoriesFilterForUser);
+						event.post(broadcastObject);
+					}
+
+					@Override
+					public void onCancelled(DatabaseError databaseError) {
+						Timber.d("categoriesFilterForUserDB#onCancelled", databaseError);
+					}
+				});
 	}
 
-	public void setCategoriesFilterForUser(Map<String, Boolean> categoriesFilterForUser) {
+	public void setCategoriesFilterForUser(
+			List<UserCategoryFilterListItem> categoriesFilterForUser) {
 		if (databaseReferenceUser == null) {
 			return;
 		}
 		categoriesFilterForUserDB.setValue(categoriesFilterForUser);
 	}
 
-	public Map<String, Boolean> getCategoriesFilterForUser() {
+	public List<UserCategoryFilterListItem> getCategoriesFilterForUser() {
 		return categoriesFilterForUser;
 	}
 }

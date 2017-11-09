@@ -3,16 +3,18 @@ package hu.tvarga.capstone.cheaplist.business.compare.dto;
 import java.io.Serializable;
 import java.util.List;
 
+import hu.tvarga.capstone.cheaplist.dao.ItemCategory;
+
 public class CategoriesBroadcastObject implements Serializable {
 
 	private static final long serialVersionUID = -2455499628579734589L;
-	private final List<String> categories;
+	private final List<ItemCategory> categories;
 
-	public CategoriesBroadcastObject(List<String> categories) {
+	public CategoriesBroadcastObject(List<ItemCategory> categories) {
 		this.categories = categories;
 	}
 
-	public List<String> getCategories() {
+	public List<ItemCategory> getCategories() {
 		return categories;
 	}
 
