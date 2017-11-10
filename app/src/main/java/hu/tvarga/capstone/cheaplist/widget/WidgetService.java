@@ -8,18 +8,17 @@ import android.widget.RemoteViewsService;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 import hu.tvarga.capstone.cheaplist.R;
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
@@ -44,26 +43,27 @@ public class WidgetService extends RemoteViewsService {
 		}
 
 		private void setUpFirebase() {
-			DatabaseReference dbRefForShoppingList = getDBRefForShoppingList();
+			CollectionReference dbRefForShoppingList = getDBRefForShoppingList();
 			if (dbRefForShoppingList != null) {
-				dbRefForShoppingList.addValueEventListener(new ValueEventListener() {
+				dbRefForShoppingList.addSnapshotListener(new EventListener<QuerySnapshot>() {
 					@Override
-					public void onDataChange(DataSnapshot dataSnapshot) {
-						GenericTypeIndicator<Map<String, ShoppingListItem>> genericTypeIndicator =
-								new GenericTypeIndicator<Map<String, ShoppingListItem>>() {};
-						Map<String, ShoppingListItem> itemsMap = dataSnapshot.getValue(
-								genericTypeIndicator);
+					public void onEvent(QuerySnapshot documentSnapshots,
+							FirebaseFirestoreException e) {
+						if (e != null) {
+							Timber.d("Widget firebase cancel for shopping list %s", e);
+							return;
+						}
+
+						List<DocumentSnapshot> documents = documentSnapshots.getDocuments();
 						items.clear();
-						if (itemsMap != null) {
-							items.addAll(itemsMap.values());
+						for (DocumentSnapshot document : documents) {
+							ShoppingListItem shoppingListItem = document.toObject(
+									ShoppingListItem.class);
+							items.add(shoppingListItem);
 							sortByCheckedState();
 							updateWidget();
 						}
-					}
 
-					@Override
-					public void onCancelled(DatabaseError databaseError) {
-						Timber.d("Widget firebase cancel for shopping list %s", databaseError);
 					}
 				});
 			}
@@ -83,12 +83,12 @@ public class WidgetService extends RemoteViewsService {
 			});
 		}
 
-		private DatabaseReference getDBRefForShoppingList() {
+		private CollectionReference getDBRefForShoppingList() {
 			FirebaseAuth auth = FirebaseAuth.getInstance();
 			FirebaseUser currentUser = auth.getCurrentUser();
 			if (currentUser != null) {
-				return FirebaseDatabase.getInstance().getReference().child("userData").child(
-						currentUser.getUid()).child("shoppingList");
+				return FirebaseFirestore.getInstance().collection("userData").document(
+						currentUser.getUid()).collection("shoppingList");
 			}
 			return null;
 		}

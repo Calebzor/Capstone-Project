@@ -4,18 +4,21 @@ import android.support.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 import hu.tvarga.capstone.cheaplist.business.compare.settings.dto.CompareSettingsFilterChangedBroadcastObject;
+import hu.tvarga.capstone.cheaplist.dao.ItemCategory;
 import hu.tvarga.capstone.cheaplist.dao.UserCategoryFilterListItem;
 import hu.tvarga.capstone.cheaplist.di.scopes.ApplicationScope;
 import hu.tvarga.capstone.cheaplist.utility.eventbus.Event;
@@ -24,17 +27,18 @@ import timber.log.Timber;
 @ApplicationScope
 public class UserService implements FirebaseAuth.AuthStateListener {
 
-	private final FirebaseDatabase firebaseDatabase;
+	private static final String CATEGORIES_FILTER_FOR_USER = "categoriesFilterForUser";
+	private final FirebaseFirestore db;
 	private final Event event;
-	private DatabaseReference databaseReferenceUser;
+	private DocumentReference databaseReferenceUser;
 
 	private List<UserCategoryFilterListItem> categoriesFilterForUser = new ArrayList<>();
-	private DatabaseReference categoriesFilterForUserDB;
+	private CollectionReference categoriesFilterForUserDB;
 
 	@Inject
 	UserService(Event event) {
 		this.event = event;
-		firebaseDatabase = FirebaseDatabase.getInstance();
+		db = FirebaseFirestore.getInstance();
 		FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 		firebaseAuth.addAuthStateListener(this);
 	}
@@ -43,9 +47,9 @@ public class UserService implements FirebaseAuth.AuthStateListener {
 	public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 		FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 		if (currentUser != null) {
-			databaseReferenceUser = firebaseDatabase.getReference().child("userData").child(
-					currentUser.getUid());
-			categoriesFilterForUserDB = databaseReferenceUser.child("categoriesFilterForUser");
+			databaseReferenceUser = db.collection("userData").document(currentUser.getUid());
+			categoriesFilterForUserDB = databaseReferenceUser.collection(
+					CATEGORIES_FILTER_FOR_USER);
 			addCategoriesFilterForUserDBListener();
 		}
 		else {
@@ -53,32 +57,48 @@ public class UserService implements FirebaseAuth.AuthStateListener {
 		}
 	}
 
+	class UserCategoryFilterListItemForDB {
+
+		List<UserCategoryFilterListItem> userCategoryFilterListItems;
+
+		UserCategoryFilterListItemForDB(
+				List<UserCategoryFilterListItem> userCategoryFilterListItems) {
+			this.userCategoryFilterListItems = userCategoryFilterListItems;
+		}
+	}
+
 	private void addCategoriesFilterForUserDBListener() {
-		categoriesFilterForUserDB.orderByChild("category").addValueEventListener(
-				new ValueEventListener() {
-					@SuppressWarnings("unchecked")
+		categoriesFilterForUserDB.document(CATEGORIES_FILTER_FOR_USER).addSnapshotListener(
+				new EventListener<DocumentSnapshot>() {
 					@Override
-					public void onDataChange(DataSnapshot dataSnapshot) {
-						Iterable<DataSnapshot> children = dataSnapshot.getChildren();
-						List<UserCategoryFilterListItem> categoriesFilterForUserOld =
-								new ArrayList<>();
-						categoriesFilterForUserOld.addAll(categoriesFilterForUser);
-						categoriesFilterForUser.clear();
-						for (DataSnapshot child : children) {
-							UserCategoryFilterListItem item = child.getValue(
-									UserCategoryFilterListItem.class);
-							categoriesFilterForUser.add(item);
+					public void onEvent(DocumentSnapshot documentSnapshot,
+							FirebaseFirestoreException e) {
+						if (e != null) {
+							Timber.d("categoriesFilterForUserDB#onCancelled", e);
+							return;
 						}
+						if (documentSnapshot != null && documentSnapshot.exists()) {
+							List<UserCategoryFilterListItem> categoriesFilterForUserOld =
+									new ArrayList<>();
+							categoriesFilterForUserOld.addAll(categoriesFilterForUser);
+							categoriesFilterForUser.clear();
+							@SuppressWarnings("unchecked")
+							List<Map<String, Object>> userCategoryFilterListItems =
+									(List<Map<String, Object>>) documentSnapshot.get(
+											"userCategoryFilterListItems");
+							for (Map<String, Object> userCategoryFilterListItem : userCategoryFilterListItems) {
+								UserCategoryFilterListItem item = new UserCategoryFilterListItem();
+								item.category = ItemCategory.valueOf(
+										(String) userCategoryFilterListItem.get("category"));
+								item.checked = (boolean) userCategoryFilterListItem.get("checked");
+								categoriesFilterForUser.add(item);
+							}
+							CompareSettingsFilterChangedBroadcastObject broadcastObject =
+									new CompareSettingsFilterChangedBroadcastObject(
+											categoriesFilterForUserOld, categoriesFilterForUser);
+							event.post(broadcastObject);
 
-						CompareSettingsFilterChangedBroadcastObject broadcastObject =
-								new CompareSettingsFilterChangedBroadcastObject(
-										categoriesFilterForUserOld, categoriesFilterForUser);
-						event.post(broadcastObject);
-					}
-
-					@Override
-					public void onCancelled(DatabaseError databaseError) {
-						Timber.d("categoriesFilterForUserDB#onCancelled", databaseError);
+						}
 					}
 				});
 	}
@@ -88,7 +108,8 @@ public class UserService implements FirebaseAuth.AuthStateListener {
 		if (databaseReferenceUser == null) {
 			return;
 		}
-		categoriesFilterForUserDB.setValue(categoriesFilterForUser);
+		categoriesFilterForUserDB.document(CATEGORIES_FILTER_FOR_USER).set(
+				new UserCategoryFilterListItemForDB(categoriesFilterForUser));
 	}
 
 	public List<UserCategoryFilterListItem> getCategoriesFilterForUser() {

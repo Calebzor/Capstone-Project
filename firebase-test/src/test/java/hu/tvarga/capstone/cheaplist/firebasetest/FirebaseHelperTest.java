@@ -1,5 +1,8 @@
 package hu.tvarga.capstone.cheaplist.firebasetest;
 
+import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.DocumentSnapshot;
+import com.google.cloud.firestore.QuerySnapshot;
 import com.google.firebase.auth.UserRecord;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -15,13 +18,17 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 import hu.tvarga.capstone.cheaplist.dao.Item;
+import hu.tvarga.capstone.cheaplist.dao.ItemCategory;
 import hu.tvarga.capstone.cheaplist.dao.Merchant;
 import hu.tvarga.capstone.cheaplist.dao.MerchantCategoryListItem;
 
 import static com.jayway.awaitility.Awaitility.await;
+import static hu.tvarga.capstone.cheaplist.firebasetest.FirebaseHelper.L;
 import static hu.tvarga.capstone.cheaplist.firebasetest.TestDBEntries.getSoproni;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class FirebaseHelperTest {
@@ -55,7 +62,7 @@ public class FirebaseHelperTest {
 	@Ignore
 	@Test
 	public void pushCategories() {
-		Task<Void> task = firebaseHelper.pushItemCategories();
+		ApiFuture<?> task = firebaseHelper.pushItemCategories();
 
 		assertTaskSuccess(task);
 	}
@@ -68,6 +75,30 @@ public class FirebaseHelperTest {
 		Task<Void> task = firebaseHelper.pushMerchant(merchant);
 
 		assertTaskSuccess(task);
+	}
+
+	@Ignore
+	@Test
+	public void pushToMerchantsToStore() {
+		Merchant merchant = new Merchant();
+		merchant.name = "TESCO";
+		ApiFuture<?> documentReferenceApiFuture = firebaseHelper.pushMerchantToStore(merchant);
+
+		assertTaskSuccess(documentReferenceApiFuture);
+	}
+
+	@Test
+	public void getItemsFromStore() throws Exception {
+		Merchant merchant = getMerchant1();
+		ApiFuture<QuerySnapshot> itemsFromStore = firebaseHelper.getItemsFromStore(
+				ItemCategory.MEAT, merchant);
+
+		List<DocumentSnapshot> documents = itemsFromStore.get().getDocuments();
+		for (DocumentSnapshot document : documents) {
+			L.debug(document.toObject(MerchantCategoryListItem.class));
+		}
+		assertEquals(2, documents.size());
+
 	}
 
 	@Ignore
@@ -94,9 +125,21 @@ public class FirebaseHelperTest {
 		assertTaskSuccess(task);
 	}
 
+	@Ignore
+	@Test
+	public void pushToItemsToStore() {
+		Item item = getSoproni();
+
+		Merchant merchant = getMerchant1();
+
+		ApiFuture<?> apiFuture = firebaseHelper.pushItemToStore(item, merchant);
+
+		assertTaskSuccess(apiFuture);
+	}
+
 	private Merchant getMerchant1() {
 		Merchant merchant = new Merchant();
-		merchant.id = "-KtftTTSOMgtW0zXyGtk";
+		merchant.id = "ws2QwmZ6UhsuwlvwlAz3";
 		return merchant;
 	}
 
@@ -124,6 +167,14 @@ public class FirebaseHelperTest {
 	private static void assertTaskSuccess(Task<?> hello) {
 		final Boolean[] callSucceeded = {false};
 		hello.addOnSuccessListener(result -> callSucceeded[0] = true);
+		await().until(() -> callSucceeded[0]);
+	}
+
+	private void assertTaskSuccess(ApiFuture<?> documentReferenceApiFuture) {
+		final Boolean[] callSucceeded = {false};
+		documentReferenceApiFuture.addListener(() -> {
+			callSucceeded[0] = true;
+		}, Executors.newSingleThreadExecutor());
 		await().until(() -> callSucceeded[0]);
 	}
 

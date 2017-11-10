@@ -2,11 +2,11 @@ package hu.tvarga.capstone.cheaplist.jobservices;
 
 import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,17 +19,18 @@ import hu.tvarga.capstone.cheaplist.dao.ItemCategory;
 import hu.tvarga.capstone.cheaplist.dao.Merchant;
 import timber.log.Timber;
 
+import static hu.tvarga.capstone.cheaplist.business.compare.CompareService.ITEM_CATEGORIES;
+import static hu.tvarga.capstone.cheaplist.business.compare.CompareService.MERCHANTS;
+
 public class CategoriesJobService extends JobService {
 
 	private List<ItemCategory> categories = new ArrayList<>();
 	private HashMap<String, Merchant> merchantMap = new HashMap<>();
-	FirebaseDatabase firebaseDatabase;
-	DatabaseReference databaseReferencePublic;
+	FirebaseFirestore db;
 
 	@Override
 	public boolean onStartJob(JobParameters job) {
-		firebaseDatabase = FirebaseDatabase.getInstance();
-		databaseReferencePublic = firebaseDatabase.getReference().child("publicReadable");
+		db = FirebaseFirestore.getInstance();
 		getCategories();
 		getMerchants();
 
@@ -57,18 +58,18 @@ public class CategoriesJobService extends JobService {
 			for (Map.Entry<String, Merchant> merchant : merchantMap.entrySet()) {
 				for (ItemCategory category : categories) {
 					final String key = merchant.getKey() + category;
-					DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child(
-							"publicReadable").child("merchantCategoryListItems").child(key);
-					ref.addListenerForSingleValueEvent(new ValueEventListener() {
+					DocumentReference ref = FirebaseFirestore.getInstance().collection(
+							"merchantItems").document(key);
+					ref.addSnapshotListener(new EventListener<DocumentSnapshot>() {
 						@Override
-						public void onDataChange(DataSnapshot dataSnapshot) {
+						public void onEvent(DocumentSnapshot documentSnapshot,
+								FirebaseFirestoreException e) {
+							if (e != null) {
+								Timber.d("Job failed to get data for key: %s, error: %s", key, e);
+								return;
+							}
 							Timber.d("Job got data for key: %s", key);
-						}
 
-						@Override
-						public void onCancelled(DatabaseError databaseError) {
-							Timber.d("Job failed to get data for key: %s, error: %s", key,
-									databaseError);
 						}
 					});
 				}
@@ -81,18 +82,17 @@ public class CategoriesJobService extends JobService {
 	}
 
 	private void getMerchants() {
-		databaseReferencePublic.child("merchants").addListenerForSingleValueEvent(
-				new MerchantValueEventListener(merchantMap,
-						new MerchantValueEventListener.MerchantsDBCallback() {
-							@Override
-							public void success() {
-								gotMerchants();
-							}
-						}));
+		db.collection(MERCHANTS).addSnapshotListener(new MerchantValueEventListener(merchantMap,
+				new MerchantValueEventListener.MerchantsDBCallback() {
+					@Override
+					public void success() {
+						gotMerchants();
+					}
+				}));
 	}
 
 	private void getCategories() {
-		databaseReferencePublic.child("itemCategories").orderByKey().addListenerForSingleValueEvent(
+		db.collection(ITEM_CATEGORIES).document(ITEM_CATEGORIES).addSnapshotListener(
 				new CategoryValueEventListener(categories,
 						new CategoryValueEventListener.CategoriesDBCallback() {
 							@Override

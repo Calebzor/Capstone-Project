@@ -2,12 +2,11 @@ package hu.tvarga.capstone.cheaplist.business.compare;
 
 import android.support.v7.widget.RecyclerView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
@@ -34,16 +33,20 @@ import timber.log.Timber;
 @ApplicationScope
 public class CompareService {
 
+	public static final String ITEMS = "items";
+	public static final String MERCHANT_ITEMS = "merchantItems";
+	private static final String CATEGORY_KEY = "category";
+	public static final String ITEM_CATEGORIES = "itemCategories";
+	public static final String MERCHANTS = "merchants";
 	private final Event event;
-	private DatabaseReference databaseReferencePublic;
 	private List<MerchantCategoryListItem> startItems = new LinkedList<>();
 	private List<MerchantCategoryListItem> endItems = new LinkedList<>();
 	private List<MerchantCategoryListItem> startItemsUnfiltered = new LinkedList<>();
 	private List<MerchantCategoryListItem> endItemsUnfiltered = new LinkedList<>();
 	private RecyclerView.Adapter<MerchantCategoryListItemHolder> startAdapter;
 	private RecyclerView.Adapter<MerchantCategoryListItemHolder> endAdapter;
-	private DatabaseReference startMerchantItemsDBRef;
-	private DatabaseReference endMerchantItemsDBRef;
+	private com.google.firebase.firestore.Query startMerchantItemsDBRef;
+	private com.google.firebase.firestore.Query endMerchantItemsDBRef;
 
 	private ArrayList<ItemCategory> categories = new ArrayList<>();
 	private Map<String, Merchant> merchantMap = new HashMap<>();
@@ -51,14 +54,13 @@ public class CompareService {
 	private Merchant endMerchant;
 	private ItemCategory category = ItemCategory.ALCOHOL;
 	private String filter;
+	private final FirebaseFirestore db;
 
 	@Inject
 	CompareService(Event event) {
 		this.event = event;
-		FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+		db = FirebaseFirestore.getInstance();
 		FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-
-		databaseReferencePublic = firebaseDatabase.getReference().child("publicReadable");
 
 		FirebaseRemoteConfigSettings configSettings =
 				new FirebaseRemoteConfigSettings.Builder().setDeveloperModeEnabled(
@@ -70,7 +72,7 @@ public class CompareService {
 	}
 
 	private void getCategoriesFromDB() {
-		databaseReferencePublic.child("itemCategories").orderByKey().addListenerForSingleValueEvent(
+		db.collection(ITEM_CATEGORIES).document(ITEM_CATEGORIES).addSnapshotListener(
 				new CategoryValueEventListener(categories,
 						new CategoryValueEventListener.CategoriesDBCallback() {
 							@Override
@@ -81,14 +83,13 @@ public class CompareService {
 	}
 
 	private void getMerchantsFromDB() {
-		databaseReferencePublic.child("merchants").addListenerForSingleValueEvent(
-				new MerchantValueEventListener(merchantMap,
-						new MerchantValueEventListener.MerchantsDBCallback() {
-							@Override
-							public void success() {
-								gotMerchantsFromDB();
-							}
-						}));
+		db.collection(MERCHANTS).addSnapshotListener(new MerchantValueEventListener(merchantMap,
+				new MerchantValueEventListener.MerchantsDBCallback() {
+					@Override
+					public void success() {
+						gotMerchantsFromDB();
+					}
+				}));
 	}
 
 	private void gotMerchantsFromDB() {
@@ -120,71 +121,68 @@ public class CompareService {
 		getEndItemsFromDB();
 	}
 
-	private DatabaseReference getDBRefForMerchantCategoryList(Map.Entry<String, Merchant> entry) {
-		String key = entry.getKey() + category;
-		return FirebaseDatabase.getInstance().getReference().child("publicReadable").child(
-				"merchantCategoryListItems").child(key);
+	private com.google.firebase.firestore.Query getDBRefForMerchantCategoryList(Merchant merchant) {
+		return db.collection(MERCHANT_ITEMS).document(merchant.id).collection(ITEMS).whereEqualTo(
+				CATEGORY_KEY, category.toString());
 	}
 
 	private void parseMerchantsAndSetCategoryDBRef() {
 		boolean startSet = false;
 		for (Map.Entry<String, Merchant> entry : merchantMap.entrySet()) {
 			if (!startSet) {
-				startMerchantItemsDBRef = getDBRefForMerchantCategoryList(entry);
 				startMerchant = entry.getValue();
+				startMerchantItemsDBRef = getDBRefForMerchantCategoryList(startMerchant);
 				startSet = true;
 			}
 			else {
-				endMerchantItemsDBRef = getDBRefForMerchantCategoryList(entry);
 				endMerchant = entry.getValue();
+				endMerchantItemsDBRef = getDBRefForMerchantCategoryList(endMerchant);
 			}
 		}
 	}
 
 	private void getStartItemsFromDB() {
-		Query query = startMerchantItemsDBRef.orderByChild("name");
-		query.addValueEventListener(new ValueEventListener() {
+		com.google.firebase.firestore.Query query = startMerchantItemsDBRef.orderBy("name");
+		query.addSnapshotListener(new EventListener<QuerySnapshot>() {
 			@Override
-			public void onDataChange(DataSnapshot dataSnapshot) {
-				Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+			public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+				if (e != null) {
+					Timber.d("getStartItemsFromDB#onCancelled %s", e);
+					return;
+				}
+				List<DocumentSnapshot> documents = documentSnapshots.getDocuments();
 				startItemsUnfiltered.clear();
-				for (DataSnapshot child : children) {
-					MerchantCategoryListItem item = child.getValue(MerchantCategoryListItem.class);
+				for (DocumentSnapshot document : documents) {
+					MerchantCategoryListItem item = document.toObject(
+							MerchantCategoryListItem.class);
 					startItemsUnfiltered.add(item);
 				}
-
 				if (startAdapter != null) {
 					filterStart();
 				}
-			}
-
-			@Override
-			public void onCancelled(DatabaseError databaseError) {
-				Timber.d("getStartItemsFromDB#onCancelled %s", databaseError);
 			}
 		});
 	}
 
 	private void getEndItemsFromDB() {
-		Query query = endMerchantItemsDBRef.orderByChild("name");
-		query.addValueEventListener(new ValueEventListener() {
+		com.google.firebase.firestore.Query query = endMerchantItemsDBRef.orderBy("name");
+		query.addSnapshotListener(new EventListener<QuerySnapshot>() {
 			@Override
-			public void onDataChange(DataSnapshot dataSnapshot) {
-				Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+			public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+				if (e != null) {
+					Timber.d("getEndItemsFromDB#onCancelled %s", e);
+					return;
+				}
+				List<DocumentSnapshot> documents = documentSnapshots.getDocuments();
 				endItemsUnfiltered.clear();
-				for (DataSnapshot child : children) {
-					MerchantCategoryListItem item = child.getValue(MerchantCategoryListItem.class);
+				for (DocumentSnapshot document : documents) {
+					MerchantCategoryListItem item = document.toObject(
+							MerchantCategoryListItem.class);
 					endItemsUnfiltered.add(item);
 				}
-
 				if (endAdapter != null) {
 					filterEnd();
 				}
-			}
-
-			@Override
-			public void onCancelled(DatabaseError databaseError) {
-				Timber.d("getEndItemsFromDB#onCancelled %s", databaseError);
 			}
 		});
 	}

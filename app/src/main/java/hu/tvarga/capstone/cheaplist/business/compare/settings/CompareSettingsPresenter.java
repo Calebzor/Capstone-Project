@@ -70,7 +70,8 @@ public class CompareSettingsPresenter implements CompareSettingsContract.Present
 				public void onBindViewHolder(CompareSettingsCategoryHolder holder, int position) {
 					List<UserCategoryFilterListItem> categoriesFilterForUser =
 							userService.getCategoriesFilterForUser();
-					final ItemCategory category = compareService.getCategories().get(position);
+					List<ItemCategory> categories = compareService.getCategories();
+					final ItemCategory category = categories.get(position);
 					boolean filterSelected = false;
 
 					for (UserCategoryFilterListItem filterListItem : categoriesFilterForUser) {

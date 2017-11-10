@@ -95,12 +95,6 @@ public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 
 		FragmentManager manager = getSupportFragmentManager();
 		boolean fragmentPopped;
-		// logic meant to be hear is that Compare Fragment is the very root, opening it from the
-		// menu clears the stack
-		// Opening ShoppingList from menu should clear the stack and open shopping list (while
-		// compare fragment is still there)
-		// FIXME 30-Oct-2017/vatam:
-		// not yet working but shopping list should always keep scroll position
 		if (fragment instanceof CompareFragment || fragment instanceof ShoppingListFragment) {
 			fragmentPopped = manager.popBackStackImmediate(null,
 					FragmentManager.POP_BACK_STACK_INCLUSIVE);

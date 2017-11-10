@@ -2,11 +2,12 @@ package hu.tvarga.capstone.cheaplist.business.itemdetail;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 
 import javax.inject.Inject;
 
@@ -17,16 +18,17 @@ import hu.tvarga.capstone.cheaplist.dao.Merchant;
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
 import timber.log.Timber;
 
+import static hu.tvarga.capstone.cheaplist.business.compare.CompareService.ITEMS;
+import static hu.tvarga.capstone.cheaplist.business.compare.CompareService.MERCHANT_ITEMS;
+
 public class DetailPresenter implements DetailContract.Presenter {
 
 	private final ShoppingListManager shoppingListManager;
 	private DetailContract.View view;
 	private ShoppingListItem item;
 
-	private DatabaseReference itemRef;
-	private ValueEventListener itemEventListener;
-	private DatabaseReference shoppingListItemRef;
-	private ValueEventListener shoppingListItemEventListener;
+	private ListenerRegistration shoppingListItemListenerRegistration;
+	private ListenerRegistration itemRefListenerRegistration;
 
 	@Inject
 	DetailPresenter(ShoppingListManager shoppingListManager) {
@@ -72,55 +74,60 @@ public class DetailPresenter implements DetailContract.Presenter {
 		FirebaseAuth auth = FirebaseAuth.getInstance();
 		FirebaseUser currentUser = auth.getCurrentUser();
 		if (currentUser != null) {
-			shoppingListItemEventListener = new ValueEventListener() {
-				@Override
-				public void onDataChange(DataSnapshot dataSnapshot) {
-					final ShoppingListItem shoppingListItem = dataSnapshot.getValue(
-							ShoppingListItem.class);
-					Timber.d("listItemChange %s", shoppingListItem);
-					if (shoppingListItem != null) {
-						view.showFabAsRemove();
-					}
-					else {
-						view.showFabAsAdd();
-					}
-				}
+			EventListener<DocumentSnapshot> shoppingListItemEventListener =
+					new EventListener<DocumentSnapshot>() {
+						@Override
+						public void onEvent(DocumentSnapshot documentSnapshot,
+								FirebaseFirestoreException e) {
+							if (e != null) {
+								Timber.e("shoppingListItemEventListener#onCancelled %s", e);
+								return;
+							}
 
-				@Override
-				public void onCancelled(DatabaseError databaseError) {
-					Timber.d("shoppingListItemEventListener#onCancelled %s", databaseError);
-				}
-			};
-			shoppingListItemRef = FirebaseDatabase.getInstance().getReference().child("userData")
-					.child(currentUser.getUid()).child("shoppingList").child(item.id);
-			shoppingListItemRef.addValueEventListener(shoppingListItemEventListener);
-			itemRef = FirebaseDatabase.getInstance().getReference().child("publicReadable").child(
-					"items").child(item.id);
-			itemEventListener = new ValueEventListener() {
-				@Override
-				public void onDataChange(DataSnapshot dataSnapshot) {
-					Item itemFromDB = dataSnapshot.getValue(Item.class);
-					Timber.d("items %s", itemFromDB);
-					if (itemFromDB != null) {
-						view.updateUI(itemFromDB);
-					}
-				}
+							if (documentSnapshot != null && documentSnapshot.exists()) {
+								ShoppingListItem shoppingListItem = documentSnapshot.toObject(
+										ShoppingListItem.class);
+								Timber.d("listItemChange %s", shoppingListItem);
+								view.showFabAsRemove();
+							}
+							else {
+								view.showFabAsAdd();
+							}
+						}
+					};
+			DocumentReference shoppingListItemRef = FirebaseFirestore.getInstance().collection(
+					"userData").document(currentUser.getUid()).collection("shoppingList").document(
+					item.id);
+			shoppingListItemListenerRegistration = shoppingListItemRef.addSnapshotListener(
+					shoppingListItemEventListener);
+			DocumentReference itemRef = FirebaseFirestore.getInstance().collection(MERCHANT_ITEMS)
+					.document(item.merchant.id).collection(ITEMS).document(item.id);
 
-				@Override
-				public void onCancelled(DatabaseError databaseError) {
-					Timber.d("itemEventListener#onCancelled %s", databaseError);
-				}
-			};
-			itemRef.addValueEventListener(itemEventListener);
+			itemRefListenerRegistration = itemRef.addSnapshotListener(
+					new EventListener<DocumentSnapshot>() {
+						@Override
+						public void onEvent(DocumentSnapshot documentSnapshot,
+								FirebaseFirestoreException e) {
+							if (e != null) {
+								Timber.e("itemEventListener#onCancelled %s", e);
+								return;
+							}
+							if (documentSnapshot != null) {
+								Item itemFromDB = documentSnapshot.toObject(Item.class);
+								Timber.d("items %s", itemFromDB);
+								view.updateUI(itemFromDB);
+							}
+						}
+					});
 		}
 	}
 
 	private void removeDBListeners() {
-		if (shoppingListItemRef != null) {
-			shoppingListItemRef.removeEventListener(shoppingListItemEventListener);
+		if (shoppingListItemListenerRegistration != null) {
+			shoppingListItemListenerRegistration.remove();
 		}
-		if (itemRef != null) {
-			itemRef.removeEventListener(itemEventListener);
+		if (itemRefListenerRegistration != null) {
+			itemRefListenerRegistration.remove();
 		}
 	}
 

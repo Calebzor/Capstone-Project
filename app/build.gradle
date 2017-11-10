@@ -60,11 +60,11 @@ dependencies {
 	compile "com.android.support:design:$supportLibraryVersion"
 	compile "com.android.support:appcompat-v7:$supportLibraryVersion"
 	compile "com.google.firebase:firebase-core:$firebaseVersion"
-	compile "com.google.firebase:firebase-database:$firebaseVersion"
 	compile "com.google.firebase:firebase-auth:$firebaseVersion"
 	compile "com.google.firebase:firebase-config:$firebaseVersion"
 	compile "com.google.firebase:firebase-ads:$firebaseVersion"
 	compile "com.google.firebase:firebase-crash:$firebaseVersion"
+	compile "com.google.firebase:firebase-firestore:$firebaseVersion"
 	compile "com.firebaseui:firebase-ui-auth:$firebaseUIVersion"
 	compile "com.firebaseui:firebase-ui-database:$firebaseUIVersion"
 	compile 'com.firebase:firebase-jobdispatcher:0.8.3'

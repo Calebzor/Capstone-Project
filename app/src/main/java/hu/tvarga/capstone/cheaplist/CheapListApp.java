@@ -10,7 +10,8 @@ import com.firebase.jobdispatcher.GooglePlayDriver;
 import com.firebase.jobdispatcher.Job;
 import com.firebase.jobdispatcher.Lifetime;
 import com.firebase.jobdispatcher.Trigger;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import javax.inject.Inject;
 
@@ -36,8 +37,10 @@ public class CheapListApp extends Application implements HasActivityInjector {
 		if (BuildConfig.DEBUG) {
 			Timber.plant(new Timber.DebugTree());
 		}
-		FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-		firebaseDatabase.setPersistenceEnabled(true);
+		FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+		FirebaseFirestoreSettings settings =
+				new FirebaseFirestoreSettings.Builder().setPersistenceEnabled(true).build();
+		firebaseFirestore.setFirestoreSettings(settings);
 		DaggerAppComponent.builder().appModule(new AppModule(this)).build().inject(this);
 		setUpCategoriesJob();
 	}

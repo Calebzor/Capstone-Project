@@ -5,7 +5,13 @@ public enum ItemCategory {
 	DAIRY_EGGS,
 	BAKERY,
 	MEAT,
+	BASIC_GROCERIES,
 	DRINKS,
 	ALCOHOL,
 	FROZEN_FOOD,
+	HOME,
+	BEAUTY,
+	BABY,
+	PET,
+	HOBBY,
 }
