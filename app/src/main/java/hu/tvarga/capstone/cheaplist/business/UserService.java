@@ -97,7 +97,6 @@ public class UserService implements FirebaseAuth.AuthStateListener {
 									new CompareSettingsFilterChangedBroadcastObject(
 											categoriesFilterForUserOld, categoriesFilterForUser);
 							event.post(broadcastObject);
-
 						}
 					}
 				});

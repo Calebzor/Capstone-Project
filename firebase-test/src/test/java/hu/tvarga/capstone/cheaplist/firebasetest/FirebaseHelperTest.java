@@ -87,11 +87,11 @@ public class FirebaseHelperTest {
 		assertTaskSuccess(documentReferenceApiFuture);
 	}
 
+	@Ignore
 	@Test
 	public void getItemsFromStore() throws Exception {
 		Merchant merchant = getMerchant1();
-		ApiFuture<QuerySnapshot> itemsFromStore = firebaseHelper.getItemsFromStore(
-				ItemCategory.MEAT, merchant);
+		ApiFuture<QuerySnapshot> itemsFromStore = firebaseHelper.getItemsFromStore(ItemCategory.MEAT, merchant);
 
 		List<DocumentSnapshot> documents = itemsFromStore.get().getDocuments();
 		for (DocumentSnapshot document : documents) {
