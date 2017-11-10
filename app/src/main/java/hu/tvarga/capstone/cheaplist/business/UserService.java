@@ -67,7 +67,15 @@ public class UserService implements FirebaseAuth.AuthStateListener {
 		}
 	}
 
+	public void initiateGetCategoriesFilterForUser() {
+		addCategoriesFilterForUserDBListener();
+	}
+
 	private void addCategoriesFilterForUserDBListener() {
+		if (categoriesFilterForUserDB == null) {
+			Timber.d("categoriesFilterForUserDB was null, user not logged in?");
+			return;
+		}
 		categoriesFilterForUserDB.document(CATEGORIES_FILTER_FOR_USER).addSnapshotListener(
 				new EventListener<DocumentSnapshot>() {
 					@Override

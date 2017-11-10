@@ -12,6 +12,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,7 +24,9 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import hu.tvarga.capstone.cheaplist.BuildConfig;
+import hu.tvarga.capstone.cheaplist.business.UserService;
 import hu.tvarga.capstone.cheaplist.business.compare.dto.CategoriesBroadcastObject;
+import hu.tvarga.capstone.cheaplist.business.compare.settings.dto.CompareSettingsFilterChangedBroadcastObject;
 import hu.tvarga.capstone.cheaplist.dao.ItemCategory;
 import hu.tvarga.capstone.cheaplist.dao.Merchant;
 import hu.tvarga.capstone.cheaplist.dao.MerchantCategoryListItem;
@@ -35,15 +39,6 @@ import timber.log.Timber;
 
 @ApplicationScope
 public class CompareService {
-
-	private static final ArrayList<UserCategoryFilterListItem> DEFAULT_FILTER = new ArrayList<>();
-
-	static {
-		UserCategoryFilterListItem filterListItem = new UserCategoryFilterListItem();
-		filterListItem.category = ItemCategory.ALCOHOL;
-		filterListItem.checked = true;
-		DEFAULT_FILTER.add(filterListItem);
-	}
 
 	public static final String ITEMS = "items";
 	public static final String MERCHANT_ITEMS = "merchantItems";
@@ -64,25 +59,38 @@ public class CompareService {
 	private Map<String, Merchant> merchantMap = new HashMap<>();
 	private Merchant startMerchant;
 	private Merchant endMerchant;
-	private List<UserCategoryFilterListItem> categoryFilter = DEFAULT_FILTER;
+	private List<UserCategoryFilterListItem> categoryFilter = new LinkedList<>();
 	private String filter;
 	private final FirebaseFirestore db;
 	private List<ListenerRegistration> startListeners = new LinkedList<>();
 	private List<ListenerRegistration> endListeners = new LinkedList<>();
 
 	@Inject
-	CompareService(Event event) {
+	CompareService(Event event, UserService userService) {
 		this.event = event;
 		db = FirebaseFirestore.getInstance();
 		FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
 
-		FirebaseRemoteConfigSettings configSettings =
-				new FirebaseRemoteConfigSettings.Builder().setDeveloperModeEnabled(
-						BuildConfig.DEBUG).build();
+		FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder().setDeveloperModeEnabled(
+				BuildConfig.DEBUG).build();
 		firebaseRemoteConfig.setConfigSettings(configSettings);
 
 		getCategoriesFromDB();
 		getMerchantsFromDB();
+		event.register(this);
+		userService.initiateGetCategoriesFilterForUser();
+	}
+
+	@Subscribe
+	public void handleCompareSettingsFilterChangedBroadcastObject(
+			CompareSettingsFilterChangedBroadcastObject object) {
+		filterChanged(object);
+	}
+
+	private void filterChanged(CompareSettingsFilterChangedBroadcastObject object) {
+		setCategoryFilter(object.getNewFilter());
+		getData();
+		event.unregister(this);
 	}
 
 	private void getCategoriesFromDB() {
