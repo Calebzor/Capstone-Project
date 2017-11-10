@@ -6,6 +6,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
@@ -66,6 +67,8 @@ public class CompareService {
 	private List<UserCategoryFilterListItem> categoryFilter = DEFAULT_FILTER;
 	private String filter;
 	private final FirebaseFirestore db;
+	private List<ListenerRegistration> startListeners = new LinkedList<>();
+	private List<ListenerRegistration> endListeners = new LinkedList<>();
 
 	@Inject
 	CompareService(Event event) {
@@ -160,57 +163,74 @@ public class CompareService {
 	}
 
 	private void getStartItemsFromDB() {
+		cleanUpCategoryListListeners(startListeners);
+
 		List<Query> queries = startMerchantItemsDBRef;
 		final int[] queriesToFinish = {queries.size()};
 		startItemsUnfiltered.clear();
 		for (Query query : queries) {
-			query.addSnapshotListener(new EventListener<QuerySnapshot>() {
-				@Override
-				public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-					if (e != null) {
-						Timber.e("getStartItemsFromDB#onCancelled %s", e);
-						return;
-					}
-					List<DocumentSnapshot> documents = documentSnapshots.getDocuments();
-					for (DocumentSnapshot document : documents) {
-						MerchantCategoryListItem item = document.toObject(
-								MerchantCategoryListItem.class);
-						startItemsUnfiltered.add(item);
-					}
-					queriesToFinish[0] = queriesToFinish[0] - 1;
-					if (startAdapter != null && queriesToFinish[0] == 0) {
-						filterStart();
-					}
-				}
-			});
+			ListenerRegistration listener = query.addSnapshotListener(
+					new EventListener<QuerySnapshot>() {
+						@Override
+						public void onEvent(QuerySnapshot documentSnapshots,
+								FirebaseFirestoreException e) {
+							if (e != null) {
+								Timber.e("getStartItemsFromDB#onCancelled %s", e);
+								return;
+							}
+							List<DocumentSnapshot> documents = documentSnapshots.getDocuments();
+							for (DocumentSnapshot document : documents) {
+								MerchantCategoryListItem item = document.toObject(
+										MerchantCategoryListItem.class);
+								startItemsUnfiltered.add(item);
+							}
+							queriesToFinish[0] = queriesToFinish[0] - 1;
+							if (startAdapter != null && queriesToFinish[0] == 0) {
+								filterStart();
+							}
+						}
+					});
+			startListeners.add(listener);
 		}
 	}
 
 	private void getEndItemsFromDB() {
+		cleanUpCategoryListListeners(endListeners);
+
 		List<Query> queries = endMerchantItemsDBRef;
 		final int[] queriesToFinish = {queries.size()};
 		startItemsUnfiltered.clear();
 		for (Query query : queries) {
-			query.addSnapshotListener(new EventListener<QuerySnapshot>() {
-				@Override
-				public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-					if (e != null) {
-						Timber.d("getEndItemsFromDB#onCancelled %s", e);
-						return;
-					}
-					List<DocumentSnapshot> documents = documentSnapshots.getDocuments();
-					for (DocumentSnapshot document : documents) {
-						MerchantCategoryListItem item = document.toObject(
-								MerchantCategoryListItem.class);
-						endItemsUnfiltered.add(item);
-					}
-					queriesToFinish[0] = queriesToFinish[0] - 1;
-					if (endAdapter != null && queriesToFinish[0] == 0) {
-						filterEnd();
-					}
-				}
-			});
+			ListenerRegistration listener = query.addSnapshotListener(
+					new EventListener<QuerySnapshot>() {
+						@Override
+						public void onEvent(QuerySnapshot documentSnapshots,
+								FirebaseFirestoreException e) {
+							if (e != null) {
+								Timber.d("getEndItemsFromDB#onCancelled %s", e);
+								return;
+							}
+							List<DocumentSnapshot> documents = documentSnapshots.getDocuments();
+							for (DocumentSnapshot document : documents) {
+								MerchantCategoryListItem item = document.toObject(
+										MerchantCategoryListItem.class);
+								endItemsUnfiltered.add(item);
+							}
+							queriesToFinish[0] = queriesToFinish[0] - 1;
+							if (endAdapter != null && queriesToFinish[0] == 0) {
+								filterEnd();
+							}
+						}
+					});
+			endListeners.add(listener);
 		}
+	}
+
+	private void cleanUpCategoryListListeners(List<ListenerRegistration> listeners) {
+		for (ListenerRegistration startListener : listeners) {
+			startListener.remove();
+		}
+		listeners.clear();
 	}
 
 	List<MerchantCategoryListItem> getStartItems() {
