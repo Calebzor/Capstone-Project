@@ -37,20 +37,21 @@
 			android:layout_alignParentEnd="true"
 			android:layout_centerInParent="true"
 			android:indeterminate="true"
+			tools:visibility="gone"
 			/>
 
-		// TODO 01-Nov-2017/vatam: use text "Filter"
-
-		<android.support.v7.widget.AppCompatImageView
+		<android.support.v7.widget.AppCompatButton
 			android:id="@+id/compareFilterButton"
+			style="@style/Base.Widget.AppCompat.Button.Borderless"
 			android:layout_width="wrap_content"
-			android:layout_height="@dimen/compareToolbarIconSize"
+			android:layout_height="wrap_content"
 			android:layout_alignParentEnd="true"
 			android:layout_centerInParent="true"
-			android:contentDescription="@string/filter"
-			android:tint="@color/secondaryTextColor"
+			android:text="@string/filter"
+			android:textAllCaps="true"
 			android:visibility="invisible"
-			app:srcCompat="@drawable/zzz_filter" />
+			tools:visibility="visible" />
+
 	</RelativeLayout>
 
 	<LinearLayout

@@ -3,7 +3,7 @@ package hu.tvarga.capstone.cheaplist.ui.compare;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.AppCompatImageView;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
@@ -42,7 +42,7 @@ public class CompareFragment extends DaggerFragment implements CompareContract.V
 	RecyclerView endItems;
 
 	@BindView(R.id.compareFilterButton)
-	AppCompatImageView compareFilterButton;
+	AppCompatButton compareFilterButton;
 
 	@BindView(R.id.compareSearchInput)
 	SearchView compareSearchInput;
