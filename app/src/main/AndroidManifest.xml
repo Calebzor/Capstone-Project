@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="hu.tvarga.capstone.cheaplist"
+<manifest package="hu.tvarga.cheaplist"
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools">
 
@@ -39,7 +39,7 @@
 
 			<intent-filter>
 				<action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-				<action android:name="hu.tvarga.capstone.cheaplist.ACTION_DATA_UPDATED" />
+				<action android:name="hu.tvarga.cheaplist.ACTION_DATA_UPDATED" />
 			</intent-filter>
 			<meta-data
 				android:name="android.appwidget.provider"

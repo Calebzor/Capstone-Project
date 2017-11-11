@@ -10,4 +10,7 @@
 	<color name="secondaryTextColor">#ffffff</color>
 
 	<color name="colorAccent">@color/secondaryColor</color>
+
+	<color name="bg_row_background">#f44336</color>
+
 </resources>
