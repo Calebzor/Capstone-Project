@@ -10,4 +10,5 @@ project.ext {
 	supportLibraryVersion = '26.1.0'
 	daggerVersion = '2.12'
 	mockitoVersion = '2.11.0'
+	glideVersion = '4.3.1'
 }

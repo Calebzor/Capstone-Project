@@ -13,7 +13,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 
 import java.lang.reflect.Field;
 
@@ -118,7 +120,8 @@ public class DetailFragment extends DaggerFragment implements DetailContract.Vie
 	@Override
 	public void updateUI(Item item) {
 		detailItemTitle.setText(item.name);
-		Picasso.with(getContext()).load(item.imageURL).placeholder(R.drawable.zzz_image).into(
+		Glide.with(this).load(item.imageURL).apply(
+				new RequestOptions().override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)).into(
 				detailImage);
 		detailPrice.setText(String.format("%s %s", item.price, item.currency));
 		detailPricePerUnit.setText(
@@ -171,7 +174,8 @@ public class DetailFragment extends DaggerFragment implements DetailContract.Vie
 				}
 				if (nutritionValue != null) {
 					@SuppressLint("InflateParams")
-					View view = LayoutInflater.from(getContext()).inflate(R.layout.nutrition_information_item, null);
+					View view = LayoutInflater.from(getContext()).inflate(
+							R.layout.nutrition_information_item, null);
 					TextView name = view.findViewById(R.id.nutritionName);
 					int nutritionLocalizedName = getNutritionLocalizedName(fieldName);
 					if (nutritionLocalizedName == 0) {
@@ -192,7 +196,8 @@ public class DetailFragment extends DaggerFragment implements DetailContract.Vie
 	private void addEnergyAtTop(Double energy) {
 		if (energy != null) {
 			@SuppressLint("InflateParams")
-			View view = LayoutInflater.from(getContext()).inflate(R.layout.nutrition_information_item, null);
+			View view = LayoutInflater.from(getContext()).inflate(
+					R.layout.nutrition_information_item, null);
 			TextView name = view.findViewById(R.id.nutritionName);
 			name.setText(R.string.energy);
 			TextView value = view.findViewById(R.id.nutritionValue);

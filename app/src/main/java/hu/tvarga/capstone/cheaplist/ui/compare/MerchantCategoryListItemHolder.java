@@ -5,7 +5,9 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,7 +43,9 @@ public class MerchantCategoryListItemHolder extends ImageBasedListItemHolder {
 		price.setText(String.format("%s %s", item.price, item.currency));
 		pricePerUnit.setText(
 				String.format("%s %s %s", item.pricePerUnit, item.currency, item.unit));
-		Picasso.with(itemView.getContext()).load(item.imageURL).into(image);
+		Glide.with(itemView.getContext()).load(item.imageURL).apply(
+				new RequestOptions().override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)).into(
+				image);
 
 		setTransitionName(merchant, item.id);
 
