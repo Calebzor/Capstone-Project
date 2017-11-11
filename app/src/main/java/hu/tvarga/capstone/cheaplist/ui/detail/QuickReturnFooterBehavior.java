@@ -14,6 +14,7 @@ import android.view.animation.Interpolator;
 /**
  * Credits: https://github.com/bherbst/QuickReturnFooterSample
  */
+@SuppressWarnings("unused")
 public class QuickReturnFooterBehavior extends CoordinatorLayout.Behavior<View> {
 
 	private static final Interpolator INTERPOLATOR = new FastOutSlowInInterpolator();
@@ -74,8 +75,8 @@ public class QuickReturnFooterBehavior extends CoordinatorLayout.Behavior<View> 
 	private void hide(final View view) {
 		isHiding = true;
 		ViewPropertyAnimator animator = view.animate().translationY(
-				view.getHeight() + getBottomMargin(view)).setInterpolator(INTERPOLATOR).setDuration(
-				DURATION);
+				view.getHeight() + (float) getBottomMargin(view)).setInterpolator(INTERPOLATOR)
+				.setDuration(DURATION);
 
 		animator.setListener(new Animator.AnimatorListener() {
 			@Override
