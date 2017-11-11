@@ -110,11 +110,12 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginEnd="16dp"
-		android:layout_marginTop="42dp"
+		android:layout_marginBottom="42dp"
 		android:contentDescription="@string/add_remove_from_list_action"
 		android:tint="@color/secondaryTextColor"
 		app:layout_anchor="@id/detailScrollView"
-		app:layout_anchorGravity="top|end"
+		app:layout_anchorGravity="bottom|end"
+		app:layout_behavior="hu.tvarga.capstone.cheaplist.ui.detail.ScrollAwareFABBehavior"
 		app:srcCompat="@drawable/zzz_playlist_minus" />
 
 </android.support.design.widget.CoordinatorLayout>
