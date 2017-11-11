@@ -14,6 +14,8 @@ import hu.tvarga.cheaplist.ui.compare.CompareFragment;
 import hu.tvarga.cheaplist.ui.detail.DetailFragment;
 import hu.tvarga.cheaplist.utility.eventbus.EventBusBuffer;
 
+import static hu.tvarga.cheaplist.utility.SharedElementTransition.setTransitionName;
+
 @SuppressWarnings("squid:MaximumInheritanceDepth")
 public class MainActivity extends AuthBaseActivity {
 
@@ -49,6 +51,8 @@ public class MainActivity extends AuthBaseActivity {
 
 	public void openDetailView(ShoppingListItem item, ImageBasedListItemHolder holder) {
 		DetailFragment details = DetailFragment.newInstance(item);
+		// somehow sometimes the holder.image looses the transition name, so we set it here again
+		setTransitionName(holder.image, item.merchant, item.id);
 		getSupportFragmentManager().beginTransaction().addSharedElement(holder.image,
 				getString(R.string.detailImageTransition)).replace(
 				R.id.mainActivityFragmentContainer, details).addToBackStack(

@@ -16,6 +16,8 @@ import hu.tvarga.cheaplist.business.compare.shoppinglist.ShoppingListManager;
 import hu.tvarga.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.cheaplist.ui.ImageBasedListItemHolder;
 
+import static hu.tvarga.cheaplist.utility.SharedElementTransition.setTransitionName;
+
 public class ShoppingListItemHolder extends ImageBasedListItemHolder {
 
 	@BindView(R.id.itemContainer)
@@ -67,8 +69,7 @@ public class ShoppingListItemHolder extends ImageBasedListItemHolder {
 				image);
 		shoppingListItemCheckBox.setChecked(item.checked);
 
-		// would probably not need merchant name for uniqueness here
-		setTransitionName(item.merchant, item.id);
+		setTransitionName(image, item.merchant, item.id);
 
 		itemContainer.setOnClickListener(onClickListener);
 

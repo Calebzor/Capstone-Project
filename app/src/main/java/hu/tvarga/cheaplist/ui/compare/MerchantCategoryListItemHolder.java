@@ -17,6 +17,8 @@ import hu.tvarga.cheaplist.dao.Merchant;
 import hu.tvarga.cheaplist.dao.MerchantCategoryListItem;
 import hu.tvarga.cheaplist.ui.ImageBasedListItemHolder;
 
+import static hu.tvarga.cheaplist.utility.SharedElementTransition.setTransitionName;
+
 public class MerchantCategoryListItemHolder extends ImageBasedListItemHolder {
 
 	@BindView(R.id.itemContainer)
@@ -47,7 +49,7 @@ public class MerchantCategoryListItemHolder extends ImageBasedListItemHolder {
 				new RequestOptions().override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)).into(
 				image);
 
-		setTransitionName(merchant, item.id);
+		setTransitionName(image, merchant, item.id);
 
 		itemContainer.setOnClickListener(onClickListener);
 
