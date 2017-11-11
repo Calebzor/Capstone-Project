@@ -4,7 +4,8 @@
 	<item
 		android:id="@+id/compareMenuItem"
 		android:title="@string/compare_menu_item"
-		app:showAsAction="never" />
+		android:icon="@drawable/ic_compare"
+		app:showAsAction="ifRoom" />
 	<item
 		android:id="@+id/shoppingListMenuItem"
 		android:title="@string/shopping_list_menu_item"

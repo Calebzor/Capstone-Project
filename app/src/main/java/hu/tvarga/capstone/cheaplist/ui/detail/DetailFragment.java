@@ -1,5 +1,6 @@
 package hu.tvarga.capstone.cheaplist.ui.detail;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -169,8 +170,8 @@ public class DetailFragment extends DaggerFragment implements DetailContract.Vie
 					Timber.d(e);
 				}
 				if (nutritionValue != null) {
-					View view = LayoutInflater.from(getContext()).inflate(
-							R.layout.nutrition_information_item, null);
+					@SuppressLint("InflateParams")
+					View view = LayoutInflater.from(getContext()).inflate(R.layout.nutrition_information_item, null);
 					TextView name = view.findViewById(R.id.nutritionName);
 					int nutritionLocalizedName = getNutritionLocalizedName(fieldName);
 					if (nutritionLocalizedName == 0) {
@@ -181,7 +182,7 @@ public class DetailFragment extends DaggerFragment implements DetailContract.Vie
 					}
 					TextView value = view.findViewById(R.id.nutritionValue);
 					String unit = getString(R.string.gram);
-					value.setText(nutritionValue + unit);
+					value.setText(String.format("%s%s", nutritionValue, unit));
 					detailNutritionInformation.addView(view);
 				}
 			}
@@ -190,13 +191,13 @@ public class DetailFragment extends DaggerFragment implements DetailContract.Vie
 
 	private void addEnergyAtTop(Double energy) {
 		if (energy != null) {
-			View view = LayoutInflater.from(getContext()).inflate(
-					R.layout.nutrition_information_item, null);
+			@SuppressLint("InflateParams")
+			View view = LayoutInflater.from(getContext()).inflate(R.layout.nutrition_information_item, null);
 			TextView name = view.findViewById(R.id.nutritionName);
 			name.setText(R.string.energy);
 			TextView value = view.findViewById(R.id.nutritionValue);
 			String unit = getString(R.string.kcal);
-			value.setText(energy + unit);
+			value.setText(String.format("%s%s", energy, unit));
 			detailNutritionInformation.addView(view);
 		}
 	}

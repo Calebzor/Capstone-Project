@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -281,7 +282,8 @@ public class CompareService {
 	private void removeItemFromStartList(List<MerchantCategoryListItem> items) {
 		for (Iterator<MerchantCategoryListItem> iterator = items.iterator(); iterator.hasNext(); ) {
 			MerchantCategoryListItem item = iterator.next();
-			if (!item.name.toLowerCase().contains(filter.toLowerCase())) {
+			if (!item.name.toLowerCase(Locale.getDefault()).contains(
+					filter.toLowerCase(Locale.getDefault()))) {
 				iterator.remove();
 			}
 		}
