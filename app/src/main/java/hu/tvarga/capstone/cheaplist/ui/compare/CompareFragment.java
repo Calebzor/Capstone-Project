@@ -98,12 +98,9 @@ public class CompareFragment extends DaggerFragment implements CompareContract.V
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-		RecyclerView.Adapter<MerchantCategoryListItemHolder> startAdapter =
-				comparePresenter.getStartAdapter(startItems);
+		comparePresenter.getAndSetStartAdapter(startItems);
+		comparePresenter.getAndSetEndAdapter(endItems);
 		compareSearchInput.setOnQueryTextListener(comparePresenter.getOnQueryTextListener());
-
-		RecyclerView.Adapter<MerchantCategoryListItemHolder> endAdapter =
-				comparePresenter.getEndAdapter(endItems);
 		super.onViewCreated(view, savedInstanceState);
 	}
 

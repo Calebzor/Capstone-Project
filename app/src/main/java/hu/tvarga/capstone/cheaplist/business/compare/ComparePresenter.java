@@ -1,5 +1,6 @@
 package hu.tvarga.capstone.cheaplist.business.compare;
 
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +28,7 @@ import hu.tvarga.capstone.cheaplist.R;
 import hu.tvarga.capstone.cheaplist.business.compare.dto.CategoriesBroadcastObject;
 import hu.tvarga.capstone.cheaplist.business.compare.shoppinglist.ShoppingListManager;
 import hu.tvarga.capstone.cheaplist.dao.ItemCategory;
+import hu.tvarga.capstone.cheaplist.dao.Merchant;
 import hu.tvarga.capstone.cheaplist.dao.MerchantCategoryListItem;
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.capstone.cheaplist.ui.compare.MerchantCategoryListItemHolder;
@@ -77,80 +79,70 @@ public class ComparePresenter implements CompareContract.Presenter {
 	}
 
 	@Override
-	public RecyclerView.Adapter<MerchantCategoryListItemHolder> getStartAdapter(
-			RecyclerView startItems) {
-		RecyclerView.Adapter<MerchantCategoryListItemHolder> adapter =
-				new RecyclerView.Adapter<MerchantCategoryListItemHolder>() {
-					@Override
-					public MerchantCategoryListItemHolder onCreateViewHolder(ViewGroup parent,
-							int viewType) {
-						View viewHolder = LayoutInflater.from(parent.getContext()).inflate(
-								R.layout.merchant_category_list_item_start, parent, false);
-						return new MerchantCategoryListItemHolder(viewHolder);
-					}
+	public RecyclerView.Adapter<MerchantCategoryListItemHolder> getAndSetStartAdapter(
+			RecyclerView view) {
+		List<MerchantCategoryListItem> startItems = compareService.getStartItems();
+		RecyclerView.Adapter<MerchantCategoryListItemHolder> adapter = getAdapter(
+				R.layout.merchant_category_list_item_start, startItems, true);
 
-					@Override
-					public void onBindViewHolder(MerchantCategoryListItemHolder holder,
-							int position) {
-						MerchantCategoryListItem item = compareService.getStartItems().get(
-								position);
-						holder.bind(item, view.getActivityCoordinatorLayout(), shoppingListManager,
-								compareService.getStartMerchant(),
-								view.getOnListItemOnClickListener(new ShoppingListItem(item,
-										compareService.getStartMerchant()), holder));
-					}
-
-					@Override
-					public int getItemCount() {
-						int size = compareService.getStartItems().size();
-						if (!stillLoadingUserFilter(size)) {
-							view.setStartEmptyView(size);
-						}
-						return size;
-					}
-				};
-		startItems.setAdapter(adapter);
-		setImagePreLoader(startItems, compareService.getStartItems());
+		view.setAdapter(adapter);
+		setImagePreLoader(view, startItems);
 		compareService.setStartAdapter(adapter);
 		return adapter;
 	}
 
 	@Override
-	public RecyclerView.Adapter<MerchantCategoryListItemHolder> getEndAdapter(
-			RecyclerView endItems) {
-		RecyclerView.Adapter<MerchantCategoryListItemHolder> adapter =
-				new RecyclerView.Adapter<MerchantCategoryListItemHolder>() {
-					@Override
-					public MerchantCategoryListItemHolder onCreateViewHolder(ViewGroup parent,
-							int viewType) {
-						View viewHolder = LayoutInflater.from(parent.getContext()).inflate(
-								R.layout.merchant_category_list_item_end, parent, false);
-						return new MerchantCategoryListItemHolder(viewHolder);
-					}
-
-					@Override
-					public void onBindViewHolder(MerchantCategoryListItemHolder holder,
-							int position) {
-						MerchantCategoryListItem item = compareService.getEndItems().get(position);
-						holder.bind(item, view.getActivityCoordinatorLayout(), shoppingListManager,
-								compareService.getEndMerchant(), view.getOnListItemOnClickListener(
-										new ShoppingListItem(item, compareService.getEndMerchant()),
-										holder));
-					}
-
-					@Override
-					public int getItemCount() {
-						int size = compareService.getEndItems().size();
-						if (!stillLoadingUserFilter(size)) {
-							view.setEndEmptyView(size);
-						}
-						return size;
-					}
-				};
-		endItems.setAdapter(adapter);
-		setImagePreLoader(endItems, compareService.getEndItems());
+	public RecyclerView.Adapter<MerchantCategoryListItemHolder> getAndSetEndAdapter(
+			RecyclerView view) {
+		List<MerchantCategoryListItem> endItems = compareService.getEndItems();
+		RecyclerView.Adapter<MerchantCategoryListItemHolder> adapter = getAdapter(
+				R.layout.merchant_category_list_item_end, endItems, false);
+		view.setAdapter(adapter);
+		setImagePreLoader(view, endItems);
 		compareService.setEndAdapter(adapter);
 		return adapter;
+	}
+
+	private RecyclerView.Adapter<MerchantCategoryListItemHolder> getAdapter(
+			@LayoutRes final int layoutId, final List<MerchantCategoryListItem> items,
+			final boolean isStart) {
+		return new RecyclerView.Adapter<MerchantCategoryListItemHolder>() {
+			@Override
+			public MerchantCategoryListItemHolder onCreateViewHolder(ViewGroup parent,
+					int viewType) {
+				View viewHolder = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent,
+						false);
+				return new MerchantCategoryListItemHolder(viewHolder);
+			}
+
+			@Override
+			public void onBindViewHolder(MerchantCategoryListItemHolder holder, int position) {
+				MerchantCategoryListItem item = items.get(position);
+				Merchant merchant = compareService.getEndMerchant();
+				if (isStart) {
+					merchant = compareService.getStartMerchant();
+				}
+
+				holder.bind(item, view.getActivityCoordinatorLayout(), shoppingListManager,
+						merchant,
+						view.getOnListItemOnClickListener(new ShoppingListItem(item, merchant),
+								holder));
+			}
+
+			@Override
+			public int getItemCount() {
+				int size = items.size();
+				if (!stillLoadingUserFilter(size)) {
+					if (isStart) {
+						view.setStartEmptyView(size);
+					}
+					else {
+						view.setEndEmptyView(size);
+					}
+				}
+				return size;
+			}
+		};
 	}
 
 	private void setImagePreLoader(RecyclerView recyclerView,
