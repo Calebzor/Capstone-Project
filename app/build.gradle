@@ -17,7 +17,7 @@ android {
 	compileSdkVersion compileSdk
 	buildToolsVersion buildTools
 	defaultConfig {
-		applicationId "hu.tvarga.capstone.cheaplist"
+		applicationId "hu.tvarga.cheaplist"
 		minSdkVersion minSdk
 		targetSdkVersion targetSdk
 		versionCode 1
