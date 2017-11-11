@@ -62,7 +62,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:background="@android:color/white"
-		tools:visibility="gone">
+		tools:visibility="visible">
 
 		<ImageView
 			android:id="@+id/image"
@@ -82,7 +82,8 @@
 			android:background="?android:attr/selectableItemBackground"
 			android:clickable="true"
 			android:focusable="true"
-			android:paddingStart="@dimen/shopping_list_text_padding">
+			android:paddingStart="@dimen/shopping_list_text_padding"
+			tools:ignore="RtlSymmetry">
 
 			<android.support.v7.widget.AppCompatCheckBox
 				android:id="@+id/shoppingListItemCheckBox"
