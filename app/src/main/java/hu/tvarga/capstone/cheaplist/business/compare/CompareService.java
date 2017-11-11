@@ -64,6 +64,7 @@ public class CompareService {
 	private final FirebaseFirestore db;
 	private List<ListenerRegistration> startListeners = new LinkedList<>();
 	private List<ListenerRegistration> endListeners = new LinkedList<>();
+	private boolean userFilterLoaded;
 
 	@Inject
 	CompareService(Event event, UserService userService) {
@@ -84,7 +85,12 @@ public class CompareService {
 	@Subscribe
 	public void handleCompareSettingsFilterChangedBroadcastObject(
 			CompareSettingsFilterChangedBroadcastObject object) {
+		userFilterLoaded = true;
 		filterChanged(object);
+	}
+
+	boolean isUserFilterLoaded() {
+		return userFilterLoaded;
 	}
 
 	private void filterChanged(CompareSettingsFilterChangedBroadcastObject object) {

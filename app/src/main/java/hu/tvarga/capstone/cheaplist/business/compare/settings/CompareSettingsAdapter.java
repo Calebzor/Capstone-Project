@@ -64,9 +64,22 @@ public class CompareSettingsAdapter extends RecyclerView.Adapter<CompareSettings
 						break;
 					}
 				}
+				ensureCategoriesFilterIsFilledIfItWasEmpty(categoriesFilterForUser, category);
 				userService.setCategoriesFilterForUser(categoriesFilterForUser);
 			}
 		};
+	}
+
+	private void ensureCategoriesFilterIsFilledIfItWasEmpty(
+			List<UserCategoryFilterListItem> categoriesFilterForUser, ItemCategory category) {
+		if (categoriesFilterForUser.isEmpty()) {
+			for (ItemCategory categoryInList : compareService.getCategories()) {
+				UserCategoryFilterListItem filterListItem = new UserCategoryFilterListItem();
+				filterListItem.category = categoryInList;
+				filterListItem.checked = categoryInList.equals(category);
+				categoriesFilterForUser.add(filterListItem);
+			}
+		}
 	}
 
 	@Override

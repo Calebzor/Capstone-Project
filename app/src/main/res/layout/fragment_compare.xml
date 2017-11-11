@@ -69,14 +69,14 @@
 			android:layout_weight="1">
 
 			<TextView
-				android:id="@+id/startEmptyText"
+				android:id="@+id/startDefaultText"
 				style="@style/TextAppearance.AppCompat.Subhead"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_gravity="center"
 				android:layout_marginBottom="@dimen/detail_inner_horizontal_margin"
 				android:gravity="center"
-				android:text="@string/no_data_available"
+				android:text="@string/loading_data"
 				/>
 
 			<android.support.v7.widget.RecyclerView
@@ -94,14 +94,14 @@
 			android:layout_weight="1">
 
 			<TextView
-				android:id="@+id/endEmptyText"
+				android:id="@+id/endDefaultText"
 				style="@style/TextAppearance.AppCompat.Subhead"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_gravity="center"
 				android:layout_marginBottom="@dimen/detail_inner_horizontal_margin"
 				android:gravity="center"
-				android:text="@string/no_data_available"
+				android:text="@string/loading_data"
 				/>
 
 			<android.support.v7.widget.RecyclerView

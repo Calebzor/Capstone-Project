@@ -31,13 +31,13 @@ public class CompareFragment extends DaggerFragment implements CompareContract.V
 
 	public static final String FRAGMENT_TAG = CompareFragment.class.getName();
 
-	@BindView(R.id.startEmptyText)
-	TextView startEmptyText;
+	@BindView(R.id.startDefaultText)
+	TextView startDefaultText;
 	@BindView(R.id.itemsListStart)
 	RecyclerView startItems;
 
-	@BindView(R.id.endEmptyText)
-	TextView endEmptyText;
+	@BindView(R.id.endDefaultText)
+	TextView endDefaultText;
 	@BindView(R.id.itemListEnd)
 	RecyclerView endItems;
 
@@ -111,12 +111,18 @@ public class CompareFragment extends DaggerFragment implements CompareContract.V
 
 	@Override
 	public void setStartEmptyView(int itemCount) {
-		startEmptyText.setVisibility(itemCount == 0 ? View.VISIBLE : View.GONE);
+		if (itemCount == 0) {
+			startDefaultText.setText(R.string.no_data_available);
+		}
+		startDefaultText.setVisibility(itemCount == 0 ? View.VISIBLE : View.GONE);
 	}
 
 	@Override
 	public void setEndEmptyView(int itemCount) {
-		endEmptyText.setVisibility(itemCount == 0 ? View.VISIBLE : View.GONE);
+		if (itemCount == 0) {
+			endDefaultText.setText(R.string.no_data_available);
+		}
+		endDefaultText.setVisibility(itemCount == 0 ? View.VISIBLE : View.GONE);
 	}
 
 	@Override

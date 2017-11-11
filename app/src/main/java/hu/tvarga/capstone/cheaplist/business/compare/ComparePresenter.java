@@ -89,6 +89,9 @@ public class ComparePresenter implements CompareContract.Presenter {
 					@Override
 					public int getItemCount() {
 						int size = compareService.getStartItems().size();
+						if (stillLoadingUserFilter(size)) {
+							return size;
+						}
 						view.setStartEmptyView(size);
 						return size;
 					}
@@ -122,12 +125,19 @@ public class ComparePresenter implements CompareContract.Presenter {
 					@Override
 					public int getItemCount() {
 						int size = compareService.getEndItems().size();
+						if (stillLoadingUserFilter(size)) {
+							return size;
+						}
 						view.setEndEmptyView(size);
 						return size;
 					}
 				};
 		compareService.setEndAdapter(adapter);
 		return adapter;
+	}
+
+	private boolean stillLoadingUserFilter(int size) {
+		return size == 0 && !compareService.isUserFilterLoaded();
 	}
 
 	@Override
