@@ -202,7 +202,7 @@ public class CompareService {
 		final int[] queriesToFinish = {queries.size()};
 		unfilteredItems.clear();
 		for (Query query : queries) {
-			ListenerRegistration listener = query.addSnapshotListener(
+			ListenerRegistration listener = query.orderBy("name").addSnapshotListener(
 					new EventListener<QuerySnapshot>() {
 						@Override
 						public void onEvent(QuerySnapshot documentSnapshots,
