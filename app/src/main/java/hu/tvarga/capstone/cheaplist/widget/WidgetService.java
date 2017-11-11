@@ -125,14 +125,15 @@ public class WidgetService extends RemoteViewsService {
 		public RemoteViews getViewAt(int position) {
 			RemoteViews row = new RemoteViews(getPackageName(), R.layout.widget_shopping_list_item);
 			if (items != null) {
-				row.setTextViewText(R.id.widgetItemName, items.get(position).name);
+				ShoppingListItem shoppingListItem = items.get(position);
+				row.setTextViewText(R.id.widgetItemName, shoppingListItem.name);
 				row.setTextViewText(R.id.widgetItemPrice,
-						String.format("%s %s", items.get(position).price,
-								items.get(position).currency));
+						String.format("%s - %s %s", shoppingListItem.merchant.name,
+								shoppingListItem.price, shoppingListItem.currency));
 
 				Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 				Bundle extras = new Bundle();
-				extras.putSerializable(DETAIL_ITEM, items.get(position));
+				extras.putSerializable(DETAIL_ITEM, shoppingListItem);
 				intent.putExtras(extras);
 
 				row.setOnClickFillInIntent(R.id.widgetListItemContainer, intent);
