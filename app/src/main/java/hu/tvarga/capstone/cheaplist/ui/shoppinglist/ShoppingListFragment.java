@@ -128,10 +128,32 @@ public class ShoppingListFragment extends DaggerFragment implements ShoppingList
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-		RecyclerView.Adapter<ShoppingListItemHolder> adapter = shoppingListPresenter.getAdapter();
+		RecyclerView.Adapter<ShoppingListItemHolder> adapter = getAdapter();
+		shoppingListPresenter.setAdapter(adapter);
 		shoppingList.setAdapter(adapter);
 		setUpSwipeAction();
 		super.onViewCreated(view, savedInstanceState);
+	}
+
+	private RecyclerView.Adapter<ShoppingListItemHolder> getAdapter() {
+		return new RecyclerView.Adapter<ShoppingListItemHolder>() {
+			@Override
+			public ShoppingListItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+				View viewHolder = LayoutInflater.from(getContext()).inflate(
+						R.layout.shopping_list_item, parent, false);
+				return new ShoppingListItemHolder(viewHolder);
+			}
+
+			@Override
+			public void onBindViewHolder(ShoppingListItemHolder holder, int position) {
+				shoppingListPresenter.adapterOnBindViewHolder(holder, position);
+			}
+
+			@Override
+			public int getItemCount() {
+				return shoppingListPresenter.adapterGetItemCount();
+			}
+		};
 	}
 
 	@Override

@@ -11,9 +11,11 @@ public interface ShoppingListContract {
 
 		void onPause();
 		void onResume(View view);
-		RecyclerView.Adapter<ShoppingListItemHolder> getAdapter();
+		void adapterOnBindViewHolder(ShoppingListItemHolder holder, int position);
+		int adapterGetItemCount();
 		void removeFromList(ShoppingListItem item);
 		void addToList(ShoppingListItem item);
+		void setAdapter(RecyclerView.Adapter<ShoppingListItemHolder> adapter);
 	}
 
 	interface View {

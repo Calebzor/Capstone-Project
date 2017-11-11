@@ -44,11 +44,13 @@ public abstract class BaseMockitoJUnitTest extends Assert {
 		setupContextWrapperResourceHandling();
 	}
 
-	protected void verifyEventRegister() {
+	// not calling this verify because auto complete is then annoying
+	protected void checkEventRegister() {
 		verify(event).register(any());
 	}
 
-	protected void verifyEventUnregister() {
+	// not calling this verify because auto complete is then annoying
+	protected void checkEventUnregister() {
 		verify(event).unregister(any());
 	}
 

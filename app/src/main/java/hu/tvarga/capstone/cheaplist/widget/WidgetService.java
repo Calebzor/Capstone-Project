@@ -3,6 +3,7 @@ package hu.tvarga.capstone.cheaplist.widget;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -37,20 +38,25 @@ public class WidgetService extends RemoteViewsService {
 	public class CheapListAppWidgetViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
 		private List<ShoppingListItem> items = new ArrayList<>();
+		private CollectionReference dbRefForShoppingList;
 
-		public CheapListAppWidgetViewsFactory() {
-			setUpFirebase();
+		CheapListAppWidgetViewsFactory() {
+			setUPp();
 		}
 
-		private void setUpFirebase() {
-			CollectionReference dbRefForShoppingList = getDBRefForShoppingList();
+		private void setUPp() {
+			listenForAuthStateChange();
+			setUpShoppingListListener();
+		}
+
+		private void setUpShoppingListListener() {
 			if (dbRefForShoppingList != null) {
 				dbRefForShoppingList.addSnapshotListener(new EventListener<QuerySnapshot>() {
 					@Override
 					public void onEvent(QuerySnapshot documentSnapshots,
 							FirebaseFirestoreException e) {
 						if (e != null) {
-							Timber.d("Widget firebase cancel for shopping list %s", e);
+							Timber.e("widget dbRefForShoppingList#onEvent");
 							return;
 						}
 
@@ -83,17 +89,29 @@ public class WidgetService extends RemoteViewsService {
 			});
 		}
 
-		private CollectionReference getDBRefForShoppingList() {
+		private void listenForAuthStateChange() {
 			FirebaseAuth auth = FirebaseAuth.getInstance();
-			FirebaseUser currentUser = auth.getCurrentUser();
-			if (currentUser != null) {
-				return FirebaseFirestore.getInstance().collection("userData").document(
-						currentUser.getUid()).collection("shoppingList");
-			}
-			return null;
+			FirebaseAuth.AuthStateListener authStateListener =
+					new FirebaseAuth.AuthStateListener() {
+						@Override
+						public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+							FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+							if (currentUser != null) {
+								dbRefForShoppingList = FirebaseFirestore.getInstance().collection(
+										"userData").document(currentUser.getUid()).collection(
+										"shoppingList");
+								setUpShoppingListListener();
+							}
+							else {
+								dbRefForShoppingList = null;
+							}
+						}
+
+					};
+			auth.addAuthStateListener(authStateListener);
 		}
 
-		public void updateWidget() {
+		void updateWidget() {
 			Intent intent = new Intent(getApplicationContext(), WidgetProvider.class);
 			intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 			int[] ids = {R.xml.widget_provider};

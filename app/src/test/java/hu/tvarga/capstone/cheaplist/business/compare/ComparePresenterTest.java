@@ -38,7 +38,7 @@ public class ComparePresenterTest extends BaseMockitoJUnitTest {
 		presenter.onResume(view);
 
 		assertEquals(presenter.view, view);
-		verifyEventRegister();
+		checkEventRegister();
 		verify(view).notifyGotMerchantCategoryData(list);
 	}
 
@@ -46,6 +46,6 @@ public class ComparePresenterTest extends BaseMockitoJUnitTest {
 	public void onPause() throws Exception {
 		presenter.onPause();
 
-		verifyEventUnregister();
+		checkEventUnregister();
 	}
 }
