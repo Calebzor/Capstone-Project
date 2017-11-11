@@ -22,6 +22,9 @@ import hu.tvarga.capstone.cheaplist.business.compare.shoppinglist.ShoppingListCo
 import hu.tvarga.capstone.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.capstone.cheaplist.ui.MainActivity;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 public class ShoppingListFragment extends DaggerFragment implements ShoppingListContract.View {
 
 	public static final String FRAGMENT_TAG = ShoppingListFragment.class.getName();
@@ -63,30 +66,22 @@ public class ShoppingListFragment extends DaggerFragment implements ShoppingList
 
 	//region Swipe action
 	private void setUpSwipeAction() {
-		ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(
-				0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-
-			@Override
-			public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
-					RecyclerView.ViewHolder target) {
-				return false;
-			}
-
-			@Override
-			public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-				if (viewHolder instanceof ShoppingListItemHolder) {
-					ShoppingListItemHolder shoppingListItemHolder =
-							(ShoppingListItemHolder) viewHolder;
-					if (shoppingListItemHolder.item != null) {
-						shoppingListPresenter.removeFromList(shoppingListItemHolder.item);
-						View coordinatorLayout = getActivity().findViewById(R.id.coordinator);
-						if (coordinatorLayout != null) {
-							showSnackBar(coordinatorLayout, shoppingListItemHolder.item);
+		ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ShoppingListItemTouchHelper(0,
+				ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT,
+				new ShoppingListItemTouchHelper.ShoppingListItemTouchHelperListener() {
+					@Override
+					public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+						ShoppingListItemHolder shoppingListItemHolder =
+								(ShoppingListItemHolder) viewHolder;
+						if (shoppingListItemHolder.item != null) {
+							shoppingListPresenter.removeFromList(shoppingListItemHolder.item);
+							View coordinatorLayout = getActivity().findViewById(R.id.coordinator);
+							if (coordinatorLayout != null) {
+								showSnackBar(coordinatorLayout, shoppingListItemHolder.item);
+							}
 						}
 					}
-				}
-			}
-		};
+				});
 
 		ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
 		itemTouchHelper.attachToRecyclerView(shoppingList);
@@ -111,8 +106,8 @@ public class ShoppingListFragment extends DaggerFragment implements ShoppingList
 
 	@Override
 	public void setEmptyView(int itemCount) {
-		shoppingList.setVisibility(itemCount != 0 ? View.VISIBLE : View.GONE);
-		emptyText.setVisibility(itemCount == 0 ? View.VISIBLE : View.GONE);
+		shoppingList.setVisibility(itemCount != 0 ? VISIBLE : GONE);
+		emptyText.setVisibility(itemCount == 0 ? VISIBLE : GONE);
 	}
 
 	@Override

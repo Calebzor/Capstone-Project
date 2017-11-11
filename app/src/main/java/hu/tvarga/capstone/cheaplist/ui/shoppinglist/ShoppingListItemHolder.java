@@ -2,6 +2,7 @@ package hu.tvarga.capstone.cheaplist.ui.shoppinglist;
 
 import android.support.v7.widget.AppCompatCheckBox;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -32,9 +33,24 @@ public class ShoppingListItemHolder extends ImageBasedListItemHolder {
 	@BindView(R.id.shoppingListItemCheckBox)
 	AppCompatCheckBox shoppingListItemCheckBox;
 
+	@BindView(R.id.view_background)
+	RelativeLayout viewBackground;
+
+	@BindView(R.id.view_foreground)
+	RelativeLayout viewForeground;
+
+	@BindView(R.id.delete_iconEnd)
+	View deleteIconEnd;
+	@BindView(R.id.delete_textEnd)
+	View deleteTextEnd;
+	@BindView(R.id.delete_iconStart)
+	View deleteIconStart;
+	@BindView(R.id.delete_textStart)
+	View deleteTextStart;
+
 	ShoppingListItem item;
 
-	public ShoppingListItemHolder(View itemView) {
+	ShoppingListItemHolder(View itemView) {
 		super(itemView);
 		ButterKnife.bind(this, itemView);
 	}
