@@ -6,7 +6,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
@@ -63,8 +62,6 @@ public class CompareService {
 	private List<UserCategoryFilterListItem> categoryFilter = new LinkedList<>();
 	private String filter;
 	private final FirebaseFirestore db;
-	private List<ListenerRegistration> startListeners = new LinkedList<>();
-	private List<ListenerRegistration> endListeners = new LinkedList<>();
 	private boolean userFilterLoaded;
 
 	@Inject
@@ -73,8 +70,9 @@ public class CompareService {
 		db = FirebaseFirestore.getInstance();
 		FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
 
-		FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder().setDeveloperModeEnabled(
-				BuildConfig.DEBUG).build();
+		FirebaseRemoteConfigSettings configSettings =
+				new FirebaseRemoteConfigSettings.Builder().setDeveloperModeEnabled(
+						BuildConfig.DEBUG).build();
 		firebaseRemoteConfig.setConfigSettings(configSettings);
 
 		getCategoriesFromDB();
@@ -183,54 +181,40 @@ public class CompareService {
 	}
 
 	private void getStartItemsFromDB() {
-		getItemsFromDB(startListeners, startMerchantItemsDBRef, startItems, startItemsUnfiltered,
-				startAdapter);
+		getItemsFromDB(startMerchantItemsDBRef, startItems, startItemsUnfiltered, startAdapter);
 	}
 
 	private void getEndItemsFromDB() {
-		getItemsFromDB(endListeners, endMerchantItemsDBRef, endItems, endItemsUnfiltered,
-				endAdapter);
+		getItemsFromDB(endMerchantItemsDBRef, endItems, endItemsUnfiltered, endAdapter);
 	}
 
-	private void getItemsFromDB(List<ListenerRegistration> listeners, List<Query> queries,
-			final List<MerchantCategoryListItem> items,
+	private void getItemsFromDB(List<Query> queries, final List<MerchantCategoryListItem> items,
 			final List<MerchantCategoryListItem> unfilteredItems,
 			final RecyclerView.Adapter<MerchantCategoryListItemHolder> adapter) {
-		cleanUpCategoryListListeners(listeners);
 
 		final int[] queriesToFinish = {queries.size()};
 		unfilteredItems.clear();
 		for (Query query : queries) {
-			ListenerRegistration listener = query.addSnapshotListener(
-					new EventListener<QuerySnapshot>() {
-						@Override
-						public void onEvent(QuerySnapshot documentSnapshots,
-								FirebaseFirestoreException e) {
-							if (e != null) {
-								Timber.e(e, "getItemsFromDB#error %s");
-								return;
-							}
-							List<DocumentSnapshot> documents = documentSnapshots.getDocuments();
-							for (DocumentSnapshot document : documents) {
-								MerchantCategoryListItem item = document.toObject(
-										MerchantCategoryListItem.class);
-								unfilteredItems.add(item);
-							}
-							queriesToFinish[0] = queriesToFinish[0] - 1;
-							if (adapter != null && queriesToFinish[0] == 0) {
-								filter(items, unfilteredItems, adapter);
-							}
-						}
-					});
-			listeners.add(listener);
+			query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+				@Override
+				public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+					if (e != null) {
+						Timber.e(e, "getItemsFromDB#error %s");
+						return;
+					}
+					List<DocumentSnapshot> documents = documentSnapshots.getDocuments();
+					for (DocumentSnapshot document : documents) {
+						MerchantCategoryListItem item = document.toObject(
+								MerchantCategoryListItem.class);
+						unfilteredItems.add(item);
+					}
+					queriesToFinish[0] = queriesToFinish[0] - 1;
+					if (adapter != null && queriesToFinish[0] == 0) {
+						filter(items, unfilteredItems, adapter);
+					}
+				}
+			});
 		}
-	}
-
-	private void cleanUpCategoryListListeners(List<ListenerRegistration> listeners) {
-		for (ListenerRegistration startListener : listeners) {
-			startListener.remove();
-		}
-		listeners.clear();
 	}
 
 	List<MerchantCategoryListItem> getStartItems() {

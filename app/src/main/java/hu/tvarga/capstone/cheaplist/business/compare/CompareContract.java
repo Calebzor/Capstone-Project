@@ -15,8 +15,9 @@ public interface CompareContract {
 
 		void onResume(View view);
 		void onPause();
-		RecyclerView.Adapter<MerchantCategoryListItemHolder> getStartAdapter();
-		RecyclerView.Adapter<MerchantCategoryListItemHolder> getEndAdapter();
+		RecyclerView.Adapter<MerchantCategoryListItemHolder> getStartAdapter(
+				RecyclerView startItems);
+		RecyclerView.Adapter<MerchantCategoryListItemHolder> getEndAdapter(RecyclerView endItems);
 		SearchView.OnQueryTextListener getOnQueryTextListener();
 	}
 
