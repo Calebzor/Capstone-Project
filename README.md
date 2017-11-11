@@ -5,7 +5,10 @@ Android app to compare products of merchants
 
 ## CI
 ### Travis
-[![build](https://travis-ci.org/Calebzor/CheapList.svg?branch=master)](https://travis-ci.org/Calebzor/CheapList)
+[![Travis](https://travis-ci.org/Calebzor/CheapList.svg?branch=master)](https://travis-ci.org/Calebzor/CheapList)
+
+### CircleCI
+[![CircleCI](https://circleci.com/gh/Calebzor/CheapList.svg?style=shield&circle-token=93f9612f2e7c32128da18999d4936aab7580a347)](https://circleci.com/gh/Calebzor/CheapList)
 
 ### Jenkins
 Might get disabled: 
