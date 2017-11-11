@@ -40,7 +40,6 @@ android {
 			signingConfig signingConfigs.defaultConfig
 		}
 	}
-	buildToolsVersion '26.0.2'
 }
 
 configurations { codacy }
