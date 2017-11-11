@@ -25,6 +25,9 @@ import hu.tvarga.cheaplist.ui.MainActivity;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 public class ShoppingListFragment extends DaggerFragment implements ShoppingListContract.View {
 
 	public static final String FRAGMENT_TAG = ShoppingListFragment.class.getName();
