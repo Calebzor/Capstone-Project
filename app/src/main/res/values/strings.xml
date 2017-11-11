@@ -28,4 +28,5 @@
 	<string name="filter">Filter</string>
 	<string name="detailImageTransition">detailImageTransition</string>
 	<string name="loading_data">Loading data.</string>
+	<string name="remove">Remove</string>
 </resources>
