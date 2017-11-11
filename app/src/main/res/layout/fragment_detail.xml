@@ -115,7 +115,7 @@
 		android:tint="@color/secondaryTextColor"
 		app:layout_anchor="@id/detailScrollView"
 		app:layout_anchorGravity="bottom|end"
-		app:layout_behavior="hu.tvarga.capstone.cheaplist.ui.detail.ScrollAwareFABBehavior"
+		app:layout_behavior="hu.tvarga.capstone.cheaplist.ui.detail.QuickReturnFooterBehavior"
 		app:srcCompat="@drawable/zzz_playlist_minus" />
 
 </android.support.design.widget.CoordinatorLayout>
