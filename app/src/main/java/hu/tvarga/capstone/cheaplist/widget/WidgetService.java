@@ -104,6 +104,8 @@ public class WidgetService extends RemoteViewsService {
 							}
 							else {
 								dbRefForShoppingList = null;
+								items.clear();
+								updateWidget();
 							}
 						}
 
