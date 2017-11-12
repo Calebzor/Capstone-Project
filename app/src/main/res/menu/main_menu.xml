@@ -2,9 +2,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto">
 	<item
+		android:id="@+id/searchMenuItem"
+		android:icon="@drawable/ic_search"
+		android:title="@string/search"
+		app:actionViewClass="android.support.v7.widget.SearchView"
+		app:showAsAction="always|collapseActionView" />
+	<item
+		android:id="@+id/compareFilterMenuItem"
+		android:title="@string/filter"
+		android:visible="false"
+		app:showAsAction="always" />
+	<item
 		android:id="@+id/compareMenuItem"
-		android:title="@string/compare_menu_item"
 		android:icon="@drawable/ic_compare"
+		android:title="@string/compare_menu_item"
 		app:showAsAction="ifRoom" />
 	<item
 		android:id="@+id/shoppingListMenuItem"

@@ -77,8 +77,14 @@ public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main_menu, menu);
+
+		if (this instanceof MainActivity) {
+			setUpSearchView(menu);
+		}
 		return true;
 	}
+
+	protected abstract void setUpSearchView(Menu menu);
 
 	private DaggerFragment getFragmentByTag(String fragmentTag) {
 		return (DaggerFragment) getSupportFragmentManager().findFragmentByTag(fragmentTag);

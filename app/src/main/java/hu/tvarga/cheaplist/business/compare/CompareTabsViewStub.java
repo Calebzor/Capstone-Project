@@ -2,9 +2,6 @@ package hu.tvarga.cheaplist.business.compare;
 
 import android.view.View;
 
-import java.util.List;
-
-import hu.tvarga.cheaplist.dao.ItemCategory;
 import hu.tvarga.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.cheaplist.ui.compare.MerchantCategoryListItemHolder;
 import timber.log.Timber;
@@ -33,10 +30,4 @@ public class CompareTabsViewStub implements CompareContract.View {
 	public void setEndEmptyView(int itemCount) {
 		Timber.d("setEndEmptyView");
 	}
-
-	@Override
-	public void notifyGotMerchantCategoryData(List<ItemCategory> categories) {
-		Timber.d("notifyGotMerchantCategoryData");
-	}
-
 }

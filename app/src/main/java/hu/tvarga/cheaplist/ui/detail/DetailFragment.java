@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -80,11 +82,18 @@ public class DetailFragment extends DaggerFragment implements DetailContract.Vie
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
 		setSharedElementEnterTransition(
 				TransitionInflater.from(getContext()).inflateTransition(android.R.transition.move));
 		if (getArguments().containsKey(DETAIL_ITEM)) {
 			itemFromArgument = (ShoppingListItem) getArguments().getSerializable(DETAIL_ITEM);
 		}
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		menu.clear();
 	}
 
 	@Override

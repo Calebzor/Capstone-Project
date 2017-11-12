@@ -3,16 +3,14 @@ package hu.tvarga.cheaplist.ui.compare;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -22,12 +20,12 @@ import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 import hu.tvarga.cheaplist.R;
 import hu.tvarga.cheaplist.business.compare.CompareContract;
-import hu.tvarga.cheaplist.dao.ItemCategory;
 import hu.tvarga.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.cheaplist.ui.MainActivity;
 import hu.tvarga.cheaplist.ui.compare.settings.CompareSettingsDialog;
 
-public class CompareFragment extends DaggerFragment implements CompareContract.View {
+public class CompareFragment extends DaggerFragment
+		implements CompareContract.View, MainActivity.SearchHandler {
 
 	public static final String FRAGMENT_TAG = CompareFragment.class.getName();
 
@@ -41,19 +39,34 @@ public class CompareFragment extends DaggerFragment implements CompareContract.V
 	@BindView(R.id.itemListEnd)
 	RecyclerView endItems;
 
-	@BindView(R.id.compareFilterButton)
-	AppCompatButton compareFilterButton;
-
-	@BindView(R.id.compareSearchInput)
-	SearchView compareSearchInput;
-
-	@BindView(R.id.compareProgressBar)
-	ProgressBar progressBar;
-
 	@Inject
 	CompareContract.Presenter comparePresenter;
 
 	private Unbinder unbinder;
+
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+	}
+
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		menu.findItem(R.id.compareMenuItem).setVisible(false);
+		menu.findItem(R.id.compareFilterMenuItem).setVisible(true);
+		super.onPrepareOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == R.id.compareFilterMenuItem) {
+			CompareSettingsDialog compareSettingsDialog = new CompareSettingsDialog();
+			compareSettingsDialog.show(getActivity().getFragmentManager(),
+					CompareSettingsDialog.FRAGMENT_TAG);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 
 	@Override
 	public void onResume() {
@@ -97,10 +110,14 @@ public class CompareFragment extends DaggerFragment implements CompareContract.V
 	}
 
 	@Override
+	public void setOnQueryTextListener(SearchView searchView) {
+		searchView.setOnQueryTextListener(comparePresenter.getOnQueryTextListener());
+	}
+
+	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-		comparePresenter.getAndSetStartAdapter(startItems);
-		comparePresenter.getAndSetEndAdapter(endItems);
-		compareSearchInput.setOnQueryTextListener(comparePresenter.getOnQueryTextListener());
+		comparePresenter.setStartAdapter(startItems);
+		comparePresenter.setEndAdapter(endItems);
 		super.onViewCreated(view, savedInstanceState);
 	}
 
@@ -124,20 +141,5 @@ public class CompareFragment extends DaggerFragment implements CompareContract.V
 	public void onDestroyView() {
 		super.onDestroyView();
 		unbinder.unbind();
-	}
-
-	@Override
-	public void notifyGotMerchantCategoryData(final List<ItemCategory> categories) {
-		progressBar.setVisibility(View.INVISIBLE);
-		compareFilterButton.setVisibility(View.VISIBLE);
-
-		compareFilterButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				CompareSettingsDialog compareSettingsDialog = new CompareSettingsDialog();
-				compareSettingsDialog.show(getActivity().getFragmentManager(),
-						CompareSettingsDialog.FRAGMENT_TAG);
-			}
-		});
 	}
 }

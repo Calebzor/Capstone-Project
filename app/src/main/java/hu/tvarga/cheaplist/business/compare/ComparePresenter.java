@@ -62,7 +62,6 @@ public class ComparePresenter implements CompareContract.Presenter {
 		if (categories == null) {
 			categories = compareService.getCategories();
 		}
-		view.notifyGotMerchantCategoryData(categories);
 	}
 
 	@Override
@@ -75,12 +74,10 @@ public class ComparePresenter implements CompareContract.Presenter {
 	public void handleCategoriesBroadcastObject(CategoriesBroadcastObject object) {
 		Timber.d("handleCategoriesBroadcastObject", object);
 		categories = object.getCategories();
-		view.notifyGotMerchantCategoryData(categories);
 	}
 
 	@Override
-	public RecyclerView.Adapter<MerchantCategoryListItemHolder> getAndSetStartAdapter(
-			RecyclerView view) {
+	public void setStartAdapter(RecyclerView view) {
 		List<MerchantCategoryListItem> startItems = compareService.getStartItems();
 		RecyclerView.Adapter<MerchantCategoryListItemHolder> adapter = getAdapter(
 				R.layout.merchant_category_list_item_start, startItems, true);
@@ -88,19 +85,16 @@ public class ComparePresenter implements CompareContract.Presenter {
 		view.setAdapter(adapter);
 		setImagePreLoader(view, startItems);
 		compareService.setStartAdapter(adapter);
-		return adapter;
 	}
 
 	@Override
-	public RecyclerView.Adapter<MerchantCategoryListItemHolder> getAndSetEndAdapter(
-			RecyclerView view) {
+	public void setEndAdapter(RecyclerView view) {
 		List<MerchantCategoryListItem> endItems = compareService.getEndItems();
 		RecyclerView.Adapter<MerchantCategoryListItemHolder> adapter = getAdapter(
 				R.layout.merchant_category_list_item_end, endItems, false);
 		view.setAdapter(adapter);
 		setImagePreLoader(view, endItems);
 		compareService.setEndAdapter(adapter);
-		return adapter;
 	}
 
 	private RecyclerView.Adapter<MerchantCategoryListItemHolder> getAdapter(

@@ -7,6 +7,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -21,9 +23,6 @@ import hu.tvarga.cheaplist.R;
 import hu.tvarga.cheaplist.business.compare.shoppinglist.ShoppingListContract;
 import hu.tvarga.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.cheaplist.ui.MainActivity;
-
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -45,6 +44,18 @@ public class ShoppingListFragment extends DaggerFragment implements ShoppingList
 
 	public static ShoppingListFragment newInstance() {
 		return new ShoppingListFragment();
+	}
+
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		menu.removeItem(R.id.searchMenuItem);
 	}
 
 	@Override
