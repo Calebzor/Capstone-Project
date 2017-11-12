@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
+<menu
+	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto">
 	<item
 		android:id="@+id/searchMenuItem"
@@ -10,19 +11,5 @@
 	<item
 		android:id="@+id/compareFilterMenuItem"
 		android:title="@string/filter"
-		android:visible="false"
 		app:showAsAction="always" />
-	<item
-		android:id="@+id/compareMenuItem"
-		android:icon="@drawable/ic_compare"
-		android:title="@string/compare_menu_item"
-		app:showAsAction="ifRoom" />
-	<item
-		android:id="@+id/shoppingListMenuItem"
-		android:title="@string/shopping_list_menu_item"
-		app:showAsAction="never" />
-	<item
-		android:id="@+id/sign_out_menu"
-		android:title="@string/sign_out"
-		app:showAsAction="never" />
 </menu>

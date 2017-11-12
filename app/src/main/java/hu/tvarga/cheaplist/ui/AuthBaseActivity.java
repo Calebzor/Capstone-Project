@@ -8,7 +8,6 @@ import android.support.annotation.StringRes;
 import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -86,37 +85,8 @@ public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 
 	protected abstract void setUpSearchView(Menu menu);
 
-	private DaggerFragment getFragmentByTag(String fragmentTag) {
+	protected DaggerFragment getFragmentByTag(String fragmentTag) {
 		return (DaggerFragment) getSupportFragmentManager().findFragmentByTag(fragmentTag);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		DaggerFragment fragmentByTag;
-		String fragmentTag;
-		switch (item.getItemId()) {
-			case R.id.sign_out_menu:
-				AuthUI.getInstance().signOut(this);
-				return true;
-			case R.id.shoppingListMenuItem:
-				fragmentTag = ShoppingListFragment.FRAGMENT_TAG;
-				fragmentByTag = getFragmentByTag(fragmentTag);
-				if (fragmentByTag == null) {
-					fragmentByTag = ShoppingListFragment.newInstance();
-				}
-				replaceFragment(fragmentByTag);
-				return true;
-			case R.id.compareMenuItem:
-				fragmentTag = CompareFragment.FRAGMENT_TAG;
-				fragmentByTag = getFragmentByTag(fragmentTag);
-				if (fragmentByTag == null) {
-					fragmentByTag = new CompareFragment();
-				}
-				replaceFragment(fragmentByTag);
-				return true;
-			default:
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	protected void replaceFragment(DaggerFragment fragment) {

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<group
+		android:id="@+id/navigation_drawer_group_one"
+		android:checkableBehavior="single">
+		<item
+			android:id="@+id/compareMenuItem"
+			android:icon="@drawable/ic_compare"
+			android:title="@string/compare_menu_item" />
+		<item
+			android:id="@+id/shoppingListMenuItem"
+			android:icon="@drawable/ic_format_list_bulletted"
+			android:title="@string/shopping_list_menu_item" />
+	</group>
+
+	<group
+		android:id="@+id/navigation_drawer_group_two"
+		android:checkableBehavior="none">
+		<item
+			android:id="@+id/sign_out_menu"
+			android:icon="@drawable/ic_logout_variant"
+			android:title="@string/sign_out" />
+	</group>
+
+</menu>

@@ -55,7 +55,7 @@ public class ShoppingListFragment extends DaggerFragment implements ShoppingList
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-		menu.removeItem(R.id.searchMenuItem);
+		menu.clear();
 	}
 
 	@Override

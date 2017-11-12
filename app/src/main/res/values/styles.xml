@@ -1,6 +1,6 @@
 <resources>
 
-	<style name="Theme.Bacon" parent="@style/Base.Theme.AppCompat.Light.DarkActionBar">
+	<style name="Theme.Bacon" parent="@style/Theme.Design.Light.NoActionBar">
 		<item name="colorPrimary">@color/primaryColor</item>
 		<item name="colorPrimaryDark">@color/primaryDarkColor</item>
 		<item name="colorAccent">@color/secondaryColor</item>
