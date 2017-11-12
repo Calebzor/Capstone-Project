@@ -98,8 +98,10 @@ public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 			fragmentPopped = manager.popBackStackImmediate(null,
 					FragmentManager.POP_BACK_STACK_INCLUSIVE);
 			if (fragment instanceof ShoppingListFragment && fragmentPopped) {
-				manager.beginTransaction().replace(R.id.mainActivityFragmentContainer, fragment)
-						.addToBackStack(backStateName).commit();
+				manager.beginTransaction().setCustomAnimations(android.R.anim.fade_in,
+						android.R.anim.fade_out, android.R.anim.fade_out, android.R.anim.fade_in)
+						.replace(R.id.mainActivityFragmentContainer, fragment).addToBackStack(
+						backStateName).commit();
 			}
 		}
 		else {
@@ -107,8 +109,10 @@ public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 		}
 
 		if (!fragmentPopped) { //fragment not in back stack, create it.
-			manager.beginTransaction().replace(R.id.mainActivityFragmentContainer, fragment)
-					.addToBackStack(backStateName).commit();
+			manager.beginTransaction().setCustomAnimations(android.R.anim.fade_in,
+					android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
+					.replace(R.id.mainActivityFragmentContainer, fragment).addToBackStack(
+					backStateName).commit();
 		}
 	}
 
