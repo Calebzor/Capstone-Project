@@ -1,5 +1,9 @@
 <resources>
-	<string name="ad_unit_id">ca-app-pub-3940256099942544/1033173712</string>
+	<string name="facebook_app_id" translatable="false">301947823625448</string>
+	<string name="facebook_application_id" translatable="false">@string/facebook_app_id</string>
+	<string name="fb_login_protocol_scheme" translatable="false">fb301947823625448</string>
+	<string name="facebook_login_protocol_scheme" translatable="false">@string/fb_login_protocol_scheme</string>
+	<string name="ad_unit_id" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
 	<string name="app_name">CheapList</string>
 	<string name="sign_out">Sign Out</string>
 	<string name="category">Category</string>
@@ -29,4 +33,10 @@
 	<string name="detailImageTransition">detailImageTransition</string>
 	<string name="loading_data">Loading data.</string>
 	<string name="remove">Remove</string>
+
+	<string name="unknown_response">Unexpected onActivityResult response code</string>
+	<string name="unknown_sign_in_response">Unknown response from AuthUI sign-in</string>
+	<string name="sign_in_cancelled">Sign in cancelled</string>
+	<string name="no_internet_connection">No internet connection</string>
+	<string name="unknown_error">An unknown error occurred</string>
 </resources>

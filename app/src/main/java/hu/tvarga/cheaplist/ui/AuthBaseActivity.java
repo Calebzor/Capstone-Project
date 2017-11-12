@@ -2,7 +2,9 @@ package hu.tvarga.cheaplist.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,10 +12,14 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.ErrorCodes;
+import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import dagger.android.support.DaggerAppCompatActivity;
 import dagger.android.support.DaggerFragment;
@@ -40,14 +46,31 @@ public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 				FirebaseUser user = firebaseAuth.getCurrentUser();
 				if (user == null) {
 					startActivityForResult(
-							AuthUI.getInstance().createSignInIntentBuilder().setIsSmartLockEnabled(
-									false).setAvailableProviders(Arrays.asList(
-									new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-									new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
+							AuthUI.getInstance().createSignInIntentBuilder().setTheme(getAppTheme())
+									.setAvailableProviders(Arrays.asList(
+											new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER)
+													.build(), new AuthUI.IdpConfig.Builder(
+													AuthUI.FACEBOOK_PROVIDER)
+													.setPermissions(getFacebookPermissions())
+													.build(),
+											new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER)
+													.build())).setAllowNewEmailAccounts(true)
 									.build(), RC_SIGN_IN);
 				}
 			}
 		};
+	}
+
+	@MainThread
+	private List<String> getFacebookPermissions() {
+		List<String> result = new ArrayList<>();
+		result.add("user_friends");
+		result.add("user_photos");
+		return result;
+	}
+
+	private int getAppTheme() {
+		return R.style.AppTheme;
 	}
 
 	@Override
@@ -130,15 +153,47 @@ public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (RC_SIGN_IN == requestCode) {
-			if (RESULT_OK == resultCode) {
-				Toast.makeText(this, getString(R.string.signed_in), Toast.LENGTH_SHORT).show();
+		if (requestCode == RC_SIGN_IN) {
+			handleSignInResponse(resultCode, data);
+			return;
+		}
+
+		showToast(R.string.unknown_response);
+	}
+
+	@MainThread
+	private void handleSignInResponse(int resultCode, Intent data) {
+		IdpResponse response = IdpResponse.fromResultIntent(data);
+
+		// Successfully signed in
+		if (resultCode == RESULT_OK) {
+			showToast(R.string.signed_in);
+			return;
+		}
+		else {
+			// Sign in failed
+			if (response == null) {
+				// User pressed back button
+				showToast(R.string.sign_in_cancelled);
+				return;
 			}
-			else if (RESULT_CANCELED == resultCode) {
-				Toast.makeText(this, getString(R.string.sign_in_canceled), Toast.LENGTH_SHORT)
-						.show();
-				finish();
+
+			if (response.getErrorCode() == ErrorCodes.NO_NETWORK) {
+				showToast(R.string.no_internet_connection);
+				return;
+			}
+
+			if (response.getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
+				showToast(R.string.unknown_error);
+				return;
 			}
 		}
+
+		showToast(R.string.unknown_sign_in_response);
+	}
+
+	@MainThread
+	private void showToast(@StringRes int errorMessageRes) {
+		Toast.makeText(this, errorMessageRes, Toast.LENGTH_SHORT).show();
 	}
 }
