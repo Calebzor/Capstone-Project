@@ -2,6 +2,7 @@ package hu.tvarga.cheaplist.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.view.Menu;
@@ -13,7 +14,9 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import dagger.android.support.DaggerAppCompatActivity;
 import dagger.android.support.DaggerFragment;
@@ -40,14 +43,31 @@ public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 				FirebaseUser user = firebaseAuth.getCurrentUser();
 				if (user == null) {
 					startActivityForResult(
-							AuthUI.getInstance().createSignInIntentBuilder().setIsSmartLockEnabled(
-									false).setAvailableProviders(Arrays.asList(
-									new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-									new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
+							AuthUI.getInstance().createSignInIntentBuilder().setTheme(getAppTheme())
+									.setAvailableProviders(Arrays.asList(
+											new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER)
+													.build(), new AuthUI.IdpConfig.Builder(
+													AuthUI.FACEBOOK_PROVIDER)
+													.setPermissions(getFacebookPermissions())
+													.build(),
+											new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER)
+													.build())).setAllowNewEmailAccounts(true)
 									.build(), RC_SIGN_IN);
 				}
 			}
 		};
+	}
+
+	@MainThread
+	private List<String> getFacebookPermissions() {
+		List<String> result = new ArrayList<>();
+		result.add("user_friends");
+		result.add("user_photos");
+		return result;
+	}
+
+	private int getAppTheme() {
+		return R.style.AppTheme;
 	}
 
 	@Override

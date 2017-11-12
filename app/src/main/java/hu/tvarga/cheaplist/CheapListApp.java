@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
+import com.facebook.appevents.AppEventsLogger;
 import com.firebase.jobdispatcher.Constraint;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.GooglePlayDriver;
@@ -37,6 +38,7 @@ public class CheapListApp extends Application implements HasActivityInjector {
 		if (BuildConfig.DEBUG) {
 			Timber.plant(new Timber.DebugTree());
 		}
+		AppEventsLogger.activateApp(this);
 		FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
 		FirebaseFirestoreSettings settings =
 				new FirebaseFirestoreSettings.Builder().setPersistenceEnabled(true).build();
