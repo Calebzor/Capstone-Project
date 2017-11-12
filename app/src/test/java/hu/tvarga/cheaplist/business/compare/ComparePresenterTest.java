@@ -7,9 +7,6 @@ import java.util.ArrayList;
 
 import hu.tvarga.cheaplist.BaseMockitoJUnitTest;
 import hu.tvarga.cheaplist.business.compare.shoppinglist.ShoppingListManager;
-import hu.tvarga.cheaplist.dao.ItemCategory;
-
-import static org.mockito.Mockito.verify;
 
 public class ComparePresenterTest extends BaseMockitoJUnitTest {
 
@@ -32,14 +29,12 @@ public class ComparePresenterTest extends BaseMockitoJUnitTest {
 
 	@Test
 	public void onResume() throws Exception {
-		ArrayList<ItemCategory> list = new ArrayList<>();
-		presenter.categories = list;
+		presenter.categories = new ArrayList<>();
 
 		presenter.onResume(view);
 
 		assertEquals(presenter.view, view);
 		checkEventRegister();
-		verify(view).notifyGotMerchantCategoryData(list);
 	}
 
 	@Test
