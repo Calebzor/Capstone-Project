@@ -56,6 +56,9 @@ public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 													.build())).setAllowNewEmailAccounts(true)
 									.build(), RC_SIGN_IN);
 				}
+				else if (AuthBaseActivity.this instanceof StartActivity) {
+					openMainActivity();
+				}
 			}
 		};
 	}
@@ -147,7 +150,7 @@ public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 
 		// Successfully signed in
 		if (resultCode == RESULT_OK) {
-			showToast(R.string.signed_in);
+			openMainActivity();
 			return;
 		}
 		else {
@@ -170,6 +173,12 @@ public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 		}
 
 		showToast(R.string.unknown_sign_in_response);
+	}
+
+	private void openMainActivity() {
+		Intent inject = new Intent(this, MainActivity.class);
+		startActivity(inject);
+		finish();
 	}
 
 	@MainThread
