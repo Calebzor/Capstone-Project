@@ -58,13 +58,21 @@ public class ShoppingListItemTouchHelper extends ItemTouchHelper.SimpleCallback 
 	public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
 			float dX, float dY, int actionState, boolean isCurrentlyActive) {
 		ShoppingListItemHolder shoppingListItemHolder = (ShoppingListItemHolder) viewHolder;
-		shoppingListItemHolder.deleteIconEnd.setVisibility(dX > 0 ? GONE : VISIBLE);
-		shoppingListItemHolder.deleteTextEnd.setVisibility(dX > 0 ? GONE : VISIBLE);
-		shoppingListItemHolder.deleteIconStart.setVisibility(dX < 0 ? GONE : VISIBLE);
-		shoppingListItemHolder.deleteTextStart.setVisibility(dX < 0 ? GONE : VISIBLE);
+		setVisibilityForEnd(shoppingListItemHolder.deleteIconEnd, dX);
+		setVisibilityForEnd(shoppingListItemHolder.deleteTextEnd, dX);
+		setVisibilityForStart(shoppingListItemHolder.deleteIconStart, dX);
+		setVisibilityForStart(shoppingListItemHolder.deleteTextStart, dX);
 
 		getDefaultUIUtil().onDraw(c, recyclerView, shoppingListItemHolder.viewForeground, dX, dY,
 				actionState, isCurrentlyActive);
+	}
+
+	private void setVisibilityForStart(View view, float dX) {
+		view.setVisibility(dX < 0 ? GONE : VISIBLE);
+	}
+
+	private void setVisibilityForEnd(View view, float dX) {
+		view.setVisibility(dX > 0 ? GONE : VISIBLE);
 	}
 
 	interface ShoppingListItemTouchHelperListener {
