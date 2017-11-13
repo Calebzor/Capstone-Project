@@ -15,6 +15,7 @@ public class Item extends DataObject {
 
 	public String description;
 	public String imageURL;
+	public String thumbnail;
 
 	public NutritionInformation nutritionInformation;
 

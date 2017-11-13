@@ -45,7 +45,7 @@ public class MerchantCategoryListItemHolder extends ImageBasedListItemHolder {
 		price.setText(String.format("%s %s", item.price, item.currency));
 		pricePerUnit.setText(
 				String.format("%s %s %s", item.pricePerUnit, item.currency, item.unit));
-		Glide.with(itemView.getContext()).load(item.imageURL).apply(
+		Glide.with(itemView.getContext()).load(item.thumbnail).apply(
 				new RequestOptions().override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)).into(
 				image);
 
