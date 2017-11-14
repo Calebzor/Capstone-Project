@@ -9,7 +9,7 @@
 	android:layout_marginEnd="@dimen/compare_list_item_margin"
 	android:background="@android:color/white">
 
-	<ImageView
+	<android.support.v7.widget.AppCompatImageView
 		android:id="@+id/image"
 		android:transitionName="itemImage"
 		android:layout_width="wrap_content"
