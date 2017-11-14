@@ -27,6 +27,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import hu.tvarga.cheaplist.dao.Item;
 import hu.tvarga.cheaplist.dao.ItemCategory;
@@ -240,11 +241,28 @@ public class FirebaseHelper {
 	 */
 	public ApiFuture<UserRecord> createUser() {
 		UserRecord.CreateRequest request = new UserRecord.CreateRequest().setEmail(
-				"user@example.com").setEmailVerified(false).setPassword("secretPassword")
-				.setPhoneNumber("+11234567890").setDisplayName("John Doe").setPhotoUrl(
-						"http://www.example.com/12345678/photo.png").setDisabled(false);
+				"user@example.com").setEmailVerified(false).setPassword("secretPassword").setPhoneNumber("+11234567890").setDisplayName("John Doe").setPhotoUrl(
+				"http://www.example.com/12345678/photo.png").setDisabled(false);
 
 		return FirebaseAuth.getInstance().createUserAsync(request);
+	}
+
+	/**
+	 * Delete the dummy user (UI test uses this user)
+	 *
+	 * @return task for result of the operation
+	 */
+	public boolean deleteUser() {
+		try {
+			UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmailAsync(
+					"user@example.com").get();
+			FirebaseAuth.getInstance().deleteUserAsync(userRecord.getUid()).get();
+		}
+		catch (InterruptedException | ExecutionException e) {
+			L.error(e);
+			return false;
+		}
+		return true;
 	}
 
 	public void detachDatabaseReadListener() {

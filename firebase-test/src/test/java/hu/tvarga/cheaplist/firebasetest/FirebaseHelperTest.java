@@ -61,6 +61,13 @@ public class FirebaseHelperTest {
 
 	@Ignore
 	@Test
+	public void deleteUser() throws Exception {
+		boolean deleted = firebaseHelper.deleteUser();
+		await().until(() -> deleted);
+	}
+
+	@Ignore
+	@Test
 	public void pushCategories() {
 		ApiFuture<?> task = firebaseHelper.pushItemCategories();
 
