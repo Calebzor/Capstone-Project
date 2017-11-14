@@ -238,13 +238,13 @@ public class FirebaseHelper {
 	 *
 	 * @return task for result of the operation
 	 */
-	public Task<UserRecord> createUser() {
+	public ApiFuture<UserRecord> createUser() {
 		UserRecord.CreateRequest request = new UserRecord.CreateRequest().setEmail(
 				"user@example.com").setEmailVerified(false).setPassword("secretPassword")
 				.setPhoneNumber("+11234567890").setDisplayName("John Doe").setPhotoUrl(
 						"http://www.example.com/12345678/photo.png").setDisabled(false);
 
-		return FirebaseAuth.getInstance().createUser(request);
+		return FirebaseAuth.getInstance().createUserAsync(request);
 	}
 
 	public void detachDatabaseReadListener() {

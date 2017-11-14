@@ -22,6 +22,7 @@ import java.util.List;
 
 import dagger.android.support.DaggerAppCompatActivity;
 import dagger.android.support.DaggerFragment;
+import hu.tvarga.cheaplist.BuildConfig;
 import hu.tvarga.cheaplist.R;
 import hu.tvarga.cheaplist.ui.compare.CompareFragment;
 import hu.tvarga.cheaplist.ui.shoppinglist.ShoppingListFragment;
@@ -54,6 +55,7 @@ public abstract class AuthBaseActivity extends DaggerAppCompatActivity {
 													.build(),
 											new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER)
 													.build())).setAllowNewEmailAccounts(true)
+									.setIsSmartLockEnabled(!BuildConfig.DEBUG)
 									.build(), RC_SIGN_IN);
 				}
 				else if (AuthBaseActivity.this instanceof StartActivity) {

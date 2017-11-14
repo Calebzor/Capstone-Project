@@ -41,8 +41,8 @@ import static org.hamcrest.Matchers.is;
 public class EmailLogin {
 
 	@Rule
-	public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(
-			MainActivity.class);
+	public ActivityTestRule<StartActivity> mActivityTestRule = new ActivityTestRule<>(
+			StartActivity.class);
 
 	@Ignore
 	@Test
@@ -51,9 +51,7 @@ public class EmailLogin {
 		ConditionWatcher.waitForCondition(waitForViewByIdCondition(R.id.email_button));
 
 		ViewInteraction supportVectorDrawablesButton = onView(
-				allOf(withId(R.id.email_button), withText("Sign in with email"), childAtPosition(
-						allOf(withId(R.id.btn_holder), childAtPosition(withId(R.id.container), 0)),
-						0)));
+				allOf(withId(R.id.email_button), withText("Sign in with email")));
 		supportVectorDrawablesButton.perform(scrollTo(), click());
 
 		ConditionWatcher.waitForCondition(waitForViewByIdCondition(R.id.email));

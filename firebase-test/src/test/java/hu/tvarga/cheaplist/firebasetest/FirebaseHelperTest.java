@@ -54,7 +54,7 @@ public class FirebaseHelperTest {
 	@Ignore
 	@Test
 	public void createUser() throws Exception {
-		Task<UserRecord> task = firebaseHelper.createUser();
+		ApiFuture<UserRecord> task = firebaseHelper.createUser();
 
 		assertTaskSuccess(task);
 	}
