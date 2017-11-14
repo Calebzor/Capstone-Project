@@ -53,7 +53,7 @@ public class CompareFragment extends DaggerFragment
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == R.id.compareFilterMenuItem) {
 			CompareSettingsDialog compareSettingsDialog = new CompareSettingsDialog();
-			compareSettingsDialog.show(getActivity().getFragmentManager(),
+			compareSettingsDialog.show(getActivity().getSupportFragmentManager(),
 					CompareSettingsDialog.FRAGMENT_TAG);
 			return true;
 		}

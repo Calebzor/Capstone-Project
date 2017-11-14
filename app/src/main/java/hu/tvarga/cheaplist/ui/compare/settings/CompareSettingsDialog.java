@@ -12,11 +12,11 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import dagger.android.DaggerDialogFragment;
+import dagger.android.support.DaggerAppCompatDialogFragment;
 import hu.tvarga.cheaplist.R;
 import hu.tvarga.cheaplist.business.compare.settings.CompareSettingsContract;
 
-public class CompareSettingsDialog extends DaggerDialogFragment
+public class CompareSettingsDialog extends DaggerAppCompatDialogFragment
 		implements CompareSettingsContract.View {
 
 	public static final String FRAGMENT_TAG = CompareSettingsDialog.class.getName();
