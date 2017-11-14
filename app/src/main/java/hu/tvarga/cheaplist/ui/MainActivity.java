@@ -5,10 +5,8 @@ import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -26,11 +24,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -231,32 +225,12 @@ public class MainActivity extends AuthBaseActivity
 
 	public void openDetailView(final ShoppingListItem item, final ImageBasedListItemHolder holder) {
 		final DetailFragment details = DetailFragment.newInstance(item);
-		// somehow sometimes the holder.image looses the transition name, so we set it here again
-		Glide.with(this).load(item.imageURL).listener(new RequestListener<Drawable>() {
-			@Override
-			public boolean onLoadFailed(@Nullable GlideException e, Object model,
-					Target<Drawable> target, boolean isFirstResource) {
-				// TODO 13-Nov-2017/vatam: hide loading dialog
-				prepareAndOpenDetailView(item, holder, details);
-				return false;
-			}
-
-			@Override
-			public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target,
-					DataSource dataSource, boolean isFirstResource) {
-				prepareAndOpenDetailView(item, holder, details);
-				return false;
-			}
-		}).preload();
-		// TODO 13-Nov-2017/vatam: should be showing a loading dialog here
-	}
-
-	private void prepareAndOpenDetailView(ShoppingListItem item, ImageBasedListItemHolder holder,
-			DetailFragment details) {
 		setTransitionName(holder.image, item.merchant, item.id);
 		shouldDisplayHomeUp();
-		getSupportFragmentManager().beginTransaction().addSharedElement(holder.image, getString(R.string.detailImageTransition)).replace(
-				R.id.mainActivityFragmentContainer, details).addToBackStack(DetailFragment.FRAGMENT_TAG).commit();
+		getSupportFragmentManager().beginTransaction().addSharedElement(holder.image,
+				getString(R.string.detailImageTransition)).replace(
+				R.id.mainActivityFragmentContainer, details).addToBackStack(
+				DetailFragment.FRAGMENT_TAG).commit();
 	}
 
 	@Override
