@@ -57,7 +57,7 @@
 					android:layout_width="match_parent"
 					android:layout_height="250dp"
 					android:contentDescription="@string/product_image"
-					android:scaleType="fitCenter"
+					android:scaleType="centerInside"
 					android:transitionName="@string/detailImageTransition"
 					tools:src="@color/primaryColor" />
 
