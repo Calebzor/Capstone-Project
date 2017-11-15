@@ -152,6 +152,7 @@ public class DetailFragment extends DaggerFragment implements DetailContract.Vie
 	@Override
 	public void showFabAsRemove() {
 		fab.setImageResource(R.drawable.zzz_playlist_minus);
+		fab.setContentDescription(getString(R.string.remove_from_list_action));
 		fab.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -163,6 +164,7 @@ public class DetailFragment extends DaggerFragment implements DetailContract.Vie
 	@Override
 	public void showFabAsAdd() {
 		fab.setImageResource(R.drawable.zzz_playlist_plus);
+		fab.setContentDescription(getString(R.string.add_to_list_action));
 		fab.setOnClickListener(getAddToListOnClickListener());
 	}
 
