@@ -68,6 +68,15 @@ public class FirebaseHelperTest {
 
 	@Ignore
 	@Test
+	public void deleteAndCreateDummyUser() throws Exception {
+		boolean deleted = firebaseHelper.deleteUser();
+		await().until(() -> deleted);
+		ApiFuture<UserRecord> task = firebaseHelper.createUser();
+		assertTaskSuccess(task);
+	}
+
+	@Ignore
+	@Test
 	public void pushCategories() {
 		ApiFuture<?> task = firebaseHelper.pushItemCategories();
 

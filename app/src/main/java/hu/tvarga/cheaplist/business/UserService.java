@@ -85,10 +85,10 @@ public class UserService implements FirebaseAuth.AuthStateListener {
 							Timber.d("categoriesFilterForUserDB#onCancelled", e);
 							return;
 						}
+						List<UserCategoryFilterListItem> categoriesFilterForUserOld =
+								new ArrayList<>();
+						categoriesFilterForUserOld.addAll(categoriesFilterForUser);
 						if (documentSnapshot != null && documentSnapshot.exists()) {
-							List<UserCategoryFilterListItem> categoriesFilterForUserOld =
-									new ArrayList<>();
-							categoriesFilterForUserOld.addAll(categoriesFilterForUser);
 							categoriesFilterForUser.clear();
 							@SuppressWarnings("unchecked")
 							List<Map<String, Object>> userCategoryFilterListItems =
@@ -101,11 +101,11 @@ public class UserService implements FirebaseAuth.AuthStateListener {
 								item.checked = (boolean) userCategoryFilterListItem.get("checked");
 								categoriesFilterForUser.add(item);
 							}
-							CompareSettingsFilterChangedBroadcastObject broadcastObject =
-									new CompareSettingsFilterChangedBroadcastObject(
-											categoriesFilterForUserOld, categoriesFilterForUser);
-							event.post(broadcastObject);
 						}
+						CompareSettingsFilterChangedBroadcastObject broadcastObject =
+								new CompareSettingsFilterChangedBroadcastObject(
+										categoriesFilterForUserOld, categoriesFilterForUser);
+						event.post(broadcastObject);
 					}
 				});
 	}
