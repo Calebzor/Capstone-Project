@@ -12,12 +12,12 @@ env:
 android:
   components:
   - tools
-#  - platform-tools
+  - platform-tools
   - build-tools-26.0.2
-#  - android-21
+  - android-21
   - android-26
   - extra-android-m2repository
-#  - sys-img-${ANDROID_ABI}-${ANDROID_TARGET}
+  - sys-img-${ANDROID_ABI}-${ANDROID_TARGET}
 before_install:
   - sudo apt-get install jq
   - wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r .assets[0].browser_download_url)
@@ -25,13 +25,13 @@ before_script:
   - echo $GOOGLE_SERVICES | base64 --decode --ignore-garbage > app/google-services.json
 script:
 #  - ./gradlew build jacocoMergedTestReport
-  - ./gradlew assembleDebug testDebugUnit lintDebug jacocoMergedTestReport sendCoverageToCodacy sonarqube
-#  - ./gradlew build jacocoTestReport assembleAndroidTest
-#  - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
-#  - emulator -avd test -no-skin -no-audio -no-window &
-#  - android-wait-for-emulator
-#  - adb shell setprop dalvik.vm.dexopt-flags v=n,o=v
-#  - ./gradlew connectedCheck
+  - ./gradlew assembleDebug testDebugUnit lintDebug
+  - ./gradlew assembleDebugAndroidTest
+  - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
+  - emulator -avd test -no-skin -no-audio -no-window &
+  - android-wait-for-emulator
+  - adb shell setprop dalvik.vm.dexopt-flags v=n,o=v
+  - ./gradlew connectedDebugAndroidTest jacocoMergedTestReport sendCoverageToCodacy sonarqube
 #  - ./gradlew lint sonarqube
 after_success:
   - bash <(curl -s https://codecov.io/bash)
