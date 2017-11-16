@@ -17,7 +17,7 @@ android:
   - android-21
   - android-26
   - extra-android-m2repository
-  - sys-img-${ANDROID_ABI}-${ANDROID_TARGET}
+  - sys-img-armeabi-v7a-addon-google_apis-google-$ANDROID_TARGET
 before_install:
   - sudo apt-get install jq
   - wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r .assets[0].browser_download_url)
