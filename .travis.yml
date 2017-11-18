@@ -7,11 +7,11 @@ addons:
 jdk: oraclejdk8
 android:
   components:
-  - tools
-  - platform-tools
-  - build-tools-26.0.2
-  - android-26
-  - extra-android-m2repository
+#  - tools
+#  - platform-tools
+#  - build-tools-26.0.2
+#  - android-26
+#  - extra-android-m2repository
 before_install:
   - sudo apt-get install jq
   - sudo apt-get install sshpass
@@ -19,21 +19,20 @@ before_install:
 before_script:
   - echo $GOOGLE_SERVICES | base64 --decode --ignore-garbage > app/google-services.json
 script:
-#  - ./gradlew build jacocoMergedTestReport
-  - ./gradlew assembleDebug testDebugUnit lintDebug
-  - ./gradlew assembleDebugAndroidTest
-  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb usb
-  - sshpass -e scp -o StrictHostKeyChecking=no app/build/outputs/apk/debug/app-debug.apk androidci@calebzor.redirectme.net:/home/androidci
-  - sshpass -e scp -o StrictHostKeyChecking=no app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk androidci@calebzor.redirectme.net:/home/androidci
-  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb uninstall hu.tvarga.cheaplist
-  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb uninstall hu.tvarga.cheaplist.test
-  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb install app-debug.apk
-  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb install app-debug-androidTest.apk
-  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb shell am instrument -w -e emma true -e coverageFile "/sdcard/coverage.ec" hu.tvarga.cheaplist.test/android.support.test.runner.AndroidJUnitRunner
-  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb pull "/sdcard/coverage.ec"
-  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net cp coverage.ec /home/androidci/public_html/coverage.ec
-  - wget http://calebzor.redirectme.net/~androidci/coverage.ec
-  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net rm /home/androidci/public_html/coverage.ec
-  - cp coverage.ec $TRAVIS_BUILD_DIR/app/build/outputs/code-coverage/connected/coverage.ec
-#  - ./gradlew connectedDebugAndroidTest jacocoMergedTestReport sendCoverageToCodacy sonarqube
-  - ./gradlew jacocoMergedTestReport sendCoverageToCodacy sonarqube
+   - pwd
+#  - ./gradlew assembleDebug testDebugUnit lintDebug
+#  - ./gradlew assembleDebugAndroidTest
+#  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb usb
+#  - sshpass -e scp -o StrictHostKeyChecking=no app/build/outputs/apk/debug/app-debug.apk androidci@calebzor.redirectme.net:/home/androidci
+#  - sshpass -e scp -o StrictHostKeyChecking=no app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk androidci@calebzor.redirectme.net:/home/androidci
+#  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb uninstall hu.tvarga.cheaplist
+#  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb uninstall hu.tvarga.cheaplist.test
+#  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb install app-debug.apk
+#  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb install app-debug-androidTest.apk
+#  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb shell am instrument -w -e emma true -e coverageFile "/sdcard/coverage.ec" hu.tvarga.cheaplist.test/android.support.test.runner.AndroidJUnitRunner
+#  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb pull "/sdcard/coverage.ec"
+#  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net cp coverage.ec /home/androidci/public_html/coverage.ec
+#  - wget http://calebzor.redirectme.net/~androidci/coverage.ec
+#  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net rm /home/androidci/public_html/coverage.ec
+#  - cp coverage.ec $TRAVIS_BUILD_DIR/app/build/outputs/code-coverage/connected/coverage.ec
+#  - ./gradlew jacocoMergedTestReport sendCoverageToCodacy sonarqube
