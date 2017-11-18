@@ -8,14 +8,6 @@ public class ShoppingListItem extends MerchantCategoryListItem {
 	protected ShoppingListItem() {
 	}
 
-	public ShoppingListItem(String id, String name, Double price, Double pricePerUnit, String unit,
-			String currency, String imageURL, String thumbnail, boolean checked,
-			Merchant merchant) {
-		super(id, name, price, pricePerUnit, unit, currency, imageURL, thumbnail);
-		this.checked = checked;
-		this.merchant = merchant;
-	}
-
 	public ShoppingListItem(Item item, Merchant merchant) {
 		super(item);
 		this.merchant = merchant;

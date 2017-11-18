@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import hu.tvarga.cheaplist.BaseMockitoJUnitTest;
 import hu.tvarga.cheaplist.business.compare.shoppinglist.ShoppingListManager;
 
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
+
 public class ComparePresenterTest extends BaseMockitoJUnitTest {
 
 	@Mock
@@ -41,6 +43,7 @@ public class ComparePresenterTest extends BaseMockitoJUnitTest {
 	public void onPause() throws Exception {
 		presenter.onPause();
 
+		assertThat(presenter.view, instanceOf(CompareTabsViewStub.class));
 		checkEventUnregister();
 	}
 }

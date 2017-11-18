@@ -5,20 +5,6 @@ public class MerchantCategoryListItem extends Item {
 	protected MerchantCategoryListItem() {
 	}
 
-	public MerchantCategoryListItem(String id, String name, Double price, Double pricePerUnit,
-			String unit, String currency, String imageURL, String thumbnail) {
-		this.id = id;
-
-		this.name = name;
-		this.price = price;
-		this.pricePerUnit = pricePerUnit;
-		this.unit = unit;
-		this.currency = currency;
-
-		this.imageURL = imageURL;
-		this.thumbnail = thumbnail;
-	}
-
 	public MerchantCategoryListItem(Item item) {
 		id = item.id;
 
