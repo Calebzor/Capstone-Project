@@ -20,6 +20,7 @@ before_script:
   - echo $GOOGLE_SERVICES | base64 --decode --ignore-garbage > app/google-services.json
 script:
    - pwd
+   - ls -la
 #  - ./gradlew assembleDebug testDebugUnit lintDebug
 #  - ./gradlew assembleDebugAndroidTest
 #  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb usb
