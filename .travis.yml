@@ -5,19 +5,13 @@ addons:
     token:
       secure: ${SONAR_KEY}
 jdk: oraclejdk8
-env:
-  global:
-    - ANDROID_TARGET=android-21
-    - ANDROID_ABI=armeabi-v7a
 android:
   components:
   - tools
   - platform-tools
   - build-tools-26.0.2
-  - android-21
   - android-26
   - extra-android-m2repository
-  - sys-img-${ANDROID_ABI}-${ANDROID_TARGET}
 before_install:
   - sudo apt-get install jq
   - wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r .assets[0].browser_download_url)
@@ -26,12 +20,14 @@ before_script:
 script:
 #  - ./gradlew build jacocoMergedTestReport
   - ./gradlew assembleDebug testDebugUnit lintDebug
-  - ./gradlew assembleDebugAndroidTest
-  - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
-  - emulator -avd test -no-skin -no-audio -no-window &
-  - android-wait-for-emulator
-  - adb shell setprop dalvik.vm.dexopt-flags v=n,o=v
-  - ./gradlew connectedDebugAndroidTest jacocoMergedTestReport sendCoverageToCodacy sonarqube
-#  - ./gradlew lint sonarqube
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - adb connect calebzor.redirectme.net:3333
+  - ./gradlew connectedDebugAndroidTest
+  - adb uninstall hu.tvarga.cheaplist.test
+  - adb uninstall hu.tvarga.cheaplist
+  - adb install app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+  - adb install app/build/outputs/apk/debug/app-debug.apk
+  - adb shell am instrument -w -e emma true -e coverageFile "/sdcard/coverage.ec" hu.tvarga.cheaplist.test/android.support.test.runner.AndroidJUnitRunner
+  - adb pull "/sdcard/coverage.ec"
+  - cp coverage.ec app/build/outputs/code-coverage/connected/coverage.ec
+#  - ./gradlew connectedDebugAndroidTest jacocoMergedTestReport sendCoverageToCodacy sonarqube
+  - ./gradlew jacocoMergedTestReport sendCoverageToCodacy sonarqube
