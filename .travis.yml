@@ -27,8 +27,8 @@ script:
   - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb shell input keyevent KEYCODE_WAKEUP
   - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb uninstall hu.tvarga.cheaplist
   - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb uninstall hu.tvarga.cheaplist.test
-  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb install app-debug.apk
-  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb install app-debug-androidTest.apk
+  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb install -r app-debug.apk
+  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb install -r app-debug-androidTest.apk
   - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb shell am instrument -w -e emma true -e coverageFile "/sdcard/coverage.ec" hu.tvarga.cheaplist.test/android.support.test.runner.AndroidJUnitRunner
   - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb shell input keyevent KEYCODE_POWER
   - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb pull "/sdcard/coverage.ec"
