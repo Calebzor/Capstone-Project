@@ -34,6 +34,6 @@ script:
   - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net cp coverage.ec /home/androidci/public_html/coverage.ec
   - wget http://calebzor.redirectme.net/~androidci/coverage.ec
   - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net rm /home/androidci/public_html/coverage.ec
-  - cp coverage.ec app/build/outputs/code-coverage/connected/coverage.ec
+  - cp coverage.ec $TRAVIS_BUILD_DIR/app/build/outputs/code-coverage/connected/coverage.ec
 #  - ./gradlew connectedDebugAndroidTest jacocoMergedTestReport sendCoverageToCodacy sonarqube
   - ./gradlew jacocoMergedTestReport sendCoverageToCodacy sonarqube
