@@ -18,6 +18,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import hu.tvarga.cheaplist.business.compare.settings.dto.CompareSettingsFilterChangedBroadcastObject;
+import hu.tvarga.cheaplist.business.compare.settings.dto.UserCategoryFilterListItemForDB;
 import hu.tvarga.cheaplist.dao.ItemCategory;
 import hu.tvarga.cheaplist.dao.UserCategoryFilterListItem;
 import hu.tvarga.cheaplist.di.scopes.ApplicationScope;
@@ -54,16 +55,6 @@ public class UserService implements FirebaseAuth.AuthStateListener {
 		}
 		else {
 			databaseReferenceUser = null;
-		}
-	}
-
-	class UserCategoryFilterListItemForDB {
-
-		List<UserCategoryFilterListItem> userCategoryFilterListItems;
-
-		UserCategoryFilterListItemForDB(
-				List<UserCategoryFilterListItem> userCategoryFilterListItems) {
-			this.userCategoryFilterListItems = userCategoryFilterListItems;
 		}
 	}
 
