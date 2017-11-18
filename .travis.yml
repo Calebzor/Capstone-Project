@@ -14,20 +14,24 @@ android:
   - extra-android-m2repository
 before_install:
   - sudo apt-get install jq
+  - sudo apt-get install sshpass
   - wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r .assets[0].browser_download_url)
 before_script:
   - echo $GOOGLE_SERVICES | base64 --decode --ignore-garbage > app/google-services.json
 script:
 #  - ./gradlew build jacocoMergedTestReport
   - ./gradlew assembleDebug testDebugUnit lintDebug
-  - adb connect calebzor.redirectme.net:3333
-  - ./gradlew connectedDebugAndroidTest
+  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net
+  - adb usb
   - adb uninstall hu.tvarga.cheaplist.test
   - adb uninstall hu.tvarga.cheaplist
   - adb install app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
   - adb install app/build/outputs/apk/debug/app-debug.apk
   - adb shell am instrument -w -e emma true -e coverageFile "/sdcard/coverage.ec" hu.tvarga.cheaplist.test/android.support.test.runner.AndroidJUnitRunner
   - adb pull "/sdcard/coverage.ec"
+  - cp coverage.ec ~/public_html/coverage.ec
+  - exit
+  - wget http://calebzor.redirectme.net/~androidci/coverage.ec
   - cp coverage.ec app/build/outputs/code-coverage/connected/coverage.ec
 #  - ./gradlew connectedDebugAndroidTest jacocoMergedTestReport sendCoverageToCodacy sonarqube
   - ./gradlew jacocoMergedTestReport sendCoverageToCodacy sonarqube
