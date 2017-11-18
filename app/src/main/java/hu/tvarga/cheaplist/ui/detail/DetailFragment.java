@@ -129,11 +129,10 @@ public class DetailFragment extends DaggerFragment implements DetailContract.Vie
 	@Override
 	public void updateUI(Item item) {
 		detailItemTitle.setText(item.name);
-		Glide.with(this).load(item.imageURL).thumbnail(Glide.with(this).load(item.thumbnail)
+		Glide.with(this).load(item.imageURL).thumbnail(Glide.with(this).load(item.getThumbnail())
 				.apply(new RequestOptions().override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)))
-				.apply(
-				new RequestOptions().override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)).into(
-				detailImage);
+				.apply(new RequestOptions().override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL))
+				.into(detailImage);
 		detailPrice.setText(String.format("%s %s", item.price, item.currency));
 		detailPricePerUnit.setText(
 				String.format("%s %s %s", item.pricePerUnit, item.currency, item.unit));

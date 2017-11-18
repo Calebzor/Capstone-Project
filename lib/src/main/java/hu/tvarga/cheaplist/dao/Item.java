@@ -24,4 +24,15 @@ public class Item extends DataObject {
 
 	public Object lastModified = ServerValue.TIMESTAMP;
 
+	/**
+	 * Returns thumbnail or image url
+	 *
+	 * @return url
+	 */
+	public String getThumbnail() {
+		if (thumbnail == null) {
+			return imageURL;
+		}
+		return thumbnail;
+	}
 }
