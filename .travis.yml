@@ -21,6 +21,7 @@ before_script:
 script:
 #  - ./gradlew build jacocoMergedTestReport
   - ./gradlew assembleDebug testDebugUnit lintDebug
+  - ./gradlew assembleDebugAndroidTest
   - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb usb
   - sshpass -e scp -o StrictHostKeyChecking=no app/build/outputs/apk/debug/app-debug.apk androidci@calebzor.redirectme.net:/home/androidci
   - sshpass -e scp -o StrictHostKeyChecking=no app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk androidci@calebzor.redirectme.net:/home/androidci
