@@ -24,8 +24,6 @@ http://cheaplistjenkinsazure.westeurope.cloudapp.azure.com/job/CheapList/
 ### Codacy
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/18eedd63d43844f0b5e608d41b94be8c)](https://www.codacy.com/app/calebzor/CheapList?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Calebzor/CheapList&amp;utm_campaign=Badge_Grade)
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/18eedd63d43844f0b5e608d41b94be8c)](https://www.codacy.com/app/calebzor/CheapList?utm_source=github.com&utm_medium=referral&utm_content=Calebzor/CheapList&utm_campaign=Badge_Coverage)
-
 ## Credits
 
 Icon made by https://www.flaticon.com/authors/smashicons from www.flaticon.com
