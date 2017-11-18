@@ -21,7 +21,6 @@ before_script:
 script:
 #  - ./gradlew build jacocoMergedTestReport
   - ./gradlew assembleDebug testDebugUnit lintDebug
-  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net
   - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb usb
   - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb uninstall hu.tvarga.cheaplist.test
   - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb uninstall hu.tvarga.cheaplist
