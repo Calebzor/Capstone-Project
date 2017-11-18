@@ -22,15 +22,14 @@ script:
 #  - ./gradlew build jacocoMergedTestReport
   - ./gradlew assembleDebug testDebugUnit lintDebug
   - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net
-  - adb usb
-  - adb uninstall hu.tvarga.cheaplist.test
-  - adb uninstall hu.tvarga.cheaplist
-  - adb install app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
-  - adb install app/build/outputs/apk/debug/app-debug.apk
-  - adb shell am instrument -w -e emma true -e coverageFile "/sdcard/coverage.ec" hu.tvarga.cheaplist.test/android.support.test.runner.AndroidJUnitRunner
-  - adb pull "/sdcard/coverage.ec"
-  - cp coverage.ec ~/public_html/coverage.ec
-  - exit
+  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb usb
+  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb uninstall hu.tvarga.cheaplist.test
+  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb uninstall hu.tvarga.cheaplist
+  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb install app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb install app/build/outputs/apk/debug/app-debug.apk
+  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb shell am instrument -w -e emma true -e coverageFile "/sdcard/coverage.ec" hu.tvarga.cheaplist.test/android.support.test.runner.AndroidJUnitRunner
+  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net adb pull "/sdcard/coverage.ec"
+  - sshpass -e ssh -o StrictHostKeyChecking=no androidci@calebzor.redirectme.net cp coverage.ec ~/public_html/coverage.ec
   - wget http://calebzor.redirectme.net/~androidci/coverage.ec
   - cp coverage.ec app/build/outputs/code-coverage/connected/coverage.ec
 #  - ./gradlew connectedDebugAndroidTest jacocoMergedTestReport sendCoverageToCodacy sonarqube
