@@ -273,14 +273,23 @@ public class TestObjectSupplier {
 			return clazz.newInstance();
 		}
 		catch (IllegalAccessException e) {
-			throw new RuntimeException(
+			throw new StubObjectCreationException(
 					"IllegalAccessException. Unable to create objects for field '" + fieldName +
 							"'.", e);
 		}
 		catch (InstantiationException e) {
-			throw new RuntimeException(
+			throw new StubObjectCreationException(
 					"InstantiationException. Unable to create objects for field '" + fieldName +
 							"'.", e);
+		}
+	}
+
+	public class StubObjectCreationException extends RuntimeException {
+
+		private static final long serialVersionUID = 7829950792807987428L;
+
+		StubObjectCreationException(String message, Exception source) {
+			super(message, source);
 		}
 	}
 }
