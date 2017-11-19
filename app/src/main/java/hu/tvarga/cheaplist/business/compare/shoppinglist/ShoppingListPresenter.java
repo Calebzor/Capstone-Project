@@ -15,12 +15,12 @@ public class ShoppingListPresenter implements ShoppingListContract.Presenter {
 	@Inject
 	public ShoppingListPresenter(ShoppingListManager shoppingListManager) {
 		this.shoppingListManager = shoppingListManager;
-		view = new ShoppingListViewStub();
+		view = new ShoppingListBaseViewStub();
 	}
 
 	@Override
 	public void onPause() {
-		view = new ShoppingListViewStub();
+		view = new ShoppingListBaseViewStub();
 	}
 
 	@Override

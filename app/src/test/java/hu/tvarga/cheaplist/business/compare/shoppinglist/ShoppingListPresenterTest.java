@@ -57,7 +57,7 @@ public class ShoppingListPresenterTest extends BaseMockitoJUnitTest {
 
 		presenter.onPause();
 
-		assertThat(presenter.view, instanceOf(ShoppingListViewStub.class));
+		assertThat(presenter.view, instanceOf(ShoppingListBaseViewStub.class));
 	}
 
 	@Test
