@@ -25,18 +25,20 @@
 				android:layout_margin="8dp"
 				android:orientation="vertical">
 
-				<TextView
+				<android.support.v7.widget.AppCompatTextView
 					android:id="@+id/detailItemTitle"
 					style="@style/TextAppearance.AppCompat.Headline"
 					android:layout_width="match_parent"
-					android:layout_height="match_parent"
-					tools:text="detailItemTitle" />
+					android:layout_height="24dp"
+					android:maxLines="1"
+					app:autoSizeTextType="uniform"
+					tools:text="detailItemTitle that should not fit into one line" />
 
 				<View
 					android:layout_width="match_parent"
 					android:layout_height="2dp"
 					android:layout_marginBottom="4dp"
-					android:background="?selectableItemBackground" />
+					android:background="@color/colorAccent" />
 
 				<TextView
 					android:id="@+id/detailPrice"
@@ -109,8 +111,8 @@
 		android:id="@+id/detailFab"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginEnd="16dp"
 		android:layout_marginBottom="42dp"
+		android:layout_marginEnd="16dp"
 		android:tint="@color/secondaryTextColor"
 		app:layout_anchor="@id/detailScrollView"
 		app:layout_anchorGravity="bottom|end"

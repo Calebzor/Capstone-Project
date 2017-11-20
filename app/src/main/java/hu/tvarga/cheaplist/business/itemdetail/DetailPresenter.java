@@ -71,6 +71,9 @@ public class DetailPresenter implements DetailContract.Presenter {
 	}
 
 	private void loadData() {
+		// display data passed in straight away
+		view.updateUI(item);
+
 		FirebaseAuth auth = FirebaseAuth.getInstance();
 		FirebaseUser currentUser = auth.getCurrentUser();
 		if (currentUser != null) {
