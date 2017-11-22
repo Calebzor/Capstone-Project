@@ -11,13 +11,17 @@
 			android:id="@+id/shoppingListMenuItem"
 			android:icon="@drawable/ic_format_list_bulletted"
 			android:title="@string/shopping_list_menu_item" />
+		<item
+			android:id="@+id/settingsMenuItem"
+			android:icon="@drawable/ic_settings"
+			android:title="@string/settings" />
 	</group>
 
 	<group
 		android:id="@+id/navigation_drawer_group_two"
 		android:checkableBehavior="none">
 		<item
-			android:id="@+id/sign_out_menu"
+			android:id="@+id/signOutMenuItem"
 			android:icon="@drawable/ic_logout_variant"
 			android:title="@string/sign_out" />
 	</group>
