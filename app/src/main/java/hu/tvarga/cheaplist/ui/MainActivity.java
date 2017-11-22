@@ -39,6 +39,7 @@ import hu.tvarga.cheaplist.R;
 import hu.tvarga.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.cheaplist.ui.compare.CompareFragment;
 import hu.tvarga.cheaplist.ui.detail.DetailFragment;
+import hu.tvarga.cheaplist.ui.settings.SettingsFragment;
 import hu.tvarga.cheaplist.ui.shoppinglist.ShoppingListFragment;
 import hu.tvarga.cheaplist.utility.eventbus.EventBusBuffer;
 
@@ -103,7 +104,17 @@ public class MainActivity extends AuthBaseActivity
 						DaggerFragment fragmentByTag;
 						String fragmentTag;
 						switch (item.getItemId()) {
-							case R.id.sign_out_menu:
+							case R.id.settingsMenuItem:
+								fragmentTag = SettingsFragment.FRAGMENT_TAG;
+								fragmentByTag = getFragmentByTag(fragmentTag);
+								if (fragmentByTag == null) {
+									fragmentByTag = new SettingsFragment();
+								}
+								drawerLayout.closeDrawer(navigationView);
+								item.setChecked(true);
+								replaceFragment(fragmentByTag);
+								return true;
+							case R.id.signOutMenuItem:
 								drawerLayout.closeDrawer(navigationView);
 								AuthUI.getInstance().signOut(MainActivity.this);
 								return true;

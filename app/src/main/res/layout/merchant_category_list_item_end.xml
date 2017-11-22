@@ -28,7 +28,9 @@
 		android:layout_height="match_parent"
 		android:background="?android:attr/selectableItemBackground"
 		android:clickable="true"
-		android:paddingStart="@dimen/compare_list_text_padding">
+		android:focusable="true"
+		android:paddingStart="@dimen/compare_list_text_padding"
+		tools:ignore="RtlSymmetry">
 
 		<TextView
 			android:id="@+id/name"

@@ -6,6 +6,7 @@ import hu.tvarga.cheaplist.di.scopes.FragmentScope;
 import hu.tvarga.cheaplist.ui.compare.CompareFragment;
 import hu.tvarga.cheaplist.ui.compare.settings.CompareSettingsDialog;
 import hu.tvarga.cheaplist.ui.detail.DetailFragment;
+import hu.tvarga.cheaplist.ui.settings.SettingsFragment;
 import hu.tvarga.cheaplist.ui.shoppinglist.ShoppingListFragment;
 
 @Module(includes = {PresenterModule.class})
@@ -26,4 +27,8 @@ public interface FragmentInjectorModule {
 	@FragmentScope
 	@ContributesAndroidInjector
 	CompareSettingsDialog contributesCompareSettingsDialogInjector();
+
+	@FragmentScope
+	@ContributesAndroidInjector
+	SettingsFragment contributesSettingsFragmentInjector();
 }

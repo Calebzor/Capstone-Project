@@ -41,4 +41,6 @@
 	<string name="no_internet_connection">No internet connection</string>
 	<string name="unknown_error">An unknown error occurred</string>
 	<string name="search">Search</string>
+	<string name="download_images_from_the_internet">Download images from the internet</string>
+	<string name="settings">Settings</string>
 </resources>
