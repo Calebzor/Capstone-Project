@@ -9,7 +9,7 @@ public class UserCategoryFilterListItems {
 	@Exclude
 	public static final String FIELD_NAME = "userCategoryFilterListItems";
 
-	private List<UserCategoryFilterListItem> userCategoryFilterListItems;
+	public List<UserCategoryFilterListItem> userCategoryFilterListItems;
 
 	public UserCategoryFilterListItems(
 			List<UserCategoryFilterListItem> userCategoryFilterListItems) {
