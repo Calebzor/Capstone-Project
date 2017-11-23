@@ -25,9 +25,9 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import hu.tvarga.cheaplist.BuildConfig;
-import hu.tvarga.cheaplist.business.UserService;
 import hu.tvarga.cheaplist.business.compare.dto.CategoriesBroadcastObject;
 import hu.tvarga.cheaplist.business.compare.settings.dto.CompareSettingsFilterChangedBroadcastObject;
+import hu.tvarga.cheaplist.business.user.UserService;
 import hu.tvarga.cheaplist.dao.ItemCategory;
 import hu.tvarga.cheaplist.dao.Merchant;
 import hu.tvarga.cheaplist.dao.MerchantCategoryListItem;

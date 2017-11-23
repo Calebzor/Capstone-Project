@@ -5,10 +5,6 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import hu.tvarga.cheaplist.R;
@@ -45,9 +41,8 @@ public class MerchantCategoryListItemHolder extends ImageBasedListItemHolder {
 		price.setText(String.format("%s %s", item.price, item.currency));
 		pricePerUnit.setText(
 				String.format("%s %s %s", item.pricePerUnit, item.currency, item.unit));
-		Glide.with(itemView.getContext()).load(item.getThumbnail()).apply(
-				new RequestOptions().override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)).into(
-				image);
+		String imageUrl = item.getThumbnail();
+		loadImage(imageUrl);
 
 		setTransitionName(image, merchant, item.id);
 

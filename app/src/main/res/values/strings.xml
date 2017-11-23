@@ -41,6 +41,9 @@
 	<string name="no_internet_connection">No internet connection</string>
 	<string name="unknown_error">An unknown error occurred</string>
 	<string name="search">Search</string>
-	<string name="download_images_from_the_internet">Download images from the internet</string>
+	<string name="dont_download_images_from_the_internet">Don\'t download images from the
+		internet</string>
+	<string name="dont_download_images_from_the_internet_description">Disabling image download can
+		greatly save network traffic</string>
 	<string name="settings">Settings</string>
 </resources>

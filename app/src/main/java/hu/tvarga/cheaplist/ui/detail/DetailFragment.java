@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 import hu.tvarga.cheaplist.R;
 import hu.tvarga.cheaplist.business.itemdetail.DetailContract;
+import hu.tvarga.cheaplist.business.user.UserService;
 import hu.tvarga.cheaplist.dao.Item;
 import hu.tvarga.cheaplist.dao.NutritionInformation;
 import hu.tvarga.cheaplist.dao.ShoppingListItem;
@@ -129,10 +131,17 @@ public class DetailFragment extends DaggerFragment implements DetailContract.Vie
 	@Override
 	public void updateUI(Item item) {
 		detailItemTitle.setText(item.name);
-		Glide.with(this).load(item.imageURL).thumbnail(Glide.with(this).load(item.getThumbnail())
-				.apply(new RequestOptions().override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)))
-				.apply(new RequestOptions().override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL))
-				.into(detailImage);
+		if (UserService.shouldDownloadImages()) {
+			Glide.with(this).load(item.imageURL).thumbnail(Glide.with(this)
+					.load(item.getThumbnail()).apply(new RequestOptions()
+							.override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL))).apply(
+					new RequestOptions().override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)).into(
+					detailImage);
+		}
+		else {
+			detailImage.setImageDrawable(
+					ContextCompat.getDrawable(getContext(), R.drawable.image_placeholder));
+		}
 		detailPrice.setText(String.format("%s %s", item.price, item.currency));
 		detailPricePerUnit.setText(
 				String.format("%s %s %s", item.pricePerUnit, item.currency, item.unit));

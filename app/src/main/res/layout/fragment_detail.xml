@@ -61,7 +61,7 @@
 					android:contentDescription="@string/product_image"
 					android:scaleType="fitCenter"
 					android:transitionName="@string/detailImageTransition"
-					tools:src="@color/primaryColor" />
+					tools:src="@drawable/image_placeholder" />
 
 				<TextView
 					android:id="@+id/detailNutritionTitle"

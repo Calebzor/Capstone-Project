@@ -5,10 +5,6 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import hu.tvarga.cheaplist.R;
@@ -64,9 +60,8 @@ public class ShoppingListItemHolder extends ImageBasedListItemHolder {
 		price.setText(String.format("%s %s", item.price, item.currency));
 		pricePerUnit.setText(
 				String.format("%s %s %s", item.pricePerUnit, item.currency, item.unit));
-		Glide.with(itemView.getContext()).load(item.getThumbnail()).apply(
-				new RequestOptions().override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)).into(
-				image);
+		String imageUrl = item.getThumbnail();
+		loadImage(imageUrl);
 		shoppingListItemCheckBox.setChecked(item.checked);
 
 		setTransitionName(image, item.merchant, item.id);
