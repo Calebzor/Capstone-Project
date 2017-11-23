@@ -18,7 +18,7 @@
 		android:adjustViewBounds="true"
 		android:scaleType="fitXY"
 		tools:layout_width="@dimen/compare_list_item_height"
-		tools:src="@color/primaryColor"
+		tools:src="@drawable/image_placeholder"
 		android:contentDescription="@string/product_image" />
 
 	<RelativeLayout

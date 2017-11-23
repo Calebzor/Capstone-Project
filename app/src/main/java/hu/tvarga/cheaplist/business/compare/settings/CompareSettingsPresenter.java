@@ -7,9 +7,9 @@ import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
-import hu.tvarga.cheaplist.business.UserService;
 import hu.tvarga.cheaplist.business.compare.CompareService;
 import hu.tvarga.cheaplist.business.compare.settings.dto.CompareSettingsFilterChangedBroadcastObject;
+import hu.tvarga.cheaplist.business.user.UserService;
 import hu.tvarga.cheaplist.dao.UserCategoryFilterListItem;
 import hu.tvarga.cheaplist.ui.compare.settings.CompareSettingsCategoryHolder;
 import hu.tvarga.cheaplist.utility.eventbus.Event;

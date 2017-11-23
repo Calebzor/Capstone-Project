@@ -12,7 +12,7 @@
 		android:id="@+id/settingsCheckbox"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		tools:text="@string/download_images_from_the_internet"
+		tools:text="@string/dont_download_images_from_the_internet"
 		/>
 
 	<TextView
@@ -20,6 +20,6 @@
 		style="@style/TextAppearance.Design.Hint"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		tools:text="Disabling image download can greatly save network traffic" />
+		tools:text="@string/dont_download_images_from_the_internet_description" />
 
 </LinearLayout>

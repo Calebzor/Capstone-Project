@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import hu.tvarga.cheaplist.R;
-import hu.tvarga.cheaplist.business.UserService;
 import hu.tvarga.cheaplist.business.compare.CompareService;
+import hu.tvarga.cheaplist.business.user.UserService;
 import hu.tvarga.cheaplist.dao.ItemCategory;
 import hu.tvarga.cheaplist.dao.UserCategoryFilterListItem;
 import hu.tvarga.cheaplist.ui.compare.settings.CompareSettingsCategoryHolder;

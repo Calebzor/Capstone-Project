@@ -73,7 +73,7 @@
 			android:contentDescription="@string/product_image"
 			android:scaleType="fitXY"
 			tools:layout_width="@dimen/shopping_list_item_height"
-			tools:src="@color/primaryColor" />
+			tools:src="@drawable/image_placeholder" />
 
 		<RelativeLayout
 			android:id="@+id/itemContainer"

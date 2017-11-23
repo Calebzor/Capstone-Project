@@ -27,6 +27,7 @@ import javax.inject.Inject;
 import hu.tvarga.cheaplist.R;
 import hu.tvarga.cheaplist.business.compare.dto.CategoriesBroadcastObject;
 import hu.tvarga.cheaplist.business.compare.shoppinglist.ShoppingListManager;
+import hu.tvarga.cheaplist.business.user.UserService;
 import hu.tvarga.cheaplist.dao.ItemCategory;
 import hu.tvarga.cheaplist.dao.Merchant;
 import hu.tvarga.cheaplist.dao.MerchantCategoryListItem;
@@ -174,8 +175,13 @@ public class ComparePresenter implements CompareContract.Presenter {
 		@Nullable
 		@Override
 		public RequestBuilder getPreloadRequestBuilder(String item) {
-			return Glide.with(view).load(item).apply(
-					new RequestOptions().override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL));
+			if (UserService.shouldDownloadImages()) {
+				return Glide.with(view).load(item).apply(
+						new RequestOptions().override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL));
+			}
+			else {
+				return Glide.with(view).load(R.drawable.image_placeholder);
+			}
 		}
 	}
 
