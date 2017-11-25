@@ -95,8 +95,7 @@ dependencies {
 		// Excludes the support library because it's already included by Glide.
 		transitive = false
 	}
-	annotationProcessor "com.github.bumptech.glide:compiler:$glideVersion"
-	compile "org.greenrobot:eventbus:3.1.0-RC"
+	implementation "org.greenrobot:eventbus:3.1.0-RC"
 
 	testImplementation "junit:junit:4.12"
 	testImplementation "org.mockito:mockito-core:$mockitoVersion"
