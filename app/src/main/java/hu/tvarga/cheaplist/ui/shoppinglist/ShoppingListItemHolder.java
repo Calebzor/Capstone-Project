@@ -28,6 +28,9 @@ public class ShoppingListItemHolder extends ImageBasedListItemHolder {
 	@BindView(R.id.pricePerUnit)
 	TextView pricePerUnit;
 
+	@BindView(R.id.merchantName)
+	TextView merchantName;
+
 	@BindView(R.id.shoppingListItemCheckBox)
 	AppCompatCheckBox shoppingListItemCheckBox;
 
@@ -63,6 +66,9 @@ public class ShoppingListItemHolder extends ImageBasedListItemHolder {
 		String imageUrl = item.getThumbnail();
 		loadImage(imageUrl);
 		shoppingListItemCheckBox.setChecked(item.checked);
+
+		merchantName.setText(String.format(itemView.getContext().getString(R.string.merchant),
+				item.merchant.name));
 
 		setTransitionName(image, item.merchant, item.id);
 
