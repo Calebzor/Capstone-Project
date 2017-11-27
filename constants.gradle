@@ -8,7 +8,7 @@ project.ext {
 	firebaseVersion = '11.4.2'
 	firebaseUIVersion = '3.1.0'
 	supportLibraryVersion = '26.1.0'
-	daggerVersion = '2.12'
+	daggerVersion = '2.13'
 	mockitoVersion = '2.11.0'
 	glideVersion = '4.3.1'
 }

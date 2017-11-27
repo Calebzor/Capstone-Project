@@ -3,14 +3,14 @@ package hu.tvarga.cheaplist.utility.eventbus;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import hu.tvarga.cheaplist.BaseMockitoJUnitTest;
+import hu.tvarga.cheaplist.MockitoJUnitTest;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class EventBusBufferTest extends BaseMockitoJUnitTest {
+public class EventBusBufferTest extends MockitoJUnitTest {
 
 	@Mock
 	private Object object;

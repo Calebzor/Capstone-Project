@@ -5,12 +5,12 @@ import org.mockito.Mock;
 
 import java.util.ArrayList;
 
-import hu.tvarga.cheaplist.BaseMockitoJUnitTest;
+import hu.tvarga.cheaplist.MockitoJUnitTest;
 import hu.tvarga.cheaplist.business.compare.shoppinglist.ShoppingListManager;
 
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 
-public class ComparePresenterTest extends BaseMockitoJUnitTest {
+public class ComparePresenterTest extends MockitoJUnitTest {
 
 	@Mock
 	private ShoppingListManager shoppingListManager;

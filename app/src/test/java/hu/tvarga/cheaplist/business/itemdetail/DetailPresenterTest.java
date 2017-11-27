@@ -3,14 +3,14 @@ package hu.tvarga.cheaplist.business.itemdetail;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import hu.tvarga.cheaplist.BaseMockitoJUnitTest;
+import hu.tvarga.cheaplist.MockitoJUnitTest;
 import hu.tvarga.cheaplist.business.compare.shoppinglist.ShoppingListManager;
 import hu.tvarga.cheaplist.dao.ManufacturerInformation;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 
-public class DetailPresenterTest extends BaseMockitoJUnitTest {
+public class DetailPresenterTest extends MockitoJUnitTest {
 
 	@Mock
 	private ShoppingListManager shoppingListManager;

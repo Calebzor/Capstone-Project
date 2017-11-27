@@ -25,7 +25,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public abstract class BaseMockitoJUnitTest extends Assert {
+public abstract class MockitoJUnitTest extends Assert {
 
 	private static final String STRING_PLACEHOLDER = "Placeholder #%1$s: %2$s";
 

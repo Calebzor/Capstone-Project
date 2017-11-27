@@ -8,7 +8,7 @@ import org.mockito.Mock;
 
 import java.util.Collections;
 
-import hu.tvarga.cheaplist.BaseMockitoJUnitTest;
+import hu.tvarga.cheaplist.MockitoJUnitTest;
 import hu.tvarga.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.cheaplist.ui.shoppinglist.ShoppingListItemHolder;
 
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class ShoppingListPresenterTest extends BaseMockitoJUnitTest {
+public class ShoppingListPresenterTest extends MockitoJUnitTest {
 
 	@Mock
 	private ShoppingListManager shoppingListManager;
