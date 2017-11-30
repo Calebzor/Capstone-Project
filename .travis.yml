@@ -7,9 +7,9 @@ android:
   - build-tools-26.0.2
   - android-26
 #  - extra-android-m2repository
-before_install:
+#before_install:
 #  - sudo apt-get install sshpass
-before_script:
+#before_script:
 #  - echo $GOOGLE_SERVICES | base64 --decode --ignore-garbage > app/google-services.json
 script:
    - ./gradlew variableTest -PvariableFromCommandLine=$VARIABLEFROMCOMMANDLINE
