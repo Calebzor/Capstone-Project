@@ -41,5 +41,7 @@ task clean(type: Delete) {
 
 task variableTest() {
 	outputs.upToDateWhen { false }
-	println variableFromCommandLine
+	doLast {
+		println variableFromCommandLine
+	}
 }
