@@ -20,7 +20,7 @@ public class CompareSettingsPresenter implements CompareSettingsContract.Present
 	private final UserService userService;
 	private final Event event;
 
-	private RecyclerView.Adapter<CompareSettingsCategoryHolder> adapter;
+	RecyclerView.Adapter<CompareSettingsCategoryHolder> adapter;
 
 	@Inject
 	public CompareSettingsPresenter(CompareService compareService, UserService userService,

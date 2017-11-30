@@ -1,4 +1,5 @@
 language: android
+
 addons:
   sonarcloud:
     organization: "calebzor-github"
@@ -34,5 +35,4 @@ script:
   - mkdir -p /home/travis/build/Calebzor/CheapList/app/build/outputs/code-coverage/connected/
   - cp /home/travis/build/Calebzor/CheapList/coverage.ec /home/travis/build/Calebzor/CheapList/app/build/outputs/code-coverage/connected/coverage.ec
   - git fetch --unshallow
-  - ./gradlew jacocoMergedTestReport sendCoverageToCodacy
-  - sonar-scanner
+  - ./gradlew jacocoMergedTestReport sendCoverageToCodacy sonarqube
