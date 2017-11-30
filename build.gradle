@@ -42,6 +42,6 @@ task clean(type: Delete) {
 task variableTest() {
 	outputs.upToDateWhen { false }
 	doLast {
-		println System.getProperty("VARIABLEFROMCOMMANDLINE")
+		println System.getenv('VARIABLEFROMCOMMANDLINE')
 	}
 }
