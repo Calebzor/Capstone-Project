@@ -164,6 +164,12 @@ static def gitBranch() {
 	branch
 }
 
+task setSonarKey() {
+	doLast {
+		sonar.login = System.getenv('CHEAPLIST_CALEBZOR_GITHUB_SONAR_KEY')
+	}
+}
+
 sonarqube {
 	properties {
 		property "sonar.branch.name", gitBranch()
