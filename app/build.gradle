@@ -164,14 +164,9 @@ static def gitBranch() {
 	branch
 }
 
-task setSonarKey() {
-	doLast {
-		sonar.login = System.getenv('CHEAPLIST_CALEBZOR_GITHUB_SONAR_KEY')
-	}
-}
-
 sonarqube {
 	properties {
+		property "sonar.login", System.getenv('CHEAPLIST_CALEBZOR_GITHUB_SONAR_KEY')
 		property "sonar.branch.name", gitBranch()
 		property "sonar.tests", "src/test/java"
 		property "sonar.java.binaries", "${buildDir}/intermediates/classes/debug"

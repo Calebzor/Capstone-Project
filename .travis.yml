@@ -30,4 +30,4 @@ script:
   - mkdir -p /home/travis/build/Calebzor/CheapList/app/build/outputs/code-coverage/connected/
   - cp /home/travis/build/Calebzor/CheapList/coverage.ec /home/travis/build/Calebzor/CheapList/app/build/outputs/code-coverage/connected/coverage.ec
   - git fetch --unshallow
-  - ./gradlew jacocoMergedTestReport sendCoverageToCodacy setSonarKey sonarqube -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=calebzor-github
+  - ./gradlew jacocoMergedTestReport sendCoverageToCodacy sonarqube -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=calebzor-github
