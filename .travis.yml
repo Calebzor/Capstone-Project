@@ -1,4 +1,8 @@
 language: android
+addons:
+  sonarcloud:
+    organization: "calebzor-github"
+
 jdk: oraclejdk8
 android:
   components:
@@ -30,6 +34,5 @@ script:
   - mkdir -p /home/travis/build/Calebzor/CheapList/app/build/outputs/code-coverage/connected/
   - cp /home/travis/build/Calebzor/CheapList/coverage.ec /home/travis/build/Calebzor/CheapList/app/build/outputs/code-coverage/connected/coverage.ec
   - git fetch --unshallow
-  - ./gradlew jacocoMergedTestReport sonarqube -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=calebzor-github -Dsonar.login=5786a6ea09b4e0abb87bb3ae05727484db3fc99a --debug --stacktrace | tee build.log
-  - sshpass -e scp -o StrictHostKeyChecking=no build.log androidci@calebzor.redirectme.net:/home/androidci
-  - ./gradlew sendCoverageToCodacy
+  - ./gradlew jacocoMergedTestReport sendCoverageToCodacy
+  - sonar-scanner
