@@ -38,3 +38,7 @@ allprojects { project ->
 task clean(type: Delete) {
 	delete rootProject.buildDir
 }
+
+task variableTest() {
+	println variableFromCommandLine
+}
