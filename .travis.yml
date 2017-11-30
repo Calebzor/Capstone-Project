@@ -1,4 +1,5 @@
 language: android
+
 addons:
   sonarcloud:
     organization: "calebzor-github"

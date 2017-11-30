@@ -166,6 +166,8 @@ static def gitBranch() {
 
 sonarqube {
 	properties {
+		property "sonar.projectName", "app"
+		property "sonar.projectKey", "CheapList:app"
 		property "sonar.branch.name", gitBranch()
 		property "sonar.tests", "src/test/java"
 		property "sonar.java.binaries", "${buildDir}/intermediates/classes/debug"

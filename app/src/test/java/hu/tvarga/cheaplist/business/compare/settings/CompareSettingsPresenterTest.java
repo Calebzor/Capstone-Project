@@ -1,11 +1,14 @@
 package hu.tvarga.cheaplist.business.compare.settings;
 
+import android.support.v7.widget.RecyclerView;
+
 import org.junit.Test;
 import org.mockito.Mock;
 
 import hu.tvarga.cheaplist.MockitoJUnitTest;
 import hu.tvarga.cheaplist.business.compare.CompareService;
 import hu.tvarga.cheaplist.business.user.UserService;
+import hu.tvarga.cheaplist.ui.compare.settings.CompareSettingsCategoryHolder;
 import hu.tvarga.cheaplist.utility.eventbus.Event;
 
 import static org.mockito.Mockito.verify;
@@ -20,6 +23,9 @@ public class CompareSettingsPresenterTest extends MockitoJUnitTest {
 
 	@Mock
 	private Event event;
+
+	@Mock
+	private RecyclerView.Adapter<CompareSettingsCategoryHolder> adapter;
 
 	private CompareSettingsPresenter presenter;
 
@@ -41,5 +47,12 @@ public class CompareSettingsPresenterTest extends MockitoJUnitTest {
 		presenter.onStop();
 
 		verify(event).unregister(presenter);
+	}
+
+	@Test
+	public void getCategoriesFilterForUserAdapter_AlreadyExistingAdapter() throws Exception {
+		presenter.adapter = adapter;
+
+		assertEquals(adapter, presenter.getCategoriesFilterForUserAdapter());
 	}
 }
