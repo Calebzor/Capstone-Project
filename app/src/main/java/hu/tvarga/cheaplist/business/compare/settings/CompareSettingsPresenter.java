@@ -31,7 +31,7 @@ public class CompareSettingsPresenter implements CompareSettingsContract.Present
 	}
 
 	@Override
-	public void onStart(CompareSettingsContract.View view) {
+	public void onStart() {
 		event.register(this);
 	}
 

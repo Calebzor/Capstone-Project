@@ -41,7 +41,7 @@ public class CompareSettingsDialog extends DaggerAppCompatDialogFragment
 	@Override
 	public void onStart() {
 		super.onStart();
-		presenter.onStart(this);
+		presenter.onStart();
 		categoriesFilterList.setAdapter(presenter.getCategoriesFilterForUserAdapter());
 	}
 

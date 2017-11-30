@@ -8,7 +8,7 @@ public interface CompareSettingsContract {
 
 	interface Presenter {
 
-		void onStart(CompareSettingsContract.View view);
+		void onStart();
 		void onStop();
 		RecyclerView.Adapter<CompareSettingsCategoryHolder> getCategoriesFilterForUserAdapter();
 	}
