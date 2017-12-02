@@ -22,7 +22,6 @@ import hu.tvarga.cheaplist.business.compare.CompareContract;
 import hu.tvarga.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.cheaplist.ui.MainActivity;
 import hu.tvarga.cheaplist.ui.compare.settings.CompareSettingsDialog;
-import hu.tvarga.cheaplist.utility.StringUtils;
 
 public class CompareFragment extends DaggerFragment
 		implements CompareContract.View, MainActivity.SearchHandler {
@@ -43,8 +42,6 @@ public class CompareFragment extends DaggerFragment
 	CompareContract.Presenter comparePresenter;
 
 	private Unbinder unbinder;
-
-	private SearchView searchView;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,7 +69,6 @@ public class CompareFragment extends DaggerFragment
 	@Override
 	public void onPause() {
 		super.onPause();
-		searchView.setOnQueryTextListener(null);
 		comparePresenter.onPause();
 	}
 
@@ -107,13 +103,7 @@ public class CompareFragment extends DaggerFragment
 
 	@Override
 	public void setOnQueryTextListener(SearchView searchView, MenuItem item) {
-		this.searchView = searchView;
-		String filter = comparePresenter.getFilter();
-		if (!StringUtils.isEmpty(filter)) {
-			item.expandActionView();
-			searchView.setQuery(filter, false);
-		}
-		searchView.setOnQueryTextListener(comparePresenter.getOnQueryTextListener());
+		comparePresenter.setOnQueryTextListener(searchView, item);
 	}
 
 	@Override

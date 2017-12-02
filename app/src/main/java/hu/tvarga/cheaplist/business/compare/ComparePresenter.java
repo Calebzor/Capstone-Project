@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -47,6 +48,8 @@ public class ComparePresenter implements CompareContract.Presenter {
 
 	List<ItemCategory> categories;
 
+	SearchView searchView;
+
 	@Inject
 	ComparePresenter(ShoppingListManager shoppingListManager, CompareService compareService,
 			Event event) {
@@ -67,6 +70,7 @@ public class ComparePresenter implements CompareContract.Presenter {
 
 	@Override
 	public void onPause() {
+		searchView.setOnQueryTextListener(null);
 		event.unregister(this);
 		view = new CompareTabsViewStub();
 	}
@@ -189,8 +193,7 @@ public class ComparePresenter implements CompareContract.Presenter {
 		return size == 0 && !compareService.isUserFilterLoaded();
 	}
 
-	@Override
-	public SearchView.OnQueryTextListener getOnQueryTextListener() {
+	private SearchView.OnQueryTextListener getOnQueryTextListener() {
 		return new SearchView.OnQueryTextListener() {
 			@Override
 			public boolean onQueryTextSubmit(String query) {
@@ -206,8 +209,14 @@ public class ComparePresenter implements CompareContract.Presenter {
 	}
 
 	@Override
-	public String getFilter() {
-		return compareService.getFilter();
+	public void setOnQueryTextListener(SearchView searchView, MenuItem item) {
+		this.searchView = searchView;
+		String filter = compareService.getFilter();
+		if (!StringUtils.isEmpty(filter)) {
+			item.expandActionView();
+			searchView.setQuery(filter, false);
+		}
+		searchView.setOnQueryTextListener(getOnQueryTextListener());
 	}
 
 }
