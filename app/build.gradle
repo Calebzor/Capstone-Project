@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'jacoco'
 if (!rootProject.plugins.hasPlugin("org.sonarqube")) {
 	println("sonarcube not yet applied")
 	apply plugin: 'org.sonarqube'
@@ -27,18 +26,6 @@ android {
 		vectorDrawables.useSupportLibrary = true
 		testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 	}
-	testOptions {
-		unitTests.all {
-			jacoco {
-				includeNoLocationClasses = true
-			}
-		}
-		// Starting with Robolectric 3.3 there is now tighter integration with the tool chain,
-		// where the build system processes and merges your resources.
-		unitTests {
-			includeAndroidResources = true
-		}
-	}
 	buildTypes {
 		debug {
 			testCoverageEnabled true
@@ -53,11 +40,6 @@ android {
 		}
 	}
 }
-
-jacoco {
-	toolVersion = "0.7.4+"
-}
-
 
 configurations { codacy }
 repositories {
@@ -106,9 +88,7 @@ dependencies {
 	annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVersion"
 	annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 	androidTestImplementation 'com.android.support.test:runner:1.0.1'
-	androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1', {
-		exclude group: 'com.android.support', module: 'support-annotations'
-	}
+	androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 	androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.1'
 	androidTestImplementation 'com.azimolabs.conditionwatcher:conditionwatcher:0.2'
 }
