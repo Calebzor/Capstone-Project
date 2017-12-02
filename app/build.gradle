@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'jacoco'
 if (!rootProject.plugins.hasPlugin("org.sonarqube")) {
 	println("sonarcube not yet applied")
 	apply plugin: 'org.sonarqube'
