@@ -52,9 +52,9 @@ public class CompareFilterTest {
 	public void compareFilter() throws Exception {
 		ConditionWatcher.waitForCondition(waitForViewByIdCondition(R.id.itemContainer, true));
 
-		Matcher<View> startListItem = allOf(withId(R.id.itemContainer),
+		final Matcher<View> startListItem = allOf(withId(R.id.itemContainer),
 				childAtPosition(childAtPosition(withId(R.id.itemsListStart), 0), 1));
-		Matcher<View> startListItem2 = allOf(withId(R.id.itemContainer),
+		final Matcher<View> startListItem2 = allOf(withId(R.id.itemContainer),
 				childAtPosition(childAtPosition(withId(R.id.itemsListStart), 1), 1));
 
 		ConditionWatcher.waitForCondition(waitForViewByViewMatcherCondition(startListItem));
@@ -119,32 +119,6 @@ public class CompareFilterTest {
 
 		// save first list elements name
 		final String[] firstListItemNameAfterToggle = new String[2];
-		onView(startListItem).check(matches(new BaseMatcher<View>() {
-			@Override
-			public void describeTo(Description description) {
-				// not needed
-			}
-
-			@Override
-			public boolean matches(Object item) {
-				firstListItemNameAfterToggle[0] = (String) ((TextView) ((View) item).findViewById(
-						R.id.name)).getText();
-				return true;
-			}
-		}));
-		onView(startListItem2).check(matches(new BaseMatcher<View>() {
-			@Override
-			public void describeTo(Description description) {
-				// not needed
-			}
-
-			@Override
-			public boolean matches(Object item) {
-				firstListItemNameAfterToggle[1] = (String) ((TextView) ((View) item).findViewById(
-						R.id.name)).getText();
-				return true;
-			}
-		}));
 
 		ConditionWatcher.waitForCondition(new Instruction() {
 			@Override
@@ -154,6 +128,34 @@ public class CompareFilterTest {
 
 			@Override
 			public boolean checkCondition() {
+				onView(startListItem).check(matches(new BaseMatcher<View>() {
+					@Override
+					public void describeTo(Description description) {
+						// not needed
+					}
+
+					@Override
+					public boolean matches(Object item) {
+						firstListItemNameAfterToggle[0] =
+								(String) ((TextView) ((View) item).findViewById(R.id.name))
+										.getText();
+						return true;
+					}
+				}));
+				onView(startListItem2).check(matches(new BaseMatcher<View>() {
+					@Override
+					public void describeTo(Description description) {
+						// not needed
+					}
+
+					@Override
+					public boolean matches(Object item) {
+						firstListItemNameAfterToggle[1] =
+								(String) ((TextView) ((View) item).findViewById(R.id.name))
+										.getText();
+						return true;
+					}
+				}));
 				return !firstListItemNameAfterToggle[0].equals(firstListItemName[0]) ||
 						!firstListItemNameAfterToggle[1].equals(firstListItemName[1]);
 			}
