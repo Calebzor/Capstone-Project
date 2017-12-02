@@ -48,6 +48,13 @@ public class CompareSearchTest {
 
 	@Test
 	public void compareSearch() throws Exception {
+		ConditionWatcher.waitForCondition(waitForViewByIdCondition(R.id.itemContainer, true));
+
+		Matcher<View> startListItem = allOf(withId(R.id.itemContainer),
+				childAtPosition(childAtPosition(withId(R.id.itemsListStart), 0), 1));
+
+		ConditionWatcher.waitForCondition(waitForViewByViewMatcherCondition(startListItem));
+
 		ConditionWatcher.waitForCondition(waitForViewByIdCondition(R.id.searchMenuItem, true));
 
 		ViewInteraction searchMenuItem = onView(withId(R.id.searchMenuItem));
@@ -83,9 +90,6 @@ public class CompareSearchTest {
 
 		ViewInteraction appCompatImageView = onView(withId(R.id.search_close_btn));
 		appCompatImageView.perform(click());
-
-		Matcher<View> startListItem = allOf(withId(R.id.itemContainer),
-				childAtPosition(childAtPosition(withId(R.id.itemsListStart), 0), 1));
 
 		ConditionWatcher.waitForCondition(waitForViewByViewMatcherCondition(startListItem));
 	}
