@@ -151,7 +151,7 @@ public class CompareFilterTest {
 
 			@Override
 			public boolean checkCondition() {
-				return !firstListItemNameAfterToggle[0].equals(firstListItemName[0]) &&
+				return !firstListItemNameAfterToggle[0].equals(firstListItemName[0]) ||
 						!firstListItemNameAfterToggle[1].equals(firstListItemName[1]);
 			}
 		});
