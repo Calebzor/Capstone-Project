@@ -2,6 +2,7 @@ package hu.tvarga.cheaplist.business.compare;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.view.MenuItem;
 
 import hu.tvarga.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.cheaplist.ui.compare.MerchantCategoryListItemHolder;
@@ -14,8 +15,7 @@ public interface CompareContract {
 		void onPause();
 		void setStartAdapter(RecyclerView startItems);
 		void setEndAdapter(RecyclerView endItems);
-		SearchView.OnQueryTextListener getOnQueryTextListener();
-		String getFilter();
+		void setOnQueryTextListener(SearchView searchView, MenuItem item);
 	}
 
 	interface View {
