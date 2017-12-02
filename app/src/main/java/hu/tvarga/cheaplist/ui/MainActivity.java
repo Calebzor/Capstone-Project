@@ -208,7 +208,8 @@ public class MainActivity extends AuthBaseActivity
 		// Get the SearchView and set the searchable configuration
 		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 		if (searchManager != null) {
-			searchView = (SearchView) menu.findItem(R.id.searchMenuItem).getActionView();
+			MenuItem item = menu.findItem(R.id.searchMenuItem);
+			searchView = (SearchView) item.getActionView();
 			// Assumes current activity is the searchable activity
 			searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 			// Do not iconify the widget; expand it by default
@@ -217,7 +218,7 @@ public class MainActivity extends AuthBaseActivity
 					CompareFragment.FRAGMENT_TAG);
 			if (fragment != null && fragment instanceof SearchHandler && fragment.isVisible()) {
 				SearchHandler searchViewHandler = (SearchHandler) fragment;
-				searchViewHandler.setOnQueryTextListener(searchView);
+				searchViewHandler.setOnQueryTextListener(searchView, item);
 			}
 		}
 	}
@@ -272,6 +273,6 @@ public class MainActivity extends AuthBaseActivity
 
 	public interface SearchHandler {
 
-		void setOnQueryTextListener(SearchView searchView);
+		void setOnQueryTextListener(SearchView searchView, MenuItem item);
 	}
 }
