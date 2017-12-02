@@ -51,6 +51,8 @@ public class CompareFilterTest {
 
 		Matcher<View> startListItem = allOf(withId(R.id.itemContainer),
 				childAtPosition(childAtPosition(withId(R.id.itemsListStart), 0), 1));
+		Matcher<View> startListItem2 = allOf(withId(R.id.itemContainer),
+				childAtPosition(childAtPosition(withId(R.id.itemsListStart), 1), 1));
 
 		ConditionWatcher.waitForCondition(waitForViewByViewMatcherCondition(startListItem));
 
@@ -66,13 +68,13 @@ public class CompareFilterTest {
 
 		// don't select 0 as that categories items are probably visible on screen
 		onView(withId(R.id.categoriesFilterList)).perform(
-				RecyclerViewActions.actionOnItemAtPosition(1, click()));
+				RecyclerViewActions.actionOnItemAtPosition(2, click()));
 
 		pressBack();
 		ConditionWatcher.waitForCondition(waitForViewByViewMatcherCondition(startListItem));
 
 		// save first list elements name
-		final String[] firstListItemName = new String[1];
+		final String[] firstListItemName = new String[2];
 		onView(startListItem).check(matches(new BaseMatcher<View>() {
 			@Override
 			public void describeTo(Description description) {
@@ -86,6 +88,19 @@ public class CompareFilterTest {
 				return true;
 			}
 		}));
+		onView(startListItem2).check(matches(new BaseMatcher<View>() {
+			@Override
+			public void describeTo(Description description) {
+				// not needed
+			}
+
+			@Override
+			public boolean matches(Object item) {
+				firstListItemName[1] = (String) ((TextView) ((View) item).findViewById(R.id.name))
+						.getText();
+				return true;
+			}
+		}));
 
 		compareFilterMenuItem.perform(click());
 
@@ -94,13 +109,13 @@ public class CompareFilterTest {
 		onView(withId(R.id.categoriesFilterList)).perform(
 				RecyclerViewActions.actionOnItemAtPosition(0, click()));
 		onView(withId(R.id.categoriesFilterList)).perform(
-				RecyclerViewActions.actionOnItemAtPosition(1, click()));
+				RecyclerViewActions.actionOnItemAtPosition(2, click()));
 
 		pressBack();
 		ConditionWatcher.waitForCondition(waitForViewByViewMatcherCondition(startListItem));
 
 		// save first list elements name
-		final String[] firstListItemNameAfterToggle = new String[1];
+		final String[] firstListItemNameAfterToggle = new String[2];
 		onView(startListItem).check(matches(new BaseMatcher<View>() {
 			@Override
 			public void describeTo(Description description) {
@@ -114,6 +129,19 @@ public class CompareFilterTest {
 				return true;
 			}
 		}));
+		onView(startListItem2).check(matches(new BaseMatcher<View>() {
+			@Override
+			public void describeTo(Description description) {
+				// not needed
+			}
+
+			@Override
+			public boolean matches(Object item) {
+				firstListItemNameAfterToggle[1] = (String) ((TextView) ((View) item).findViewById(
+						R.id.name)).getText();
+				return true;
+			}
+		}));
 
 		ConditionWatcher.waitForCondition(new Instruction() {
 			@Override
@@ -123,7 +151,8 @@ public class CompareFilterTest {
 
 			@Override
 			public boolean checkCondition() {
-				return !firstListItemNameAfterToggle[0].equals(firstListItemName[0]);
+				return !firstListItemNameAfterToggle[0].equals(firstListItemName[0]) &&
+						!firstListItemNameAfterToggle[1].equals(firstListItemName[1]);
 			}
 		});
 	}
