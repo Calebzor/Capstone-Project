@@ -42,6 +42,10 @@ android {
 	}
 }
 
+jacoco {
+	toolVersion = "0.7.4+"
+}
+
 configurations { codacy }
 repositories {
 	maven { url "https://jitpack.io" }
