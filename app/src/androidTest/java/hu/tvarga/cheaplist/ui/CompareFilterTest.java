@@ -36,6 +36,9 @@ import static org.hamcrest.Matchers.allOf;
 @RunWith(AndroidJUnit4.class)
 public class CompareFilterTest {
 
+	private static final int FIRST_CATEGORY = 0;
+	private static final int SECOND_CATEGORY = 2;
+
 	@Rule
 	public ActivityTestRule<StartActivity> mActivityTestRule = new ActivityTestRule<>(
 			StartActivity.class);
@@ -68,7 +71,7 @@ public class CompareFilterTest {
 
 		// don't select 0 as that categories items are probably visible on screen
 		onView(withId(R.id.categoriesFilterList)).perform(
-				RecyclerViewActions.actionOnItemAtPosition(2, click()));
+				RecyclerViewActions.actionOnItemAtPosition(SECOND_CATEGORY, click()));
 
 		pressBack();
 		ConditionWatcher.waitForCondition(waitForViewByViewMatcherCondition(startListItem));
@@ -107,9 +110,9 @@ public class CompareFilterTest {
 		ConditionWatcher.waitForCondition(waitForViewByViewMatcherCondition(listMatcher));
 
 		onView(withId(R.id.categoriesFilterList)).perform(
-				RecyclerViewActions.actionOnItemAtPosition(0, click()));
+				RecyclerViewActions.actionOnItemAtPosition(FIRST_CATEGORY, click()));
 		onView(withId(R.id.categoriesFilterList)).perform(
-				RecyclerViewActions.actionOnItemAtPosition(2, click()));
+				RecyclerViewActions.actionOnItemAtPosition(SECOND_CATEGORY, click()));
 
 		pressBack();
 		ConditionWatcher.waitForCondition(waitForViewByViewMatcherCondition(startListItem));
@@ -155,6 +158,16 @@ public class CompareFilterTest {
 						!firstListItemNameAfterToggle[1].equals(firstListItemName[1]);
 			}
 		});
+
+		compareFilterMenuItem.perform(click());
+
+		ConditionWatcher.waitForCondition(waitForViewByViewMatcherCondition(listMatcher));
+
+		onView(withId(R.id.categoriesFilterList)).perform(
+				RecyclerViewActions.actionOnItemAtPosition(FIRST_CATEGORY, click()));
+
+		pressBack();
+		ConditionWatcher.waitForCondition(waitForViewByViewMatcherCondition(startListItem));
 	}
 
 }
