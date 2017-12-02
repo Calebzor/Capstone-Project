@@ -48,12 +48,12 @@ public class ShoppingListTest {
 
 		ConditionWatcher.waitForCondition(waitForViewByIdCondition(R.id.itemContainer, true));
 
-		final Matcher<View> viewMatcher = allOf(withId(R.id.itemContainer),
+		Matcher<View> startListItem = allOf(withId(R.id.itemContainer),
 				childAtPosition(childAtPosition(withId(R.id.itemsListStart), 0), 1));
 
-		ConditionWatcher.waitForCondition(waitForViewByViewMatcherCondition(viewMatcher));
+		ConditionWatcher.waitForCondition(waitForViewByViewMatcherCondition(startListItem));
 
-		ViewInteraction merchantCategoryItemInStartList = onView(viewMatcher);
+		ViewInteraction merchantCategoryItemInStartList = onView(startListItem);
 		merchantCategoryItemInStartList.perform(click());
 
 		ConditionWatcher.waitForCondition(waitForViewByIdCondition(R.id.detailFab));
@@ -83,7 +83,7 @@ public class ShoppingListTest {
 
 		clickNavigationButton();
 
-		ConditionWatcher.waitForCondition(waitForViewByIdCondition(R.id.emptyText));
+		ConditionWatcher.waitForCondition(waitForViewByViewMatcherCondition(startListItem));
 	}
 
 }

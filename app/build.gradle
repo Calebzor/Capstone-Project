@@ -55,7 +55,7 @@ android {
 }
 
 jacoco {
-	toolVersion = "0.7.4+"
+	toolVersion = "0.7.9+"
 }
 
 
