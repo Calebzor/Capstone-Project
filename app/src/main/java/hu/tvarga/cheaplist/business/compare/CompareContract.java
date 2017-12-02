@@ -15,6 +15,7 @@ public interface CompareContract {
 		void setStartAdapter(RecyclerView startItems);
 		void setEndAdapter(RecyclerView endItems);
 		SearchView.OnQueryTextListener getOnQueryTextListener();
+		String getFilter();
 	}
 
 	interface View {

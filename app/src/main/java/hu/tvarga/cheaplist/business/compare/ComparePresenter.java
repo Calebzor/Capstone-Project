@@ -205,4 +205,9 @@ public class ComparePresenter implements CompareContract.Presenter {
 		};
 	}
 
+	@Override
+	public String getFilter() {
+		return compareService.getFilter();
+	}
+
 }

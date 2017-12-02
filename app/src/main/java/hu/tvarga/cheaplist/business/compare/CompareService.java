@@ -296,4 +296,7 @@ public class CompareService {
 		filter(endItems, endItemsUnfiltered, endAdapter);
 	}
 
+	public String getFilter() {
+		return filter;
+	}
 }
