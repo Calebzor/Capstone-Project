@@ -245,6 +245,15 @@ public class MainActivity extends AuthBaseActivity
 				DetailFragment.FRAGMENT_TAG).commit();
 	}
 
+	public void setTitle(DaggerFragment fragment) {
+		if (fragment instanceof TitleSettingFragment) {
+			setTitle(((TitleSettingFragment) fragment).getTitle());
+		}
+		else {
+			setTitle(R.string.app_name);
+		}
+	}
+
 	@Override
 	public void onBackStackChanged() {
 		shouldDisplayHomeUp();

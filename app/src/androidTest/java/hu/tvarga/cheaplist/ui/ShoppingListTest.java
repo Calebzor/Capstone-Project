@@ -25,6 +25,7 @@ import static hu.tvarga.cheaplist.ConditionWatchers.waitForViewByContentDescript
 import static hu.tvarga.cheaplist.ConditionWatchers.waitForViewByIdCondition;
 import static hu.tvarga.cheaplist.ConditionWatchers.waitForViewByViewMatcherCondition;
 import static hu.tvarga.cheaplist.EspressoHelpers.childAtPosition;
+import static hu.tvarga.cheaplist.EspressoHelpers.clickNavigationButton;
 import static hu.tvarga.cheaplist.ui.EmailLogin.ensureDummyUserIsLoggedIn;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
@@ -83,13 +84,6 @@ public class ShoppingListTest {
 		clickNavigationButton();
 
 		ConditionWatcher.waitForCondition(waitForViewByIdCondition(R.id.emptyText));
-	}
-
-	private void clickNavigationButton() {
-		ViewInteraction appCompatImageButton3 = onView(allOf(childAtPosition(
-				allOf(withId(R.id.toolbar), childAtPosition(withId(R.id.app_bar), 0)), 0),
-				isDisplayed()));
-		appCompatImageButton3.perform(click());
 	}
 
 }

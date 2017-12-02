@@ -108,6 +108,7 @@ public class CompareFragment extends DaggerFragment
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		((MainActivity) getActivity()).setTitle(this);
 		comparePresenter.setStartAdapter(startItems);
 		comparePresenter.setEndAdapter(endItems);
 		super.onViewCreated(view, savedInstanceState);

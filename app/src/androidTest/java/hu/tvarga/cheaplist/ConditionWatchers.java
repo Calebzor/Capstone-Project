@@ -14,6 +14,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 public class ConditionWatchers {
 
@@ -105,6 +106,27 @@ public class ConditionWatchers {
 				try {
 					onView(withContentDescription(contentDescription)).check(
 							matches(isDisplayed()));
+					return true;
+				}
+				catch (NoMatchingViewException e) {
+					return false;
+				}
+			}
+		};
+	}
+
+	@NonNull
+	public static Instruction waitForViewByTextCondition(final int text) {
+		return new Instruction() {
+			@Override
+			public String getDescription() {
+				return "Waiting for view";
+			}
+
+			@Override
+			public boolean checkCondition() {
+				try {
+					onView(withText(text)).check(matches(isDisplayed()));
 					return true;
 				}
 				catch (NoMatchingViewException e) {

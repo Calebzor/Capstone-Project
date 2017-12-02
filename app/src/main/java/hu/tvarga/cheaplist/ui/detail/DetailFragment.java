@@ -34,6 +34,7 @@ import hu.tvarga.cheaplist.business.user.UserService;
 import hu.tvarga.cheaplist.dao.Item;
 import hu.tvarga.cheaplist.dao.NutritionInformation;
 import hu.tvarga.cheaplist.dao.ShoppingListItem;
+import hu.tvarga.cheaplist.ui.MainActivity;
 import timber.log.Timber;
 
 import static hu.tvarga.cheaplist.business.NutritionNameHelper.getNutritionLocalizedName;
@@ -101,6 +102,7 @@ public class DetailFragment extends DaggerFragment implements DetailContract.Vie
 	@Override
 	public void onResume() {
 		super.onResume();
+		((MainActivity) getActivity()).setTitle(this);
 		presenter.onResume(this, itemFromArgument);
 	}
 

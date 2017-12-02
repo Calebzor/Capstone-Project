@@ -23,11 +23,13 @@ import hu.tvarga.cheaplist.R;
 import hu.tvarga.cheaplist.business.compare.shoppinglist.ShoppingListContract;
 import hu.tvarga.cheaplist.dao.ShoppingListItem;
 import hu.tvarga.cheaplist.ui.MainActivity;
+import hu.tvarga.cheaplist.ui.TitleSettingFragment;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class ShoppingListFragment extends DaggerFragment implements ShoppingListContract.View {
+public class ShoppingListFragment extends DaggerFragment
+		implements ShoppingListContract.View, TitleSettingFragment {
 
 	public static final String FRAGMENT_TAG = ShoppingListFragment.class.getName();
 
@@ -137,6 +139,7 @@ public class ShoppingListFragment extends DaggerFragment implements ShoppingList
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		((MainActivity) getActivity()).setTitle(this);
 		RecyclerView.Adapter<ShoppingListItemHolder> adapter = getAdapter();
 		shoppingListPresenter.setAdapter(adapter);
 		shoppingList.setAdapter(adapter);
@@ -171,4 +174,8 @@ public class ShoppingListFragment extends DaggerFragment implements ShoppingList
 		unbinder.unbind();
 	}
 
+	@Override
+	public int getTitle() {
+		return R.string.shopping_list_menu_item;
+	}
 }

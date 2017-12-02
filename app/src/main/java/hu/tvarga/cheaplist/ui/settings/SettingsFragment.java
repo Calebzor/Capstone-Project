@@ -20,8 +20,10 @@ import hu.tvarga.cheaplist.R;
 import hu.tvarga.cheaplist.business.compare.settings.SettingsContract;
 import hu.tvarga.cheaplist.business.user.UserService;
 import hu.tvarga.cheaplist.dao.UserSetting;
+import hu.tvarga.cheaplist.ui.MainActivity;
+import hu.tvarga.cheaplist.ui.TitleSettingFragment;
 
-public class SettingsFragment extends DaggerFragment {
+public class SettingsFragment extends DaggerFragment implements TitleSettingFragment {
 
 	public static final String FRAGMENT_TAG = SettingsFragment.class.getName();
 
@@ -58,6 +60,7 @@ public class SettingsFragment extends DaggerFragment {
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		((MainActivity) getActivity()).setTitle(this);
 		RecyclerView.Adapter<SettingsListItemHolder> adapter = getAdapter();
 		settingsList.setAdapter(adapter);
 		super.onViewCreated(view, savedInstanceState);
@@ -100,5 +103,10 @@ public class SettingsFragment extends DaggerFragment {
 				presenter.onSettingsClicked(userSetting);
 			}
 		};
+	}
+
+	@Override
+	public int getTitle() {
+		return R.string.settings;
 	}
 }
