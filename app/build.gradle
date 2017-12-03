@@ -92,8 +92,9 @@ dependencies {
 	annotationProcessor "com.jakewharton:butterknife-compiler:8.8.1"
 	annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVersion"
 	annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
-	androidTestImplementation 'com.android.support.test.espresso:espresso-core:2.2.2'
-	androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:2.2.2'
+	androidTestImplementation 'com.android.support.test:runner:1.0.1'
+	androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+	androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.1'
 	androidTestImplementation 'com.azimolabs.conditionwatcher:conditionwatcher:0.2'
 }
 
