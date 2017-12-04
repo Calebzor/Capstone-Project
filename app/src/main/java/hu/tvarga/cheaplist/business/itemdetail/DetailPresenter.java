@@ -24,11 +24,11 @@ import static hu.tvarga.cheaplist.business.compare.CompareService.MERCHANT_ITEMS
 public class DetailPresenter implements DetailContract.Presenter {
 
 	private final ShoppingListManager shoppingListManager;
-	private DetailContract.View view;
-	private ShoppingListItem item;
+	DetailContract.View view;
+	ShoppingListItem item;
 
-	private ListenerRegistration shoppingListItemListenerRegistration;
-	private ListenerRegistration itemRefListenerRegistration;
+	ListenerRegistration shoppingListItemListenerRegistration;
+	ListenerRegistration itemRefListenerRegistration;
 
 	@Inject
 	DetailPresenter(ShoppingListManager shoppingListManager) {
