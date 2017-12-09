@@ -53,6 +53,10 @@ public class CompareSettingsPresenterTest extends MockitoJUnitTest {
 	public void getCategoriesFilterForUserAdapter_AlreadyExistingAdapter() throws Exception {
 		presenter.adapter = adapter;
 
-		assertEquals(adapter, presenter.getCategoriesFilterForUserAdapter());
+	}
+
+	@Test
+	public void getCategoriesFilterForUserAdapter_noAdapter() throws Exception {
+		assertNotNull(presenter.getCategoriesFilterForUserAdapter());
 	}
 }
