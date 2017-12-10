@@ -10,11 +10,6 @@ Android app to compare products of merchants
 ### CircleCI
 [![CircleCI](https://circleci.com/gh/Calebzor/CheapList.svg?style=shield&circle-token=93f9612f2e7c32128da18999d4936aab7580a347)](https://circleci.com/gh/Calebzor/CheapList)
 
-### Jenkins
-Might get disabled: 
-
-http://cheaplistjenkinsazure.westeurope.cloudapp.azure.com/job/CheapList/
-
 ## Quality
 ### Sonar
 [![Quality Gate](https://sonarcloud.io/api/badges/gate?key=CheapList%3Aapp)](https://sonarcloud.io/dashboard/index/CheapList%3Aapp)
