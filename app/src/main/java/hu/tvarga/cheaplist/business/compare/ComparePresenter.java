@@ -193,7 +193,7 @@ public class ComparePresenter implements CompareContract.Presenter {
 		return size == 0 && !compareService.isUserFilterLoaded();
 	}
 
-	private SearchView.OnQueryTextListener getOnQueryTextListener() {
+	SearchView.OnQueryTextListener getOnQueryTextListener() {
 		return new SearchView.OnQueryTextListener() {
 			@Override
 			public boolean onQueryTextSubmit(String query) {

@@ -20,8 +20,10 @@ import static org.mockito.Mockito.when;
 
 public class ComparePresenterTest extends MockitoJUnitTest {
 
-	@Mock
-	private ShoppingListManager shoppingListManager;
+    private static final String QUERY = "query";
+
+    @Mock
+    private ShoppingListManager shoppingListManager;
 
 	@Mock
 	private CompareService compareService;
@@ -84,4 +86,19 @@ public class ComparePresenterTest extends MockitoJUnitTest {
 
 		assertNotNull(presenter.categories);
 	}
+
+    @Test
+    public void getOnQueryTextListener_onQueryTextSubmit() throws Exception {
+        SearchView.OnQueryTextListener onQueryTextListener = presenter.getOnQueryTextListener();
+
+        assertFalse(onQueryTextListener.onQueryTextSubmit(QUERY));
+    }
+
+    @Test
+    public void getOnQueryTextListener_onQueryTextChange() throws Exception {
+        SearchView.OnQueryTextListener onQueryTextListener = presenter.getOnQueryTextListener();
+
+        assertFalse(onQueryTextListener.onQueryTextChange(QUERY));
+        verify(compareService).setFilter(QUERY);
+    }
 }
