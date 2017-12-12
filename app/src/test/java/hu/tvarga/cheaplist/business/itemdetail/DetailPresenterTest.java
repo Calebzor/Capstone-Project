@@ -103,7 +103,6 @@ public class DetailPresenterTest extends MockitoJUnitTest {
 
         assertEquals(view, presenter.view);
         assertEquals(presenter.item, shoppingListItem);
-
         verify(view).updateUI(shoppingListItem);
         verifyNoMoreInteractions(firebaseFirestore);
     }
