@@ -20,90 +20,91 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class DetailPresenterTest extends MockitoJUnitTest {
 
-    @Mock
-    private ShoppingListManager shoppingListManager;
+	@Mock
+	private ShoppingListManager shoppingListManager;
 
-    @Mock
-    private DetailPresenter presenter;
+	@Mock
+	private DetailPresenter presenter;
 
-    @Mock
-    private ListenerRegistration shoppingListItemListenerRegistration;
+	@Mock
+	private ListenerRegistration shoppingListItemListenerRegistration;
 
-    @Mock
-    private ListenerRegistration itemRefListenerRegistration;
+	@Mock
+	private ListenerRegistration itemRefListenerRegistration;
 
-    @Mock
-    private DetailContract.View view;
+	@Mock
+	private DetailContract.View view;
 
-    @Mock
-    private ShoppingListItem shoppingListItem;
+	@Mock
+	private ShoppingListItem shoppingListItem;
 
-    @Override
-    public void setUp() throws Exception {
-        super.setUp();
-        presenter = new DetailPresenter(shoppingListManager, firebaseAuth, firebaseFirestore);
-    }
+	@Override
+	public void setUp() throws Exception {
+		super.setUp();
 
-    @Test
-    public void getManufacturerInformation() throws Exception {
-        ManufacturerInformation manufacturerInformation = new ManufacturerInformation();
-        manufacturerInformation.address = "address";
-        manufacturerInformation.contact = "contact";
-        manufacturerInformation.supplier = "supplier";
+		presenter = new DetailPresenter(shoppingListManager, firebaseAuth, firebaseFirestore);
+	}
 
-        assertThat(presenter.getManufacturerInformation(manufacturerInformation),
-                containsString(manufacturerInformation.address));
-        assertThat(presenter.getManufacturerInformation(manufacturerInformation),
-                containsString(manufacturerInformation.contact));
-        assertThat(presenter.getManufacturerInformation(manufacturerInformation),
-                containsString(manufacturerInformation.supplier));
-    }
+	@Test
+	public void getManufacturerInformation() throws Exception {
+		ManufacturerInformation manufacturerInformation = new ManufacturerInformation();
+		manufacturerInformation.address = "address";
+		manufacturerInformation.contact = "contact";
+		manufacturerInformation.supplier = "supplier";
 
-    @Test
-    public void getManufacturerInformation_emptyString() throws Exception {
-        ManufacturerInformation manufacturerInformation = new ManufacturerInformation();
+		assertThat(presenter.getManufacturerInformation(manufacturerInformation),
+				containsString(manufacturerInformation.address));
+		assertThat(presenter.getManufacturerInformation(manufacturerInformation),
+				containsString(manufacturerInformation.contact));
+		assertThat(presenter.getManufacturerInformation(manufacturerInformation),
+				containsString(manufacturerInformation.supplier));
+	}
 
-        assertThat(presenter.getManufacturerInformation(manufacturerInformation), is(""));
-    }
+	@Test
+	public void getManufacturerInformation_emptyString() throws Exception {
+		ManufacturerInformation manufacturerInformation = new ManufacturerInformation();
 
-    @Test
-    public void onPause() throws Exception {
-        presenter.shoppingListItemListenerRegistration = shoppingListItemListenerRegistration;
-        presenter.itemRefListenerRegistration = itemRefListenerRegistration;
+		assertThat(presenter.getManufacturerInformation(manufacturerInformation), is(""));
+	}
 
-        presenter.onPause();
+	@Test
+	public void onPause() throws Exception {
+		presenter.shoppingListItemListenerRegistration = shoppingListItemListenerRegistration;
+		presenter.itemRefListenerRegistration = itemRefListenerRegistration;
 
-        assertNull(presenter.item);
-        assertThat(presenter.view, instanceOf(DetailViewStub.class));
-        verify(shoppingListItemListenerRegistration).remove();
-        verify(itemRefListenerRegistration).remove();
-    }
+		presenter.onPause();
 
-    @Test
-    public void addToShoppingList() throws Exception {
-        Merchant merchant = mock(Merchant.class);
+		assertNull(presenter.item);
+		assertThat(presenter.view, instanceOf(DetailViewStub.class));
+		verify(shoppingListItemListenerRegistration).remove();
+		verify(itemRefListenerRegistration).remove();
+	}
 
-        presenter.addToShoppingList(shoppingListItem, merchant);
+	@Test
+	public void addToShoppingList() throws Exception {
+		Merchant merchant = mock(Merchant.class);
 
-        verify(shoppingListManager).addToList(shoppingListItem, merchant);
-    }
+		presenter.addToShoppingList(shoppingListItem, merchant);
 
-    @Test
-    public void removeItemFromShoppingList() throws Exception {
-        presenter.item = shoppingListItem;
+		verify(shoppingListManager).addToList(shoppingListItem, merchant);
+	}
 
-        presenter.removeItemFromShoppingList();
+	@Test
+	public void removeItemFromShoppingList() throws Exception {
+		presenter.item = shoppingListItem;
 
-        verify(shoppingListManager).removeFromList(shoppingListItem);
-    }
+		presenter.removeItemFromShoppingList();
 
-    @Test
-    public void onResume_NoUser() throws Exception {
-        presenter.onResume(view, shoppingListItem);
+		verify(shoppingListManager).removeFromList(shoppingListItem);
+	}
 
-        assertEquals(view, presenter.view);
-        assertEquals(presenter.item, shoppingListItem);
-        verify(view).updateUI(shoppingListItem);
-        verifyNoMoreInteractions(firebaseFirestore);
-    }
+	@Test
+	public void onResume_NoUser() throws Exception {
+		presenter.onResume(view, shoppingListItem);
+
+		assertEquals(view, presenter.view);
+		assertEquals(presenter.item, shoppingListItem);
+		verify(view).updateUI(shoppingListItem);
+		verifyNoMoreInteractions(firebaseFirestore);
+	}
 }
