@@ -21,6 +21,7 @@ import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
 import hu.tvarga.cheaplist.di.AppModule;
 import hu.tvarga.cheaplist.di.DaggerAppComponent;
+import hu.tvarga.cheaplist.di.FirebaseModule;
 import hu.tvarga.cheaplist.jobservices.CategoriesJobService;
 import timber.log.Timber;
 
@@ -50,7 +51,7 @@ public class CheapListApp extends Application implements HasActivityInjector {
 		FirebaseFirestoreSettings settings =
 				new FirebaseFirestoreSettings.Builder().setPersistenceEnabled(true).build();
 		firebaseFirestore.setFirestoreSettings(settings);
-		DaggerAppComponent.builder().appModule(new AppModule(this)).build().inject(this);
+		DaggerAppComponent.builder().appModule(new AppModule(this)).firebaseModule(new FirebaseModule()).build().inject(this);
 		setUpCategoriesJob();
 	}
 

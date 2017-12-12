@@ -48,10 +48,9 @@ public class UserService implements FirebaseAuth.AuthStateListener {
 	private CollectionReference userSettingsDB;
 
 	@Inject
-	UserService(Event event) {
+	UserService(Event event, FirebaseAuth firebaseAuth, FirebaseFirestore firebaseFirestore) {
 		this.event = event;
-		db = FirebaseFirestore.getInstance();
-		FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+		this.db = firebaseFirestore;
 		firebaseAuth.addAuthStateListener(this);
 	}
 

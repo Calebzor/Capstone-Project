@@ -4,6 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.ContextWrapper;
 import android.support.annotation.CallSuper;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -28,6 +31,12 @@ import static org.mockito.Mockito.verify;
 public abstract class MockitoJUnitTest extends Assert {
 
 	private static final String STRING_PLACEHOLDER = "Placeholder #%1$s: %2$s";
+
+	@Mock
+	protected FirebaseFirestore firebaseFirestore;
+
+	@Mock
+	protected FirebaseAuth firebaseAuth;
 
 	@Mock
 	protected ContextWrapper contextWrapper;

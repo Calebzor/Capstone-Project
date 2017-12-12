@@ -24,6 +24,8 @@ import static hu.tvarga.cheaplist.business.compare.CompareService.MERCHANT_ITEMS
 public class DetailPresenter implements DetailContract.Presenter {
 
 	private final ShoppingListManager shoppingListManager;
+	private final FirebaseAuth firebaseAuth;
+	private final FirebaseFirestore firebaseFirestore;
 	DetailContract.View view;
 	ShoppingListItem item;
 
@@ -31,9 +33,11 @@ public class DetailPresenter implements DetailContract.Presenter {
 	ListenerRegistration itemRefListenerRegistration;
 
 	@Inject
-	DetailPresenter(ShoppingListManager shoppingListManager) {
+	DetailPresenter(ShoppingListManager shoppingListManager, FirebaseAuth firebaseAuth, FirebaseFirestore firebaseFirestore) {
 		view = new DetailViewStub();
 		this.shoppingListManager = shoppingListManager;
+		this.firebaseAuth = firebaseAuth;
+		this.firebaseFirestore = firebaseFirestore;
 	}
 
 	@Override
@@ -74,8 +78,7 @@ public class DetailPresenter implements DetailContract.Presenter {
 		// display data passed in straight away
 		view.updateUI(item);
 
-		FirebaseAuth auth = FirebaseAuth.getInstance();
-		FirebaseUser currentUser = auth.getCurrentUser();
+		FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 		if (currentUser != null) {
 			EventListener<DocumentSnapshot> shoppingListItemEventListener =
 					new EventListener<DocumentSnapshot>() {
@@ -98,12 +101,12 @@ public class DetailPresenter implements DetailContract.Presenter {
 							}
 						}
 					};
-			DocumentReference shoppingListItemRef = FirebaseFirestore.getInstance().collection(
+			DocumentReference shoppingListItemRef = firebaseFirestore.collection(
 					"userData").document(currentUser.getUid()).collection("shoppingList").document(
 					item.id);
 			shoppingListItemListenerRegistration = shoppingListItemRef.addSnapshotListener(
 					shoppingListItemEventListener);
-			DocumentReference itemRef = FirebaseFirestore.getInstance().collection(MERCHANT_ITEMS)
+			DocumentReference itemRef = firebaseFirestore.collection(MERCHANT_ITEMS)
 					.document(item.merchant.id).collection(ITEMS).document(item.id);
 
 			itemRefListenerRegistration = itemRef.addSnapshotListener(

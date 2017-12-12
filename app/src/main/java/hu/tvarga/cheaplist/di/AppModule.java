@@ -10,7 +10,7 @@ import hu.tvarga.cheaplist.di.androidinjectors.ActivityInjectorModule;
 import hu.tvarga.cheaplist.di.androidinjectors.FragmentInjectorModule;
 import hu.tvarga.cheaplist.di.scopes.ApplicationScope;
 
-@Module(includes = {ActivityInjectorModule.class, FragmentInjectorModule.class})
+@Module(includes = {ActivityInjectorModule.class, FragmentInjectorModule.class, FirebaseModule.class})
 @ApplicationScope
 public class AppModule {
 
