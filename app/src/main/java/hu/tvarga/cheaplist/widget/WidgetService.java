@@ -41,10 +41,10 @@ public class WidgetService extends RemoteViewsService {
 		private CollectionReference dbRefForShoppingList;
 
 		CheapListAppWidgetViewsFactory() {
-			setUPp();
+			setUp();
 		}
 
-		private void setUPp() {
+		private void setUp() {
 			listenForAuthStateChange();
 			setUpShoppingListListener();
 		}
