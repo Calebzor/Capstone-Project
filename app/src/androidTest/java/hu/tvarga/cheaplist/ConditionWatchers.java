@@ -59,8 +59,7 @@ public class ConditionWatchers {
 			@Override
 			public boolean checkCondition() {
 				try {
-					viewMatcher.matches(isDisplayed());
-					return true;
+					return viewMatcher.matches(isDisplayed());
 				}
 				catch (NoMatchingViewException e) {
 					return false;
