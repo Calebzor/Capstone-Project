@@ -71,7 +71,7 @@ dependencies {
 	implementation "com.google.firebase:firebase-firestore:$firebaseVersion"
 	implementation "com.firebaseui:firebase-ui-auth:$firebaseUIVersion"
 	implementation "com.firebaseui:firebase-ui-database:$firebaseUIVersion"
-	implementation "com.firebase:firebase-jobdispatcher:0.8.3"
+	implementation "com.firebase:firebase-jobdispatcher:0.8.5"
 	implementation "com.google.dagger:dagger:$daggerVersion"
 	implementation "com.google.dagger:dagger-android:$daggerVersion"
 	implementation "com.google.dagger:dagger-android-support:$daggerVersion"
